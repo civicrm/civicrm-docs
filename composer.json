@@ -1,0 +1,16 @@
+{
+    "name": "civicrm/civicrm-docs",
+    "description": "CiviCRM documentation infrastructure",
+    "license": "AGPL",
+    "authors": [
+        {
+            "name": "Michael McAndrew",
+            "email": "michaelmcandrew@thirdsectordesign.org"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "*",
+        "gitonomy/gitlib": "*",
+        "monolog/monolog": "^1.18"
+    }
+}
