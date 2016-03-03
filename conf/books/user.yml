@@ -1,0 +1,4 @@
+en:
+ - repo: 'https://github.com/civicrm/civicrm-user-guide'
+ - latest: master
+ - stable: 4.7
