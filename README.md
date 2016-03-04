@@ -61,7 +61,7 @@ en:
 
 # Installation
 
-**Note**: the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure. If you want to contributing to CiviCRM's documentation, see [Contributing to documentation](#Contributing-to-documentation) above.
+**Note**: the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure. If you want to contributing to CiviCRM's documentation, see [Contributing to documentation](#contributing-to-documentation) above.
 
 1) Ensure that that you have [pip](https://packaging.python.org/en/latest/install_requirements_linux/#installing-pip-setuptools-wheel-with-linux-package-managers) (for python) and [composer](https://getcomposer.org/) (for php) installed..
 
