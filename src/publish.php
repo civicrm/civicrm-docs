@@ -90,5 +90,5 @@ $mkdocs = New Process($command, $dir);
 $mkdocs->run();
 echo nl2br($mkdocs->getOutput());
 echo nl2br($mkdocs->getErrorOutput());
-echo "<a href='/{$book}/{$lang}/{$branch}'>Build successful - click here to view the result</a>";
+echo "Book published successfully at <a href='/{$book}/{$lang}/{$branch}'>/{$book}/{$lang}/{$branch}</a>";
 ?>

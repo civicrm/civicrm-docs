@@ -21,17 +21,17 @@ Some time in the near future, books will automatically be updated when the corre
 
 Until that happens, the update process can be manually triggered by calling a URL in the following format:
 
-https://docs.civicrm.org/build.php?book=user&branch=master&lang=en
+https://docs.civicrm.org/publish.php?book=user&branch=master&lang=en
 
 With parameters set as follows: 
 
 * **book**: the name of the book - as per configuration file in the conf/books directory.
-* **lang**: the language that you want to build - as defined in the configuration file.
+* **lang**: the language that you want to publish - as defined in the configuration file.
 * **branch**: the name of the branch that you want to publish - needs to be a branch in the repository for that language.
 
 ### Trouble shooting the publishing process
 
-Once the build process is complete, any output from the build process (mkdocs build) is shown on the screen.
+Once the publising process is complete, any output from 'mkdocs build' (which is the process that actually creates the html) is shown on the screen.
 
 If nothing is shown on the screen, some rudimentary logging available at https://docs.civicrm.org/log might give you a clue as to what happened.
 
@@ -70,7 +70,7 @@ en:
 ```
 $ sudo pip install mkdocs
 ```
-***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/build.php script (typically invoked as https://docs.civicrm.org/build.php)*
+***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/publish.php script (typically invoked as https://docs.civicrm.org/publish.php)*
 
 3) clone this repository to somewhere like /var/www/civicrm-docs
 
