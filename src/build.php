@@ -45,7 +45,7 @@ $bookConf = $yaml->parse(file_get_contents("$root/conf/books/$book.yml"));
 $docsLog->addInfo("Found config file '$book.yml'.");
 
 if(!file_exists("$root/repos/{$book}")){
-    $repo = Gitonomy\Admin::cloneTo("$root/repos/{$book}", $bookConf[$lang], false);
+    $repo = Gitonomy\Admin::cloneTo("$root/repos/{$book}", $bookConf[$lang]['repo'], false);
 }else{
     $repo = new Gitonomy\Repository("$root/repos/{$book}");
 }
@@ -77,7 +77,9 @@ $repo->run('pull');
 
 //Override some settings from the yml before publishing
 $mkdocsConf = $yaml->parse(file_get_contents("$root/repos/$book/mkdocs.yml"));
-//$bookConfig['theme']='bootstrap';
+
+//@TODO create a CiviCRM theme so that we can uncomment this line
+//$mkdocsConf['theme_dir']="$root/themes/civicrm";
 
 $dumper = new Dumper;
 file_put_contents("$root/conf/builds/{$book}.{$lang}.{$branch}.yml", $dumper->dump($mkdocsConf, 2));
