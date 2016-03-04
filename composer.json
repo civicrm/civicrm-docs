@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "symfony/yaml": "*",
+        "symfony/yaml": "2.8.*",
+        "symfony/process": "2.8.*",
         "gitonomy/gitlib": "*",
         "monolog/monolog": "*"
     }
