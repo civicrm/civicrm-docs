@@ -1,31 +1,15 @@
 
 # Usage
 
-All CiviCRM documentation should be written in Markdown, following [mkdocs](http://www.mkdocs.org) conventions, and stored in a git repository.
+All CiviCRM documentation should be written in Markdown, following [mkdocs](http://www.mkdocs.org) conventions, and stored in a git repository, such as https://github.com/civicrm/civicrm-user-guide.
 
-## Defining books
+Documentation is organised into 'books'.  Each book can be made available in different lanaguages. Each language can have different editions.
 
-Books are defined with a Yaml configuration file, stored in the conf/books directory of this repository.
+Editions of books typically map to versions of CiviCRM (or extensions that they document). Editions are created by creating a branches in each language repository.
 
-The config file lists the **languages** that the book is available in, with a repository for each language. For each language, the file defines:
+## Contributing to documentation
 
-* which edition of the book should be considered stable
-* where to find the latest edits to the book
-* a history of book editions of the book.
-
-Editions of books typically editions map to versions of CiviCRM (or in the case of extensions, the version of the extension).  Editions are created by creating corresponding branches in the repository.
-
-Example Yaml file for our user guide: 'user.yml'
-
-```Yaml
-en:
- - repo: 'https://github.com/civicrm/civicrm-user-guide'
- - latest: master
- - stable: 4.7
- - history:
-   - 4.7
-   - 4.6
-```
+See https://civicrm.org/improve-documentation for how to get started contributing to our documentation. If you have any questions about how stuff works, or how to start contributing, please join the [documentation mailing list](http://lists.civicrm.org/lists/info/civicrm-docs) and email the list with your question. We'll be very glad to help you get going.
 
 ## Publishing books
 
@@ -45,15 +29,39 @@ With parameters set as follows:
 * **lang**: the language that you want to build - as defined in the configuration file.
 * **branch**: the name of the branch that you want to publish - needs to be a branch in the repository for that language.
 
-## Trouble shooting
+### Trouble shooting the publishing process
 
-Some rudimentary logging is available at https://docs.civicrm.org/log.
+Once the build process is complete, any output from the build process (mkdocs build) is shown on the screen.
 
-**Note:** these are plain text files and not that pretty right now. Using 'view source' in your browser is one way to make them easier to read.
+If nothing is shown on the screen, some rudimentary logging available at https://docs.civicrm.org/log might give you a clue as to what happened.
+
+**Tip:** Using 'view source' in your browser will show line breaks for these logs.
+
+## Defining books
+
+Books are defined with a Yaml configuration file, stored in the conf/books directory of this repository.
+
+The config file lists the **languages** that the book is available in, with a repository for each language. For each language, the configuration file defines:
+
+* which **edition** of the book should be considered **stable**
+* where to find the **latest** edits to the book
+* a history of book **editions** of the book (that will be publicly listed).
+
+An example configuration file for the CiviCRM user guide ('user.yml'):
+
+```Yaml
+en:
+ - repo: 'https://github.com/civicrm/civicrm-user-guide'
+ - latest: master
+ - stable: 4.7
+ - history:
+   - 4.7
+   - 4.6
+```
 
 # Installation
 
-Note that the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure. If you want to contributing to CiviCRM's documentation, see https://civicrm.org/improve-documentation.
+**Note**: the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure. If you want to contributing to CiviCRM's documentation, see [Contributing to documentation](#Contributing-to-documentation) above.
 
 1) Ensure that that you have [pip](https://packaging.python.org/en/latest/install_requirements_linux/#installing-pip-setuptools-wheel-with-linux-package-managers) (for python) and [composer](https://getcomposer.org/) (for php) installed..
 
