@@ -72,6 +72,8 @@ $ sudo pip install mkdocs
 ```
 ***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/build.php script (typically invoked as https://docs.civicrm.org/build.php)*
 
+3) clone this repository to somewhere like /var/www/civicrm-docs
+
 3) Run composer install
 
 ```
@@ -108,7 +110,7 @@ $ ln -s /var/www/civicrm-docs/conf/nginx.conf civicrm-docs
 * Last but not least: migrate lots of documentation (e.g. our developer and sys administrator documentation)
 * Future proof documentation structure
     * / - documentation home
-    * /user/lang/ver - user documentation for core civicrm
-    * /extensions/*/lang/ver - documentation for extensions (probably mostly user focused, though with possible developer and system administrator sections)
-    * /admin/lang/ver - system administrator documentation (installation, upgrades, email server configuration)
-    * /dev/lang/ver - developer documentation
+    * /user/ - user documentation for core civicrm
+    * /extensions/*/ - documentation for extensions (probably mostly user focused, though with possible developer and system administrator sections)
+    * /admin/ - system administrator documentation (installation, upgrades, email server configuration)
+    * /dev/ - developer documentation
