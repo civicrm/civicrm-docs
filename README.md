@@ -29,11 +29,21 @@ en:
 
 ## Publishing books
 
+All books are published at https://docs.civicrm.org/[name]/
+
+By default, a URL in the above format will redirect to https://docs.civicrm.org/[name]/en/stable.
+
 Some time in the near future, books will automatically be updated when the corresponding branch is updated in the repository.
 
 Until that happens, the update process can be manually triggered by calling a URL in the following format:
 
-http://docs/build.php?book=user&branch=master&lang=en
+https://docs.civicrm.org/build.php?book=user&branch=master&lang=en
+
+With parameters set as follows: 
+
+* **book**: the name of the book - as per configuration file in the conf/books directory.
+* **lang**: the language that you want to build - as defined in the configuration file.
+* **branch**: the name of the branch that you want to publish - needs to be a branch in the repository for that language.
 
 ## Trouble shooting
 
@@ -41,38 +51,56 @@ Some rudimentary logging is available at https://docs.civicrm.org/log.
 
 **Note:** these are plain text files and not that pretty right now. Using 'view source' in your browser is one way to make them easier to read.
 
-# Requirements
-
-* pip (sudo apt-get install python-pip)
-* composer (https://getcomposer.org/)
-
 # Installation
 
-1) Install mkdocs.
+Note that the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure. If you want to contributing to CiviCRM's documentation, see https://civicrm.org/improve-documentation.
 
+1) Ensure that that you have [pip](https://packaging.python.org/en/latest/install_requirements_linux/#installing-pip-setuptools-wheel-with-linux-package-managers) (for python) and [composer](https://getcomposer.org/) (for php) installed..
+
+2) Install mkdocs.
 
 ```
 $ sudo pip install mkdocs
 ```
 ***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/build.php script (typically invoked as https://docs.civicrm.org/build.php)*
 
-2) Run composer install
+3) Run composer install
 
 ```
 $ cd /var/www/civicrm-docs
 $ composer install
 ```
 
-3) Run the civicrm-docs install script
+4) Run the civicrm-docs install script
 
 ```
 $ cd /var/www/civicrm-docs
 $ ./install.sh
 ```
 
-4) Configure an nginx virtual host
+5) Configure an nginx virtual host
 
 ```
 $ cd /etc/nginx/sites-enabled
 $ ln -s /var/www/civicrm-docs/conf/nginx.conf civicrm-docs
 ```
+
+6) Reload your nginx config and you should be up and running.
+
+# To do
+
+* A CiviCRM theme for documentatiom
+* Create a better docs homepage
+* Automate creation of symlinks for latest and stable based on book.yml file
+* Create history for each book based on book.yml file
+* Improve nginx.conf
+    * Remove the trailing slash from URLs
+    * user|developer|etc should not be hard coded
+    * avoid root in location block. Might need to rethink dir structure (https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/#root-inside-location-block)
+* Last but not least: migrate lots of documentation (e.g. our developer and sys administrator documentation)
+* Future proof documentation structure
+    * / - documentation home
+    * /user/lang/ver - user documentation for core civicrm
+    * /extensions/*/lang/ver - documentation for extensions (probably mostly user focused, though with possible developer and system administrator sections)
+    * /admin/lang/ver - system administrator documentation (installation, upgrades, email server configuration)
+    * /dev/lang/ver - developer documentation
