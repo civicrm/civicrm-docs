@@ -51,10 +51,10 @@ An example configuration file for the CiviCRM user guide ('user.yml'):
 
 ```Yaml
 en:
- - repo: 'https://github.com/civicrm/civicrm-user-guide'
- - latest: master
- - stable: 4.7
- - history:
+ repo: 'https://github.com/civicrm/civicrm-user-guide'
+ latest: master
+ stable: 4.7
+ history:
    - 4.7
    - 4.6
 ```
