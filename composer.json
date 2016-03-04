@@ -11,6 +11,6 @@
     "require": {
         "symfony/yaml": "*",
         "gitonomy/gitlib": "*",
-        "monolog/monolog": "^1.18"
+        "monolog/monolog": "*"
     }
 }
