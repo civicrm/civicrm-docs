@@ -2,21 +2,18 @@
 
 require_once '../vendor/autoload.php';
 require_once '../conf/config.php';
-
 use Symfony\Component\Yaml\Parser;
-
 require_once 'ScreenHandler.php';
 require_once 'HtmlLineFormatter.php';
 
-ob_start();
+// @TODO Validate that the payload is from GitHub.
+exit;
+
 // create a new cURL resource
 $payload = json_decode(file_get_contents('php://input'));
 // print_r($payload);
-$book = 'xxx';
 $branch = explode('/', $payload->ref)[2];
-$lang = 'xxx';
 
-// @TODO check for the secret code
 
 //echo $url;
 
