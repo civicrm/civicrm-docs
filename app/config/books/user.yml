@@ -1,8 +1,9 @@
 name: User guide
 langs:
     en:
-     repo: 'https://github.com/civicrm/civicrm-user-guide'
-     latest: master
-     stable: 4.6
-     history:
-       - 4.6
+        repo: 'https://github.com/civicrm/civicrm-user-guide'
+        latest: master
+        stable: 4.7
+        history:
+            - 4.7
+            - 4.6
