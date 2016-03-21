@@ -142,13 +142,17 @@ class Publisher{
         $langDir = realpath("$publishDir/..");
         
         foreach($symlinks as $destination => $source){
-            if (!$this->fs->exists("$langDir/$destination")) {
-                if (!$this->fs->exists("$langDir/$source")) {
-                    $this->addMessage('CRITICAL', "'$source' is defined as the $destination version of this documentation but is not yet published. <a href='{$this->baseUrl}/admin/publish/{$book}/{$lang}/{$source}'>Publish now</a>");
-                }else{
-                    $this->fs->symlink("$langDir/$source", "$langDir/$destination");
-                }
+            $this->fs->remove("$langDir/$destination");
+            if ($this->fs->exists("$langDir/$source")) {
+                $this->fs->symlink("$langDir/$source", "$langDir/$destination");
+            } else {
+            $this->addMessage('CRITICAL', "'$source' is defined as the $destination version of this documentation but is not yet published. <a href='{$this->baseUrl}/admin/publish/{$book}/{$lang}/{$source}'>Publish now</a>");
             }
+                
+            //     if ($this->fs->exists("$langDir/$destination")) {
+            //         echo $this->fs->remove("$langDir/$destination");exit;
+            //     }
+            // }
         }
     }
     
