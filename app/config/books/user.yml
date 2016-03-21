@@ -1,7 +1,7 @@
-name: CiviCRM user guide
+name: User guide
 langs:
     en:
-     repo: 'https://github.com/michaelmcandrew/civicrm-user-guide'
+     repo: 'https://github.com/civicrm/civicrm-user-guide'
      latest: master
      stable: 4.6
      history:
