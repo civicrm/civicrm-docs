@@ -1,16 +1,20 @@
-All CiviCRM documentation should be written in Markdown, following [mkdocs](http://www.mkdocs.org) conventions, and stored in a git repository, such as https://github.com/civicrm/civicrm-user-guide.
+## CiviCRM documentation infrastructure
 
-Documentation is organised into 'books'.  Each book can be made available in different lanaguages. Each language can have different editions.
-
-Editions of books typically map to versions of CiviCRM (or extensions that they document). Editions are created by creating a branches in each language repository.
+A summary of CiviCRM's documentation infrastructure.
 
 ## Accessing documentation
 
 CiviCRM documentation is currently found in many different sources. Our long term vision is to have it all published at https://docs.civicrm.org/.
 
-Documentation is organised into books, which are accessible at URLs as follows https://docs.civicrm.org/[name]/  By default, a URL in the above format will redirect to https://docs.civicrm.org/[name]/en/stable which shows the latest stable documentation.  The very latest documentation (which may be incomplete / unfinished) can be accessed at https://docs.civicrm.org/[name]/en/stable.
+Documentation is organised into books, which are accessible at URLs as follows https://docs.civicrm.org/[name]/  By default, a URL in the above format will redirect to https://docs.civicrm.org/[name]/en/stable which shows the latest stable documentation in English.
+
+Books may also be available in different lanaguages and have different editions (e.g. 4.6, 4.7) (which typically map to the version of CiviCRM that they are documenting.
+
+The very latest documentation (which may be incomplete / unfinished) can be accessed at https://docs.civicrm.org/[name]/en/stable.
 
 ## Contributing to documentation
+
+All CiviCRM documentation should be written in Markdown, following [mkdocs](http://www.mkdocs.org) conventions, and stored in a git repository, such as https://github.com/civicrm/civicrm-user-guide.
 
 See https://civicrm.org/improve-documentation for how to get started contributing to our documentation. If you have any questions about how stuff works, or how to start contributing, please join the [documentation mailing list](http://lists.civicrm.org/lists/info/civicrm-docs) and email the list with your question. We'll be very glad to help you get going.
 
