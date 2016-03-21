@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Intl\ResourceBundle\RegionBundle;
 
 class ReadController extends Controller
 {
@@ -35,8 +37,19 @@ class ReadController extends Controller
     */
     public function HomeAction()
     {
-        return $this->render('AppBundle:Read:home.html.twig');
+        $k = $this->get('kernel');
+        // This seems like a kind of hacky way to find the locales, but not sure what a better way would be.
+        $locales = json_decode(file_get_contents($k->getRootDir().'/../vendor/symfony/symfony/src/Symfony/Component/Intl/Resources/data/locales/en.json'), true);
+        
+        $finder = new Finder();
+        $yaml = new Parser();
+        
+        foreach ($finder->in($this->get('kernel')->getRootDir().'/config/books')->name("*.yml") as $file) {
+            $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
+        }
+        return $this->render('AppBundle:Read:home.html.twig', array('books'=>$books, 'locales' => $locales['Names']));
     }
+
     // $k = $this->get('kernel');
     // if(substr( $path, -1)=='/'){
     //     return new Response(file_get_contents($k->getCacheDir()."/{$path}index.html"));

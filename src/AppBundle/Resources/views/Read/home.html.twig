@@ -1,9 +1,28 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}CiviCRM Documentation: Publish{% endblock %}
+{% block title %}CiviCRM Documentation{% endblock %}
 
 {% block body %}
 
-    <h1>Read documentation</h1>
+    <h1>CiviCRM Documentation</h1>
+
+    {% for url, book in books %}
+        <h2>
+            <a href="/{{url}}">{{ book.name }}</a>
+        </h2>
+        <p>{{ book.description }}</p>
+        <ul>
+            {% for lang, language in book.langs %}
+                <li>
+                    {{ attribute(locales, lang) }}:
+                    <strong><a href="/{{url}}/{{ lang }}/stable">Current edition</a></strong>. Other editions:
+                </strong>
+                {% for version in language.history %}
+                    <a href="/{{url}}/{{ lang }}/{{ version }}">{{ version }}</a>,
+                {% endfor %}
+                <a href="/{{url}}/{{ lang }}/latest">latest</a>.</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
 
 {% endblock %}

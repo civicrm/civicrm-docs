@@ -10,7 +10,7 @@ Documentation is organised into books, which are accessible at URLs as follows h
 
 Books may also be available in different lanaguages and have different editions (e.g. 4.6, 4.7) (which typically map to the version of CiviCRM that they are documenting.
 
-The very latest documentation (which may be incomplete / unfinished) can be accessed at https://docs.civicrm.org/[name]/en/stable.
+The very latest documentation (which may be incomplete / unfinished) can be accessed at https://docs.civicrm.org/[name]/en/latest.
 
 ## Contributing to documentation
 
@@ -60,6 +60,8 @@ $ cd /var/www/civicrm-docs
 $ composer install
 ```
 
+4) Set appropriate permissions on web/static
+
 5) Configure an nginx virtual host
 
 ```
@@ -72,8 +74,7 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 # To do
 
 * A CiviCRM theme for documentatiom
-* Create a better docs homepage
-    * Inlcuding a history for each book based on book.yml file
+* Book validation
 * Future proof documentation structure
     * / - documentation home
     * /user/ - user documentation for core civicrm
