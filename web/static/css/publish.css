@@ -1,0 +1,27 @@
+.message {
+    font-weight: bold;
+}
+.message-debug {
+    color: #cccccc;
+}
+.message-info {
+    color: #468847;
+}
+.message-notice {
+    color: #3a87ad;
+}
+.message-warning {
+    color: #c09853;
+}
+.message-error {
+    color: #f0ad4e;
+}
+.message-critical {
+    color: #ff7708;
+}
+.message-alert {
+    color: #c12a19;
+}
+.message-emergency {
+    color: #000000;
+}
