@@ -1,0 +1,18 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+    github.hook.processor:
+        class: AppBundle\Utils\GitHubHookProcessor
+        arguments: ['@publisher']
+    publisher:
+        class: AppBundle\Utils\Publisher
+        arguments: ['@request_stack', '@publish.logger', '@filesystem', %kernel.root_dir%/config/books, %kernel.cache_dir%/repos, %kernel.root_dir%/../var/www]
+    publish.logger:
+        class: Monolog\Logger
+        arguments: ['publish', ['@streamhandler']]
+    streamhandler:
+        class: Monolog\Handler\StreamHandler
+        arguments: [%kernel.logs_dir%/publish.log]
