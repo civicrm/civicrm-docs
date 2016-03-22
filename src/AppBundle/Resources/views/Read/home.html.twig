@@ -15,11 +15,15 @@
             {% for lang, language in book.langs %}
                 <li>
                     {{ attribute(locales, lang) }}:
-                    <strong><a href="/{{url}}/{{ lang }}/stable">Current edition</a></strong>. Other editions:
+                    <strong>
+                        <a href="/{{url}}/{{ lang }}/stable">Current edition</a>
+                    </strong>. Other editions:
                 </strong>
-                {% for version in language.history %}
-                    <a href="/{{url}}/{{ lang }}/{{ version }}">{{ version }}</a>,
-                {% endfor %}
+                {% if language.history is defined %}
+                    {% for version in language.history %}
+                        <a href="/{{url}}/{{ lang }}/{{ version }}">{{ version }}</a>,
+                    {% endfor %}
+                {% endif %}
                 <a href="/{{url}}/{{ lang }}/latest">latest</a>.</li>
         {% endfor %}
     </ul>

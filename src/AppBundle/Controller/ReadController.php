@@ -45,7 +45,13 @@ class ReadController extends Controller
         $yaml = new Parser();
         
         foreach ($finder->in($this->get('kernel')->getRootDir().'/config/books')->name("*.yml") as $file) {
-            $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
+                $book = $yaml->parse(file_get_contents("$file"));
+                foreach($book['langs'] as $lang){
+                    if(isset($lang['stable'])){
+                        $books[basename($file, '.yml')] = $book;
+                    break;
+                }
+            }
         }
         return $this->render('AppBundle:Read:home.html.twig', array('books'=>$books, 'locales' => $locales['Names']));
     }

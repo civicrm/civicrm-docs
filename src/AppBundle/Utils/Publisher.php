@@ -136,23 +136,24 @@ class Publisher{
         }
         
         //@TODO script to check and update symlinks so that latest and stable point to the right places
-        $symlinks['latest'] = $bookConfig['langs'][$lang]['latest'];
-        $symlinks['stable'] = $bookConfig['langs'][$lang]['stable'];
+        $symlinks = array('latest', 'stable');
         
         $langDir = realpath("$publishDir/..");
         
-        foreach($symlinks as $destination => $source){
-            $this->fs->remove("$langDir/$destination");
-            if ($this->fs->exists("$langDir/$source")) {
-                $this->fs->symlink("$langDir/$source", "$langDir/$destination");
-            } else {
-            $this->addMessage('CRITICAL', "'$source' is defined as the $destination version of this documentation but is not yet published. <a href='{$this->baseUrl}/admin/publish/{$book}/{$lang}/{$source}'>Publish now</a>");
+        foreach($symlinks as $symlink){
+            if(isset($bookConfig['langs'][$lang][$symlink])){
+                $source = $bookConfig['langs'][$lang][$symlink];
+                if ($this->fs->exists("$langDir/$source")) {
+                    if ($this->fs->exists("$langDir/$symlink")) {
+                        $this->fs->remove("$langDir/$symlink");
+                        $this->fs->symlink("$langDir/$source", "$langDir/$symlink");
+                    }
+                } else {
+                    $this->addMessage('CRITICAL', "'$source' is defined as the '{$symlink}' version of this documentation but is not yet published. <a href='{$this->baseUrl}/admin/publish/{$book}/{$lang}/{$source}'>Publish now</a>");
+                }
+            }else{
+                $this->addMessage('WARNING', "'{$symlink}' is not defined in this documentation's config file.");
             }
-                
-            //     if ($this->fs->exists("$langDir/$destination")) {
-            //         echo $this->fs->remove("$langDir/$destination");exit;
-            //     }
-            // }
         }
     }
     
