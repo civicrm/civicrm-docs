@@ -1,0 +1,6 @@
+name: Developer guide
+description: For CiviCRM developers
+langs:
+    en:
+        repo: 'https://github.com/civicrm/civicrm-dev-docs'
+        latest: master
