@@ -140,14 +140,16 @@ class Publisher{
         
         $langDir = realpath("$publishDir/..");
         
+        
+        //@TODO break this out into its own function that can also be called at a certain URL.
         foreach($symlinks as $symlink){
+            if ($this->fs->exists("$langDir/$symlink")) {
+                $this->fs->remove("$langDir/$symlink");
+            }
             if(isset($bookConfig['langs'][$lang][$symlink])){
                 $source = $bookConfig['langs'][$lang][$symlink];
                 if ($this->fs->exists("$langDir/$source")) {
-                    if ($this->fs->exists("$langDir/$symlink")) {
-                        $this->fs->remove("$langDir/$symlink");
-                        $this->fs->symlink("$langDir/$source", "$langDir/$symlink");
-                    }
+                    $this->fs->symlink("$langDir/$source", "$langDir/$symlink");
                 } else {
                     $this->addMessage('CRITICAL', "'$source' is defined as the '{$symlink}' version of this documentation but is not yet published. <a href='{$this->baseUrl}/admin/publish/{$book}/{$lang}/{$source}'>Publish now</a>");
                 }
