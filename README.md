@@ -73,8 +73,11 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 
 # To do
 
+* Clean up our various documentation sources, delete ones that are not in use (adding redirects to docs.c.o), (book.civicrm.org, http://civicrm-user-guide.readthedocs.org/en/latest/, etc.)
+* Update UI documentation links
 * A CiviCRM theme for documentatiom
 * Book validation
+    * missing images (`ack '\!\[.*\]\((.*?)( ".*)?\)' -h --nobreak --output='$1'` will give all images)
 * Future proof documentation structure
     * / - documentation home
     * /user/ - user documentation for core civicrm
