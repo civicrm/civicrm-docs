@@ -64,17 +64,17 @@ class PublishController extends Controller
         $processor = $this->get('github.hook.processor');
         $processor->process($event, $payload, $books);
         if(!$processor->published){
-            return new Response('OK', 200);
+            return new Response('OK', 200); // @TODO Add more appropriate error code
         }
         $messages = $processor->getMessages();
         $details = $processor->getDetails();
         $subject = $processor->getSubject();
-        ;
+        $recipients = $processor->getRecipients();
         
         $mail = \Swift_Message::newInstance()
         ->setSubject("[CiviCRM docs] $subject")
         ->setFrom('docs@civicrm.org')
-        ->setTo('michaelmcandrew@thirdsectordesign.org')
+        ->setTo($recipients)
         ->setBody($this->renderView( 'Emails/notify.html.twig', array('details' => $details, 'messages' => $messages) ), 'text/html');
         //->setBody('hello');
         $this->get('mailer')->send($mail);

@@ -33,10 +33,12 @@ class GitHubHookProcessor{
         $branch = $payload->pull_request->base->ref;
         $repo = $payload->repository->html_url;
         foreach ($this->books as $bookName => $bookConfig) {
-            foreach ($bookConfig['langs'] as $bookLang => $bookLangDetails) {
-                if($bookLangDetails['repo'] == $repo){
+            foreach ($bookConfig['langs'] as $bookLang => $bookLangConfig) {
+                if($bookLangConfig['repo'] == $repo){
                     $book = $bookName;
                     $lang = $bookLang;
+                    $config = $bookLangConfig;
+                    break 2;
                 }
             }
         }
@@ -44,11 +46,17 @@ class GitHubHookProcessor{
     
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $payload->pull_request->commits_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 'User-Agent: Awesome-Octocat-App')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 'User-Agent: civicrm-docs')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = json_decode(curl_exec($ch));
         
         //$commits = json_decode(file_get_contents('https://api.github.com/zen'));
+        
+        // add default recipients for this book
+        if(isset($config['notify'])){
+            $recipients  = $config['notify'];
+        }
+        
         foreach($response as $commit){
             $recipients[]=$commit->commit->author->email;
             $recipients[]=$commit->commit->committer->email;
@@ -65,8 +73,8 @@ class GitHubHookProcessor{
 
     function Push($event){
         //do something, then...
-        $this->publisher->publish($book, $lang, $branch);
-        array_merge($this->messages, $this->publisher->getMessages());
+        // $this->publisher->publish($book, $lang, $branch);
+        // array_merge($this->messages, $this->publisher->getMessages());
 
     }
     
