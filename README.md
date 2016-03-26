@@ -44,18 +44,12 @@ The config file lists the **languages** that the book is available in, with a re
 
 1) Ensure that that you have [pip](https://packaging.python.org/en/latest/install_requirements_linux/#installing-pip-setuptools-wheel-with-linux-package-managers) (for python) and [composer](https://getcomposer.org/) (for php) installed..
 
-2) Install mkdocs.
+2) Install mkdocs (`$ sudo pip install mkdocs`). ***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/publish.php script (typically invoked as https://docs.civicrm.org/publish.php)*
+
+3) clone this repository to somewhere like /var/www/civicrm-docs and run `composer install`
 
 ```
-$ sudo pip install mkdocs
-```
-***Note:*** *Ensure that mkdocs is installed as root so that it can be accessed from the src/publish.php script (typically invoked as https://docs.civicrm.org/publish.php)*
-
-3) clone this repository to somewhere like /var/www/civicrm-docs
-
-3) Run composer install
-
-```
+$ git clone /var/www/civicrm-docs
 $ cd /var/www/civicrm-docs
 $ composer install
 ```
@@ -74,8 +68,13 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 # To do
 
 * Clean up our various documentation sources, delete ones that are not in use (adding redirects to docs.c.o), (book.civicrm.org, http://civicrm-user-guide.readthedocs.org/en/latest/, etc.)
-* Update UI documentation links
-* A CiviCRM theme for documentatiom
+* Report if the git pull goes wrong
+* Update UI documentation linksar
+* add per book locking / queue for publishing
+* document how to add a webhook to your repo.
+* should doc infra interact with extension info.xml files?
+* A CiviCRM theme for documentation
+    * which includes the civicrm version
 * Book validation
     * missing images (`ack '\!\[.*\]\((.*?)( ".*)?\)' -h --nobreak --output='$1'` will give all images)
 * Future proof documentation structure
