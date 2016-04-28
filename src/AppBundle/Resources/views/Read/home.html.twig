@@ -12,7 +12,7 @@
         </h2>
         <p>{{ book.description }}</p>
         <ul>
-            {% for lang, language in book.langs %}
+            {% for lang, language in book.langs if language.stable is defined %}
                 <li>
                     {{ attribute(locales, lang) }}:
                     <strong>
