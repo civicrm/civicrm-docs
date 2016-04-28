@@ -72,6 +72,8 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 * Update UI documentation linksar
 * add per book locking / queue for publishing
 * document how to add a webhook to your repo.
+* create pdf and ePub versions of the document when publishing (maybe using pandoc)
+* find a nice userfriendly UI for people to edit the documentation (the github UI is OK but we can do better)
 * should doc infra interact with extension info.xml files?
 * A CiviCRM theme for documentation
     * which includes the civicrm version
