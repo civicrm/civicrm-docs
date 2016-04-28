@@ -7,9 +7,6 @@ langs:
         stable: 4.7
         history:
             - 4.6
-    ca
+    ca:
         repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
         latest: master
-        stable: 4.7
-        history:
-            - 4.6
