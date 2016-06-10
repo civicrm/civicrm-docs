@@ -4,6 +4,9 @@ parameters:
 #    parameter_name: value
 
 services:
+    book.loader:
+        class: AppBundle\BookLoader
+        arguments: ['%kernel.root_dir%/config/books']
     github.hook.processor:
         class: AppBundle\Utils\GitHubHookProcessor
         arguments: ['@publisher']
