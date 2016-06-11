@@ -59,13 +59,14 @@ class BookLoader
         foreach ($this->find() as $bookName => $book) {
             foreach ($book['langs'] as $lang => $langSpec) {
                 foreach ($this->getBranches($book, $lang) as $branch) {
+                    $key = "$bookName/$lang/$branch";
                     $row =  array(
                       'book' => $bookName,
                       'lang' => $lang,
                       'repo' => $langSpec['repo'],
                       'branch' => $branch,
                     );
-                    $rows[] = $row;
+                    $rows[$key] = $row;
                 }
             }
         }

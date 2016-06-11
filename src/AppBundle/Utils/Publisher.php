@@ -11,12 +11,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Publisher{
     
     public $bookConfigFile;
+
+    public $messages;
     
     public function __construct(RequestStack $requestStack, $logger, $fs, $configDir, $reposRoot, $publishRoot){
         $this->configDir = $configDir;
         $this->reposRoot = $reposRoot;
         $this->publishRoot = $publishRoot;
-        $this->baseUrl = $requestStack->getCurrentRequest()->getUriForPath('');
+        $this->baseUrl = $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getUriForPath('') : '/';
         //$this->baseUrl = $requestStack->getCurrentRequest()->$getBaseUrl();
         $this->logger = $logger;
         $this->fs = $fs;
@@ -112,7 +114,7 @@ class Publisher{
         $publishDir = $this->publishRoot."/{$book}/{$lang}/{$branch}";
         $buildCommand = "mkdocs build -c -f {$buildConfigFile} -d {$publishDir}";
         $this->addMessage('NOTICE', "Running '{$buildCommand}'");
-        
+
         $mkdocs = new Process($buildCommand, $bookRepo);
         $mkdocsErrors = false;
         $mkdocs->run();
@@ -164,9 +166,30 @@ class Publisher{
         $this->messages[] = array('label' => $label, 'content' => $content);
         $this->logger->addRecord($this->logger->toMonologLevel($label), $content);
     }
+
     public function getMessages()
     {
         return $this->messages;
     }
-    
+
+    public function clearMessages() {
+        $this->messages = array();
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * @param string $baseUrl
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
 }
