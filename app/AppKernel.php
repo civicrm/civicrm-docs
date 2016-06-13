@@ -47,4 +47,16 @@ class AppKernel extends Kernel
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
+
+    protected function initializeContainer()
+    {
+        parent::initializeContainer();
+        if ($this->getContainer()->hasParameter('mkdocs_path')) {
+            $_ENV['PATH'] = $this->getContainer()->getParameter('mkdocs_path')
+              . PATH_SEPARATOR . getenv('PATH');
+            putenv("PATH=" . $_ENV['PATH']);
+        }
+    }
+
+
 }
