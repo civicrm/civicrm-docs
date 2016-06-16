@@ -55,6 +55,8 @@ class PublishController extends Controller
         }
         $event = $request->headers->get('X-GitHub-Event');
         $payload = json_decode($body);
+
+        // FIXME: $books = $container->get('book.loader')->find();
         $finder = new Finder();
         $yaml = new Parser();
         foreach ($finder->in($this->get('kernel')->getRootDir().'/config/books')->name("*.yml") as $file) {

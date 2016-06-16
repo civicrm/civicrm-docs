@@ -18,5 +18,4 @@
 !/web/static/css
 
 #not sure how else to ensure that the following two files aren't deployed on prod
-/web/app_dev.php
 /web/config.php

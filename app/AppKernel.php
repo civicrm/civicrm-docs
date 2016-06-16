@@ -47,4 +47,24 @@ class AppKernel extends Kernel
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
+
+    protected function buildContainer()
+    {
+        $container = parent::buildContainer();
+        if ($container->hasParameter('mkdocs_path')) {
+            $_ENV['PATH'] = $container->getParameter('mkdocs_path')
+              . PATH_SEPARATOR . getenv('PATH');
+            putenv("PATH=" . $_ENV['PATH']);
+        }
+        if (!$container->hasParameter('publisher_repos_dir')) {
+            // This isn't really a good place to put it because it gets deleted
+            // whenever you clear the cache.
+            $container->setParameter('publisher_repos_dir',
+              $container->getParameter('kernel.cache_dir') . '/repos'
+            );
+        }
+        return $container;
+    }
+
+
 }
