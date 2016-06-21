@@ -38,6 +38,18 @@ The config file lists the **languages** that the book is available in, with a re
 * where to find the **latest** edits to the book
 * a history of book **editions** of the book (these will be publicly listed at https://docs.civicrm.org/).
 
+# Auto updating documentation
+
+Auto updates are configured via github webhooks.
+
+1. Go to https://github.com/civicrm/[repo-name]/settings/hooks/new
+2. Set the **Payload URL** to 'http://docs.civicrm.org/admin/listen'
+3. Set the **Content type** to 'application/json'
+3. Set the **Secret** to match the secret as defined in app/config/parameters.yml
+4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push'
+
+Note: automatic updates currently only happen after a pull request is merged.
+
 # Installation
 
 **Note**: the following steps are only useful and necessary for people looking after CiviCRM's documentation infrastructure.. If you are want to contribute to CiviCRM's documentation, there see [Contributing to documentation](#contributing-to-documentation) above.
