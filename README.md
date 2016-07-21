@@ -1,26 +1,28 @@
-## CiviCRM documentation infrastructure
+# CiviCRM documentation infrastructure
 
 A summary of CiviCRM's documentation infrastructure.
 
-## Accessing documentation
-
-CiviCRM documentation is currently found in many different sources. Our long term vision is to have it all published at https://docs.civicrm.org/.
-
-Documentation is organised into books, which are accessible at URLs as follows https://docs.civicrm.org/[name]/  By default, a URL in the above format will redirect to https://docs.civicrm.org/[name]/en/stable which shows the latest stable documentation in English.
-
-Books may also be available in different lanaguages and have different editions (e.g. 4.6, 4.7) (which typically map to the version of CiviCRM that they are documenting.
-
-The very latest documentation (which may be incomplete / unfinished) can be accessed at https://docs.civicrm.org/[name]/en/latest.
+Note: If you just want to read our documentation, please see https://civicrm.org/documentation for an up to date list of documentation for users, administrators and developers.
 
 ## Contributing to documentation
 
-All CiviCRM documentation should be written in Markdown, following [mkdocs](http://www.mkdocs.org) conventions, and stored in a git repository, such as https://github.com/civicrm/civicrm-user-guide.
+Our documentation is currently split between a readthedocs at https://docs.civicrm.org, and a wiki at https://wiki.civicrm.org. Our aim is to move all documentation to readthedocs. To aid with the migration, please avoid making substantial improvements to the wiki and focus your efforts on improving documentation in readthedocs.
 
-See https://civicrm.org/improve-documentation for how to get started contributing to our documentation. If you have any questions about how stuff works, or how to start contributing, please join the [documentation mailing list](http://lists.civicrm.org/lists/info/civicrm-docs) and email the list with your question. We'll be very glad to help you get going.
+Once we have moved the majority of our documentation from the wiki to readthedocs, we will switch the documentation home page from https://civicrm.org/documentation to https://docs.civicrm.org/ and retire the wiki for documentation.
 
-## Updating documentation
+The rest of this document focuses on readthedocs based documentation.
 
-Books are auto be updated when the corresponding branch is updated their repository. This is typically acheived by making edits and submitting a pull request. Any emails listed in the commits that are submitted as part of the pull request will receive an email with a summary of the update process.
+If you have any questions about how stuff works, or how to start contributing, please ask in the documentation chat room (https://chat.civicrm.org/civicrm/channels/documentation).
+
+### How documentation is organised
+
+CiviCRM documentation is organised into various *books*.  The source text for these books is stored in various git repositories, for example https://github.com/civicrm/civicrm-user-guide. Books can be translated into different languages. A seperate repository is used for each langauge.  Different versions of a book can be made if required by creating branches in a repository. See *Defining books* below for more information.
+
+All documentation is written in Markdown, and is structured following [mkdocs](http://www.mkdocs.org) conventions. 
+
+## Publishing updates to documentation
+
+Books are automatically published when the corresponding branch is updated their repository. This is typically acheived by making edits and submitting a pull request. Any emails listed in the commits that are submitted as part of the pull request will receive an email with a summary of the update process.
 
 If required, a book can be manually updated by calling a URL in the following format: https://docs.civicrm.org/admin/publish/{book}/{en}/{branch}.
 
@@ -28,11 +30,21 @@ If required, a book can be manually updated by calling a URL in the following fo
 * {lang} the language that you want to publish - as defined in the configuration file.
 * {branch} the name of the branch that you want to publish - needs to be a branch in the repository for that language.
 
+### Setting up automatic publishing of documentation
+
+Auto updates are configured via github webhooks.
+
+1. Go to https://github.com/civicrm/[repo-name]/settings/hooks/new
+2. Set the **Payload URL** to 'http://docs.civicrm.org/admin/listen'
+3. Set the **Content type** to 'application/json'
+3. Set the **Secret** to match the secret as defined in app/config/parameters.yml
+4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push' (since these are the only events that should trigger an update)
+
 ## Defining books
 
-Books are defined with a Yaml configuration file, stored in the app/config/books/ directory of this repository.
+Books are defined with a Yaml configuration file. To define a new book, create a yaml file and add it to the app/config/books/ directory of this repository.
 
-The config file lists the **languages** that the book is available in, with a repository for each language. For each language, the configuration file defines:
+The config file defines the name of the book, the repository that contains the source code, and the **languages** that the book is available in, with a repository for each language. For each language, the configuration file defines:
 
 * which **edition** of the book should be considered **stable**
 * where to find the **latest** edits to the book
@@ -60,16 +72,6 @@ langs:
         latest: master
         # stable: master (will not be published)
 ```
-
-# Auto updating documentation
-
-Auto updates are configured via github webhooks.
-
-1. Go to https://github.com/civicrm/[repo-name]/settings/hooks/new
-2. Set the **Payload URL** to 'http://docs.civicrm.org/admin/listen'
-3. Set the **Content type** to 'application/json'
-3. Set the **Secret** to match the secret as defined in app/config/parameters.yml
-4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push' (since these are the only events that should trigger an update)
 
 
 
@@ -103,6 +105,7 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 # To do
 
 * Move this todo list to another issue tracker (either this one or infra)
+* create a seperate repo for app/config/books where we can define books independently of this repo
 * create pdf and ePub versions of the document when publishing (maybe using pandoc)
 * find a nice userfriendly UI for people to edit the documentation (the github UI is OK but we can do better)
 * should doc infra interact with extension info.xml files?
