@@ -10,11 +10,12 @@ class GitHubHookProcessor{
     
     public $published = false;
     
-    public function __construct($publisher){
+    public function __construct($publisher, $bookLoader){
         $this->publisher = $publisher;
+        $this->books = $bookLoader->find();
     }
     
-    function process($event, $payload, $books){
+    function process($event, $payload){
         
         //The getDetailsFrom functions work out what branch and repo we are talking about, and the also work out what emails we should send.
         switch ($event) {
@@ -25,7 +26,7 @@ class GitHubHookProcessor{
             $this->getDetailsFromPush($payload);
             break;
         }
-        foreach ($books as $bookName => $bookConfig) {
+        foreach ($this->books as $bookName => $bookConfig) {
             foreach ($bookConfig['langs'] as $bookLang => $bookLangConfig) {
                 if($bookLangConfig['repo'] == $this->repo){
                     $this->book = $bookName;

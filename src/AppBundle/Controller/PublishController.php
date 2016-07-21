@@ -30,6 +30,8 @@ class PublishController extends Controller
     */
     public function PublishAction(Request $request, $lang, $book, $branch)
     {
+        
+        
         $publisher = $this->get('publisher');
         $publisher->publish($book, $lang, $branch);
         $content['messages'] = $publisher->getMessages();
@@ -56,14 +58,10 @@ class PublishController extends Controller
         $event = $request->headers->get('X-GitHub-Event');
         $payload = json_decode($body);
 
-        $finder = new Finder();
-        $yaml = new Parser();
-        foreach ($finder->in($this->get('kernel')->getRootDir().'/config/books')->name("*.yml") as $file) {
-            $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
-        }
-        
+        $books = $this->get('book.loader')->find();        
+
         $processor = $this->get('github.hook.processor');
-        $processor->process($event, $payload, $books);
+        $processor->process($event, $payload);
         if(!$processor->published){
             return new Response('Something went wrong during publishing.', 200); // @TODO Add more appropriate error code
         }

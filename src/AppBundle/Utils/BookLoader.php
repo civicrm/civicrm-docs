@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle;
+namespace AppBundle\Utils;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
