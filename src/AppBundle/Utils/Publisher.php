@@ -19,19 +19,19 @@ class Publisher{
         $this->reposRoot = $reposRoot;
         $this->publishRoot = $publishRoot;
         $this->baseUrl = $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getUriForPath('') : '/';
-        //$this->baseUrl = $requestStack->getCurrentRequest()->$getBaseUrl();
         $this->logger = $logger;
         $this->fs = $fs;
     }
     
     public function Publish($book, $lang, $branch)
     {
-        
+        $this->book = $book;
+        $this->lang = $lang;
+        $this->branch = $branch;
         //Attempt to load a configuration file for the book        
         $bookConfigFile = $this->configDir."/{$book}.yml";
         if (!$this->fs->exists($bookConfigFile)) {
             $this->addMessage('CRITICAL', "Could not find config file ({$bookConfigFile}) for book '{$book}'.", 'd');
-            
             return;
         }
         
@@ -44,7 +44,6 @@ class Publisher{
         //Check that the requested publishing language exists in the book config.
         if (!isset($bookConfig['langs'][$lang])) {
             $this->addMessage('CRITICAL', "Language '{$lang}' is not defined in config file ({$bookConfigFile}).");
-            
             return;
         }
         
@@ -57,7 +56,6 @@ class Publisher{
                 $this->addMessage('INFO', $gitClone->getErrorOutput());
             } else {
                 $this->addMessage('CRITICAL', $gitClone->getErrorOutput());
-                
                 return;
             }
         }else{
@@ -79,7 +77,6 @@ class Publisher{
                 $gitRemoteBranchExists->run();
                 if (!$gitRemoteBranchExists->isSuccessful()) {
                     $this->addMessage('CRITICAL', "'{$branch}' branch does not exist remotely or locally.");
-                    
                     return;
                 } else {
                     $this->addMessage('INFO', "'{$branch}' branch exists remotely.");
@@ -137,7 +134,7 @@ class Publisher{
             $this->addMessage('NOTICE', "Book published successfully at <a href='{$this->baseUrl}$bookUrl'>{$this->baseUrl}$bookUrl</a>.");
         }
         
-        //@TODO script to check and update symlinks so that latest and stable point to the right places
+        //check and update symlinks so that latest and stable point to the right places
         $symlinks = array('latest', 'stable');
         
         $langDir = realpath("$publishDir/..");
@@ -159,6 +156,7 @@ class Publisher{
                 $this->addMessage('WARNING', "'{$symlink}' is not defined in this documentation's config file.");
             }
         }
+        return 1;
     }
     
     protected function addMessage($label, $content)

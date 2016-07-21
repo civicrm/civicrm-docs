@@ -15,67 +15,73 @@ class GitHubHookProcessor{
     }
     
     function process($event, $payload, $books){
-        $this->books = $books;
+        
+        //The getDetailsFrom functions work out what branch and repo we are talking about, and the also work out what emails we should send.
         switch ($event) {
             case 'pull_request':
-            $this->pullRequest($payload);
+            $this->getDetailsFromPullRequest($payload);
             break;
             case 'push':
-            $this->push($payload);
+            $this->getDetailsFromPush($payload);
             break;
         }
-    }
-    
-    function PullRequest($payload){
-        if($payload->action != 'closed' OR !$payload->pull_request->merged){
-            return;
-        }
-        $branch = $payload->pull_request->base->ref;
-        $repo = $payload->repository->html_url;
-        foreach ($this->books as $bookName => $bookConfig) {
+        foreach ($books as $bookName => $bookConfig) {
             foreach ($bookConfig['langs'] as $bookLang => $bookLangConfig) {
-                if($bookLangConfig['repo'] == $repo){
-                    $book = $bookName;
-                    $lang = $bookLang;
+                if($bookLangConfig['repo'] == $this->repo){
+                    $this->book = $bookName;
+                    $this->lang = $bookLang;
                     $config = $bookLangConfig;
                     break 2;
                 }
             }
         }
-        
+
+        // If the book (in a specific language) wants additional people to be notified on each publication, they can be added in the book yml definition and will get added here
+        if(isset($config['notify'])){
+            foreach($config['notify'] as $recipient){
+                $this->recipients[]=$recipient;
+            }
+        }
+
+        $this->published = $this->publisher->publish($this->book, $this->lang, $this->branch);
+        $this->messages = $this->publisher->getMessages();
+        $this->subject = "Published '{$this->branch}' branch of '{$this->book}' in '{$this->lang}'";
+        $this->recipients = array_unique($this->recipients);
+    }
     
+    function getDetailsFromPullRequest($payload){
+    
+        //Only continue if this pull request is closed and merged
+        if($payload->action != 'closed' OR !$payload->pull_request->merged){
+            return;
+        }
+        
+        //Work out what book, language and branch to publish
+        $this->branch = $payload->pull_request->base->ref;
+        $this->repo = $payload->repository->html_url;
+        
+        //Get emails of people that should be notified
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $payload->pull_request->commits_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 'User-Agent: civicrm-docs')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch));
-        
-        //$commits = json_decode(file_get_contents('https://api.github.com/zen'));
-        
-        // add default recipients for this book
-        if(isset($config['notify'])){
-            $recipients  = $config['notify'];
+        $this->commits = json_decode(curl_exec($ch));
+
+        foreach($this->commits as $commit){
+            $this->recipients[]=$commit->commit->author->email;
+            $this->recipients[]=$commit->commit->committer->email;
         }
-        
-        foreach($response as $commit){
-            $recipients[]=$commit->commit->author->email;
-            $recipients[]=$commit->commit->committer->email;
-        }
-        $recipients = array_unique($recipients);
-        
-        $this->publisher->publish($book, $lang, $branch);
-        $this->details = array('book' => $book, 'lang' => $lang, 'branch' => $branch);
-        $this->published = true;
-        $this->subject = "Published '{$branch}' branch of '{$book}' in '{$lang}'";
-        $this->messages = array_merge($this->messages, $this->publisher->getMessages());
-        
+
     }
 
-    function Push($event){
-        //do something, then...
-        // $this->publisher->publish($book, $lang, $branch);
-        // array_merge($this->messages, $this->publisher->getMessages());
-
+    function getDetailsFromPush($payload){
+        $this->branch = preg_replace("/.*\/(.*)/", "$1", $payload->ref);
+        $this->repo = $payload->repository->html_url;        
+        
+        foreach($payload->commits as $commit){
+            $this->recipients[]=$commit->author->email;
+            $this->recipients[]=$commit->committer->email;
+        }
     }
     
     public function getMessages()
@@ -93,10 +99,6 @@ class GitHubHookProcessor{
         return $this->subject;
     }
 
-    public function getDetails()
-    {
-        return $this->details;
-    }
 
     
 }

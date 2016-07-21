@@ -56,7 +56,6 @@ class PublishController extends Controller
         $event = $request->headers->get('X-GitHub-Event');
         $payload = json_decode($body);
 
-        // FIXME: $books = $container->get('book.loader')->find();
         $finder = new Finder();
         $yaml = new Parser();
         foreach ($finder->in($this->get('kernel')->getRootDir().'/config/books')->name("*.yml") as $file) {
@@ -66,10 +65,9 @@ class PublishController extends Controller
         $processor = $this->get('github.hook.processor');
         $processor->process($event, $payload, $books);
         if(!$processor->published){
-            return new Response('OK', 200); // @TODO Add more appropriate error code
+            return new Response('Something went wrong during publishing.', 200); // @TODO Add more appropriate error code
         }
         $messages = $processor->getMessages();
-        $details = $processor->getDetails();
         $subject = $processor->getSubject();
         $recipients = $processor->getRecipients();
         
@@ -77,10 +75,19 @@ class PublishController extends Controller
         ->setSubject("[CiviCRM docs] $subject")
         ->setFrom('docs@civicrm.org')
         ->setTo($recipients)
-        ->setBody($this->renderView( 'Emails/notify.html.twig', array('details' => $details, 'messages' => $messages) ), 'text/html');
-        //->setBody('hello');
+        ->setBody(
+            $this->renderView(
+                'Emails/notify.html.twig', array(
+                    'branch' => $processor->publisher->branch,
+                    'book' => $processor->publisher->book,
+                    'lang' => $processor->publisher->lang,
+                    'messages' => $processor->publisher->getMessages()
+                )
+            ),
+            'text/html'
+        );
         $this->get('mailer')->send($mail);
-        return new Response('OK', 200);
+        return new Response($subject, 200);
         
 
     }
