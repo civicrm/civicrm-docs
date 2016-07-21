@@ -38,6 +38,29 @@ The config file lists the **languages** that the book is available in, with a re
 * where to find the **latest** edits to the book
 * a history of book **editions** of the book (these will be publicly listed at https://docs.civicrm.org/).
 
+If you would like to be notified by email whenever an update to a book is published, you can add your email to the notify list.
+
+**Example book definition:**
+```yml
+name: User guide
+description: Aimed at day to day users of CiviCRM.
+langs:
+    en:
+        repo: 'https://github.com/michaelmcandrew/civicrm-user-guide'
+        latest: master
+        stable: 4.7
+        history:
+            - 4.6
+            - 4.5
+            - 4.4
+        notify:
+            michael@civicrm.org # will be notified when documentation is published (as well as any emails mentioned in commits)
+    ca:
+        repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
+        latest: master
+        # stable: master (will not be published)
+```
+
 # Auto updating documentation
 
 Auto updates are configured via github webhooks.
@@ -46,9 +69,9 @@ Auto updates are configured via github webhooks.
 2. Set the **Payload URL** to 'http://docs.civicrm.org/admin/listen'
 3. Set the **Content type** to 'application/json'
 3. Set the **Secret** to match the secret as defined in app/config/parameters.yml
-4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push'
+4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push' (since these are the only events that should trigger an update)
 
-Note: automatic updates currently only happen after a pull request is merged.
+
 
 # Installation
 
@@ -79,18 +102,12 @@ $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
 
 # To do
 
-* Clean up our various documentation sources, delete ones that are not in use (adding redirects to docs.c.o), (book.civicrm.org, http://civicrm-user-guide.readthedocs.org/en/latest/, etc.)
-* Report if the git pull goes wrong
-* Update UI documentation linksar
-* add per book locking / queue for publishing
-* document how to add a webhook to your repo.
+* Move this todo list to another issue tracker (either this one or infra)
 * create pdf and ePub versions of the document when publishing (maybe using pandoc)
 * find a nice userfriendly UI for people to edit the documentation (the github UI is OK but we can do better)
 * should doc infra interact with extension info.xml files?
-* A CiviCRM theme for documentation
-    * which includes the civicrm version
-* Book validation
-    * missing images (`ack '\!\[.*\]\((.*?)( ".*)?\)' -h --nobreak --output='$1'` will give all images)
+* A CiviCRM theme for documentation which includes the civicrm version
+* Book validation as part of publishing ( missing images (`ack '\!\[.*\]\((.*?)( ".*)?\)' -h --nobreak --output='$1'` will give all images)
 * Future proof documentation structure
     * / - documentation home
     * /user/ - user documentation for core civicrm
