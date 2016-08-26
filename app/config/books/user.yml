@@ -10,3 +10,7 @@ langs:
     ca:
         repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
         latest: master
+    fr:
+        repo: 'https://github.com/civicrm-french/civicrm-user-guide'
+        latest: master
+        stable: 4.7
