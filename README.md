@@ -35,7 +35,7 @@ If required, a book can be manually updated by calling a URL in the following fo
 Auto updates are configured via github webhooks.
 
 1. Go to https://github.com/civicrm/[repo-name]/settings/hooks/new
-2. Set the **Payload URL** to 'http://docs.civicrm.org/admin/listen'
+2. Set the **Payload URL** to 'https://docs.civicrm.org/admin/listen'
 3. Set the **Content type** to 'application/json'
 3. Set the **Secret** to match the secret as defined in app/config/parameters.yml
 4. Set **Which events would you like to trigger this webhook?** to 'Let me select individual events' and select 'Pull request' and 'Push' (since these are the only events that should trigger an update)
