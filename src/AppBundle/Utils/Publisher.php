@@ -9,11 +9,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Publisher{
-    
+
     public $bookConfigFile;
 
     public $messages;
-    
+
     public function __construct(RequestStack $requestStack, $logger, $fs, $configDir, $reposRoot, $publishRoot){
         $this->configDir = $configDir;
         $this->reposRoot = $reposRoot;
@@ -22,31 +22,31 @@ class Publisher{
         $this->logger = $logger;
         $this->fs = $fs;
     }
-    
+
     public function Publish($book, $lang, $branch)
     {
         $this->book = $book;
         $this->lang = $lang;
         $this->branch = $branch;
-        //Attempt to load a configuration file for the book        
+        //Attempt to load a configuration file for the book
         $bookConfigFile = $this->configDir."/{$book}.yml";
         if (!$this->fs->exists($bookConfigFile)) {
             $this->addMessage('CRITICAL', "Could not find config file ({$bookConfigFile}) for book '{$book}'.", 'd');
             return;
         }
-        
+
         $this->addMessage('INFO', "Loaded config file ({$bookConfigFile}) for '{$book}' documentation.");
         $this->addMessage('NOTICE', "Publishing '{$book}' documentation...");
-        
+
         $yaml = new Parser();
         $bookConfig = $yaml->parse(file_get_contents("$bookConfigFile"));
-        
+
         //Check that the requested publishing language exists in the book config.
         if (!isset($bookConfig['langs'][$lang])) {
             $this->addMessage('CRITICAL', "Language '{$lang}' is not defined in config file ({$bookConfigFile}).");
             return;
         }
-        
+
         $bookRepo = "$this->reposRoot/{$book}/{$lang}";
         //See if the repo has already been cloned, and if not, clone it
         if (!$this->fs->exists($bookRepo.'/.git')) {
@@ -60,9 +60,9 @@ class Publisher{
             }
         }else{
             $this->addMessage('INFO', "Repository exists at '{$bookRepo}'.");
-            
+
         }
-        
+
         //If we are on the not on the correct branch, attempt to check it out (first locally, then remotely).
         $gitCheckCurrentBranch = new Process('git rev-parse --abbrev-ref HEAD', $bookRepo);
         $gitCheckCurrentBranch->run();
@@ -87,27 +87,32 @@ class Publisher{
             $gitCheckoutBranch->run();
         }
         $this->addMessage('INFO', "On '{$branch}' branch.");
-        
+
         $this->addMessage('INFO', "Running 'git pull' to update '{$branch}' branch.");
         $gitPull = new Process('git pull', $bookRepo);
         $gitPull->run();
-        
+
         //Override some settings from the yml before publishing
-        $mkdocsConfig = $yaml->parse(file_get_contents("{$bookRepo}/mkdocs.yml"));
-        
+        try{
+          $mkdocsConfig = $yaml->parse(file_get_contents("{$bookRepo}/mkdocs.yml"));
+        } catch (\Exception $e){
+          $this->addMessage('CRITICAL', "Error processing yaml: {$e->getMessage()}");
+          return;
+        }
+
         //@TODO create a CiviCRM theme so that we can uncomment this line
         //$mkdocsConfig['theme']="bootstrap";
         //$mkdocsConfig['theme_dir']=$k->getRootDir().'/mkdocsthemes/civicrm';
-        
+
         $mkDocsBuildFileDir = $this->reposRoot.'/buildfiles';
         if (!$this->fs->exists($mkDocsBuildFileDir)) {
             $this->fs->mkdir($mkDocsBuildFileDir);
         }
         $buildConfigFile = $mkDocsBuildFileDir."/{$book}.{$lang}.{$branch}.yml";
-        
+
         $dumper = new Dumper();
         file_put_contents($buildConfigFile, $dumper->dump($mkdocsConfig, 2));
-        
+
         $publishDir = $this->publishRoot."/{$book}/{$lang}/{$branch}";
         $buildCommand = "mkdocs build -c -f {$buildConfigFile} -d {$publishDir}";
         $this->addMessage('NOTICE', "Running '{$buildCommand}'");
@@ -118,7 +123,7 @@ class Publisher{
         //echo nl2br($mkdocs->getOutput()); (don't think anything gets outputed by this command)
         $mkdocsLogMessages = explode("\n", trim($mkdocs->getErrorOutput()));
         $this->addMessage('INFO', "mkdocs output: '{$mkdocs->getErrorOutput()}'");
-        
+
         // var_dump($mkdocsLogMessages);
         foreach ($mkdocsLogMessages as $mkdocsLogMessage) {
             //var_dump($mkdocsLogMessage);
@@ -126,20 +131,20 @@ class Publisher{
                 $mkdocsErrors = true;
             }
         }
-        
+
         $bookUrl = "/{$book}/{$lang}/{$branch}";
         if ($mkdocsErrors) {
             $this->addMessage('CRITICAL', "Book published with errors (see above for details) at <a href='{$this->baseUrl}$bookUrl'>{$this->baseUrl}$bookUrl</a>.");
         } else {
             $this->addMessage('NOTICE', "Book published successfully at <a href='{$this->baseUrl}$bookUrl'>{$this->baseUrl}$bookUrl</a>.");
         }
-        
+
         //check and update symlinks so that latest and stable point to the right places
         $symlinks = array('latest', 'stable');
-        
+
         $langDir = realpath("$publishDir/..");
-        
-        
+
+
         //@TODO break this out into its own function that can also be called at a certain URL.
         foreach($symlinks as $symlink){
             if ($this->fs->exists("$langDir/$symlink")) {
@@ -158,7 +163,7 @@ class Publisher{
         }
         return 1;
     }
-    
+
     protected function addMessage($label, $content)
     {
         $this->messages[] = array('label' => $label, 'content' => $content);
