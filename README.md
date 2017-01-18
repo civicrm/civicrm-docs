@@ -95,19 +95,3 @@ https://docs.civicrm.org/admin/publish/{book}/{lang}/{branch}
 
 6. Reload your nginx config and you should be up and running.
 
-## To do
-
-* Move this todo list to another issue tracker (either this one or infra)
-* create a seperate repo for app/config/books where we can define books independently of this repo
-* create pdf and ePub versions of the document when publishing (maybe using pandoc)
-* find a nice userfriendly UI for people to edit the documentation (the github UI is OK but we can do better)
-* should doc infra interact with extension info.xml files?
-* A CiviCRM theme for documentation which includes the civicrm version
-* Book validation as part of publishing ( missing images (`ack '\!\[.*\]\((.*?)( ".*)?\)' -h --nobreak --output='$1'` will give all images)
-* Future proof documentation structure
-    * / - documentation home
-    * /user/ - user documentation for core civicrm
-    * /extensions/[extenstion_name] - documentation for extensions (probably mostly user focused, though with possible developer and system administrator sections)
-    * /admin/ - system administrator documentation (installation, upgrades, email server configuration)
-    * /dev/ - developer documentation
-* Last but not least: migrate lots of documentation (e.g. our developer and sys administrator documentation)
