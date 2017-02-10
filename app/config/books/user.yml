@@ -14,3 +14,6 @@ langs:
         repo: 'https://github.com/civicrm-french/civicrm-user-guide'
         latest: master
         stable: 4.7
+    es:
+        repo: 'https://github.com/alejandro-ixiam/civicrm-user-guide-spanish'
+        latest: master
