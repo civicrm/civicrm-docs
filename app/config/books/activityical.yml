@@ -1,0 +1,7 @@
+name: Activity iCal 
+description: A CiviCRM extension to provide an iCalendar feed of assigned activities per contact
+langs:
+    en:
+        repo: 'https://github.com/twomice/com.joineryhq.activityical'
+        latest: master
+        stable: master
