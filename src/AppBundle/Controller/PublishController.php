@@ -44,17 +44,7 @@ class PublishController extends Controller
     */
     public function ListenAction(Request $request)
     {
-        $secret = $this->getParameter('secret');
-        if(!$request->headers->has('x-hub-signature')){
-            throw new \Exception("Missing 'X-Hub-Signature' header.");
-        }
-        $signature = $request->headers->get('X-Hub-Signature');
-        list($algo, $hash) = explode('=', $signature, 2);
         $body = $request->getContent();        
-        $payloadHash = hash_hmac($algo, $body, $secret);
-        if ($hash !== $payloadHash) {
-            throw new \Exception("Bad secret.");
-        }
         $event = $request->headers->get('X-GitHub-Event');
         $payload = json_decode($body);
 
