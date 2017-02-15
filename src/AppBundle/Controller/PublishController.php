@@ -61,7 +61,7 @@ class PublishController extends Controller
         
         $mail = \Swift_Message::newInstance()
         ->setSubject("[CiviCRM docs] $subject")
-        ->setFrom('docs@civicrm.org')
+        ->setFrom('no-reply@civicrm.org')
         ->setTo($recipients)
         ->setBody(
             $this->renderView(
