@@ -1,4 +1,5 @@
 name: Developer guide
+weight: 10
 description: For CiviCRM developers
 langs:
     en:
