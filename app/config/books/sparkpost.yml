@@ -1,0 +1,7 @@
+name: SparkPost
+description: Allows CiviCRM to send emails and process bounces through the SparkPost service.
+langs:
+    en:
+        repo: 'https://github.com/cividesk/com.cividesk.email.sparkpost'
+        latest: master
+        stable: master
