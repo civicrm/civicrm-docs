@@ -1,4 +1,5 @@
 name: User guide
+weight: -100
 description: Aimed at day to day users of CiviCRM.
 langs:
     en:

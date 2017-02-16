@@ -1,0 +1,8 @@
+name: Chained SMS
+description: Enables you to carry out automated conversations via SMS.
+type: extension
+langs:
+    en:
+        repo: https://github.com/3sd/io.3sd.chainedsms/
+        latest: master
+        stable: master

@@ -27,6 +27,31 @@ class BookLoader
     }
 
     /**
+     * Compares 2 books, side by side, for the purpose of sorting an array of
+     * books with uasort()
+     * @param array $bookA
+     * @param array $bookB
+     * @return int
+     */
+    private function compareBooksBySortOrder($bookA, $bookB) {
+        $aWeight = isset($bookA['weight']) ? $bookA['weight'] : 0;
+        $bWeight = isset($bookB['weight']) ? $bookB['weight'] : 0;
+        if ( $aWeight == $bWeight ) {
+          return strnatcmp($bookA['name'], $bookB['name']);
+        }
+        return $aWeight - $bWeight;
+    }
+
+    /**
+     * Modifies the internal book cache by sorting the array of books correctly
+     */
+    private function cacheSort() {
+      if( isset($this->cache) ) {
+        uasort($this->cache, [$this, 'compareBooksBySortOrder']);
+      }
+    }
+
+    /**
      * @return array
      */
     public function find()
@@ -40,6 +65,7 @@ class BookLoader
                 $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
             }
             $this->cache = $books;
+            $this->cacheSort();
         }
         return $this->cache;
     }
