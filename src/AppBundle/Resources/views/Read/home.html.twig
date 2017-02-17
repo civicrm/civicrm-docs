@@ -4,29 +4,28 @@
 
 {% block body %}
 
-    <h1>CiviCRM Documentation</h1>
+<h1>CiviCRM Documentation</h1>
 
-    {% for url, book in books %}
-        <h2>
-            <a href="/{{url}}">{{ book.name }}</a>
-        </h2>
-        <p>{{ book.description }}</p>
-        <ul>
-            {% for lang, language in book.langs if language.stable is defined %}
-                <li>
-                    {{ attribute(locales, lang) }}:
-                    <strong>
-                        <a href="/{{url}}/{{ lang }}/stable">Current edition</a>
-                    </strong>. Other editions:
-                </strong>
-                {% if language.history is defined %}
-                    {% for version in language.history %}
-                        <a href="/{{url}}/{{ lang }}/{{ version }}">{{ version }}</a>,
-                    {% endfor %}
-                {% endif %}
-                <a href="/{{url}}/{{ lang }}/latest">latest</a>.</li>
+{% for url, book in books %}
+  <h2><a href="/{{url}}">{{ book.name }}</a></h2>
+  <p>{{ book.description }}</p>
+  <ul>
+  {% for lang, language in book.langs if language.stable is defined %}
+
+    <li>
+      {{ attribute(locales, lang) }}:
+      <strong><a href="/{{url}}/{{lang}}/stable">Current edition</a></strong>.
+      Other editions:
+      {% if language.history is defined %}
+        {% for version in language.history %}
+            <a href="/{{url}}/{{lang}}/{{version}}">{{version}}</a>,
         {% endfor %}
-    </ul>
+      {% endif %}
+      <a href="/{{url}}/{{lang}}/latest">latest</a>.
+    </li>
+    
+  {% endfor %}
+  </ul>
 {% endfor %}
 
 {% endblock %}
