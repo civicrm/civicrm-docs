@@ -9,23 +9,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DocsListCommand extends ContainerAwareCommand
-{
-    protected function configure()
-    {
-        $this
-          ->setName('docs:list')
-          ->setDescription('List available books');
-    }
+class DocsListCommand extends ContainerAwareCommand {
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        /** @var \AppBundle\BookLoader $books */
-        $books = $this->getContainer()->get('book.loader');
-        $table = new Table($output);
-        $table->setHeaders(array('book', 'lang', 'repo', 'branch'));
-        $table->addRows($books->findAsList());
-        $table->render();
-    }
+  protected function configure() {
+    $this->setName('docs:list')->setDescription('List available books');
+  }
+
+  protected function execute(InputInterface $input, OutputInterface $output) {
+    /** @var \AppBundle\BookLoader $books */
+    $books = $this->getContainer()->get('book.loader');
+    $table = new Table($output);
+    $table->setHeaders(array('book', 'lang', 'repo', 'branch'));
+    $table->addRows($books->findAsList());
+    $table->render();
+  }
 
 }
