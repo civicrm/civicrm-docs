@@ -1,0 +1,8 @@
+{% for version_key, version_branch in language.distinct_versions %}
+<ul class="versions">
+  <li class="version">
+    {% set url = "/" ~ short_name ~ "/" ~ lang_code ~ "/" ~ version_key %}
+    <a href="{{ url }}">{{ version_key }} version</a>
+  </li>
+</ul>
+{% endfor %}

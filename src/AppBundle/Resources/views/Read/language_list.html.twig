@@ -1,0 +1,23 @@
+<ul class="languages">
+{% for lang_code, language in book.stable_langs %}
+  <li class="language {{ lang_code }}">
+    {% set language_name = attribute(locales, lang_code) %}
+    {% spaceless %}
+      <span class="language-name">
+        {% if language.is_multi_version %}
+          {{- language_name -}}
+          <span class="separator">:</span>
+        {% else %}
+          {% set url = "/" ~ short_name ~ "/" ~ lang_code ~ "/latest" %}
+          <a href="{{ url }}">
+            {{- language_name -}}
+          </a>
+        {% endif %}
+      </span>
+    {% endspaceless %}
+    {% if language.is_multi_version %}
+      {% include 'AppBundle:Read:version_list.html.twig' %}
+    {% endif %}
+  </li>
+{% endfor %}
+</ul>

@@ -23,30 +23,6 @@
 
 <h2>Books</h2>
 
-<ul class="books">
-{% for url, book in books %}
-  <li class="book">
-    <span class="name"><a href="/{{url}}">{{ book.name }}</a></span> &ndash;
-    <span class="description">{{ book.description }}</span>
-    <ul>
-    {% for lang, language in book.langs if language.stable is defined %}
-
-      <li class="lang {{lang}}">
-        {{ attribute(locales, lang) }}:
-        <a href="/{{url}}/{{lang}}/stable">Current edition</a>.
-        Other editions:
-        {% if language.history is defined %}
-          {% for version in language.history %}
-              <a href="/{{url}}/{{lang}}/{{version}}">{{version}}</a>,
-          {% endfor %}
-        {% endif %}
-        <a href="/{{url}}/{{lang}}/latest">latest</a>.
-      </li>
-
-    {% endfor %}
-    </ul>
-  </li>
-{% endfor %}
-</ul>
+{% include 'AppBundle:Read:book_list.html.twig' %}
 
 {% endblock %}

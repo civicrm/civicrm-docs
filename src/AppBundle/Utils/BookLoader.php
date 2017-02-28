@@ -50,9 +50,102 @@ class BookLoader
         uasort($this->cache, [$this, 'compareBooksBySortOrder']);
       }
     }
+    
+    /**
+     * Modifies the book passed in by inserting new elements into the book's 
+     * array structure that provide additional information about the book, such
+     * as the number of languages, etc.
+     * 
+     * @param array book
+     */
+    private function addStatsToBook(&$book) {
+      $this->addToBookDistinctVersions($book);
+      $this->addToBookIsMultiVersion($book);
+      $this->addToBookIsMultiLang($book);
+      $this->addToBookStableLangs($book);
+      $this->addtoBookIsMultiStableLang($book);
+    }
 
     /**
-     * @return array
+     * Adds 'distinct_versions' element to a book which lists all the distinct
+     * versions. If 'stable' and 'latest' both point to 'master', then it will
+     * list only 'stable' in the distinct versions.
+     * 
+     * @param array book
+     * 
+     */
+    private function addToBookDistinctVersions(&$book) {
+      foreach ($book['langs'] as &$lang) {
+        $lang['distinct_versions']['latest'] = $lang['latest'];
+        if (isset($lang['stable']) && $lang['stable'] != $lang['latest']) {
+          $lang['distinct_versions']['stable'] = $lang['stable'];
+        }
+        if (isset($lang['history'])) {
+          foreach ($lang['history'] as $version) {
+            $key = (string) $version;
+            $lang['distinct_versions'][$key] = $version;
+          }
+        }
+      }
+    }
+    
+    /**
+     * Adds 'is_multi_version' to all language elements of a book to say 
+     * whether the language has multiple versions that are different from one 
+     * another
+     * 
+     * @param array book
+     */
+    private function addToBookIsMultiVersion(&$book) {
+      foreach ($book['langs'] as &$lang) {
+        $lang['is_multi_version'] = 
+                count($lang['distinct_versions']) > 1 ? 1 : 0;
+      }
+    }
+
+    /**
+     * Adds 'is_multi_lang' element to a book to say whether the book has 
+     * multiple languages.
+     * 
+     * @param array book
+     */
+    private function addToBookIsMultiLang(&$book) {
+      $book['is_multi_lang'] = count($book['langs']) > 1 ? 1 : 0;
+    }
+    
+    /**
+     * Adds 'stable_langs' element to a book -- an array of all the languages
+     * which have a stable version defined.
+     * 
+     * @param array book
+     */
+    private function addToBookStableLangs(&$book) {
+      foreach ($book['langs'] as $lang => $language) {
+        if(isset($language['stable'])) {
+          $book['stable_langs'][$lang] = $language;
+        }
+      }
+    }
+    
+    /**
+     * Adds 'is_multi_stable_lang' element to a book to say whether the book has
+     * multiple languages which have stable versions defined.
+     * 
+     * @param array book
+     */
+    private function addToBookIsMultiStableLang(&$book) {
+      if(!isset($book['stable_langs'])) {
+        $this->addToBookStableLangs($book);
+      }
+      $book['is_multi_stable_lang'] = count($book['stable_langs']) > 1 ? 1 : 0;
+    }
+    
+    /**
+     * Find all the books
+     * Fills the private $cache variable with an array of books, as they are 
+     * defined in the yaml config files
+     * 
+     * @return array all books
      */
     public function find()
     {
@@ -63,6 +156,9 @@ class BookLoader
             foreach ($finder->in($this->configDir)
                        ->name("*.yml") as $file) {
                 $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
+            }
+            foreach ($books as &$book) {
+              $this->addStatsToBook($book);
             }
             $this->cache = $books;
             $this->cacheSort();

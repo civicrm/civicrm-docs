@@ -44,17 +44,12 @@ class ReadController extends Controller
         $finder = new Finder();
         $yaml = new Parser();
         
-        $books = $this->get('book.loader')->find();        
+        $books = $this->get('book.loader')->find();
 
-        foreach ($books as $key => $book) {
-                foreach($book['langs'] as $lang){
-                    if(isset($lang['stable'])){
-                        $stableBooks[$key] = $book;
-                    break;
-                }
-            }
-        }
-        return $this->render('AppBundle:Read:home.html.twig', array('books'=>$stableBooks, 'locales' => $locales['Names']));
+        return $this->render('AppBundle:Read:home.html.twig', array(
+            'books'   => $books, 
+            'locales' => $locales['Names'])
+                );
     }
 
     // $k = $this->get('kernel');
