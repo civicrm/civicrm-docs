@@ -1,21 +1,20 @@
 <ul class="languages">
-{% for lang_code, language in book.stable_langs %}
-  <li class="language {{ lang_code }}">
-    {% set language_name = attribute(locales, lang_code) %}
+{% for language in book.languages %}
+  <li class="language {{ language.code }}">
     {% spaceless %}
       <span class="language-name">
-        {% if language.is_multi_version %}
-          {{- language_name -}}
+        {% if language.isMultiVersion %}
+          {{- language.descriptiveName -}}
           <span class="separator">:</span>
         {% else %}
-          {% set url = "/" ~ short_name ~ "/" ~ lang_code ~ "/latest" %}
+          {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/latest" %}
           <a href="{{ url }}">
-            {{- language_name -}}
+            {{- language.descriptiveName -}}
           </a>
         {% endif %}
       </span>
     {% endspaceless %}
-    {% if language.is_multi_version %}
+    {% if language.isMultiVersion %}
       {% include 'AppBundle:Read:version_list.html.twig' %}
     {% endif %}
   </li>

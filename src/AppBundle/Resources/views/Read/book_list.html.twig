@@ -1,26 +1,22 @@
 <ul class="books">
-{% for short_name, book in books %}
+{% for book in library.books %}
   <li class="book">
     <span class="name">
-      {% if book.is_multi_stable_lang or 
-            book.stable_langs|first.is_multi_version %}
+      {% if book.isMultiLanguage or book.languages|first.isMultiVersion %}
         {{ book.name }}
       {% else %}
-        {% set lang = book.langs|keys|first %}
-        {% set url = "/" ~ short_name ~ "/" ~ lang ~ "/latest" %}
+        {% set language = book.languages|first %}
+        {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/latest" %}
         <a href="{{ url }}">{{ book.name }}</a>
       {% endif %}
     </span>
     <span class="separator">&ndash;</span>
     <span class="description">{{ book.description }}</span>
-    {% if book.is_multi_stable_lang %}
+    {% if book.isMultiLanguage %}
       {% include 'AppBundle:Read:language_list.html.twig' %}
-    {% elseif book.stable_langs|first.is_multi_version %}
+    {% elseif book.languages|first.isMultiVersion %}
       {% include 'AppBundle:Read:version_list.html.twig' 
-         with {
-           language: book.stable_langs|first,
-           lang_code: book.stable_langs|keys|first
-         }  %}
+         with {language: book.languages|first}  %}
     {% endif %}
   </li>
 {% endfor %}

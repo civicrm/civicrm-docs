@@ -32,23 +32,23 @@ class BookLoader {
    * @param array $bookB
    * @return int
    */
-  private function compareBooksBySortOrder($bookA, $bookB) {
-    $aWeight = isset($bookA['weight']) ? $bookA['weight'] : 0;
-    $bWeight = isset($bookB['weight']) ? $bookB['weight'] : 0;
-    if ($aWeight == $bWeight) {
-      return strnatcmp($bookA['name'], $bookB['name']);
-    }
-    return $aWeight - $bWeight;
-  }
+//  private function compareBooksBySortOrder($bookA, $bookB) {
+//    $aWeight = isset($bookA['weight']) ? $bookA['weight'] : 0;
+//    $bWeight = isset($bookB['weight']) ? $bookB['weight'] : 0;
+//    if ($aWeight == $bWeight) {
+//      return strnatcmp($bookA['name'], $bookB['name']);
+//    }
+//    return $aWeight - $bWeight;
+//  }
 
   /**
    * Modifies the internal book cache by sorting the array of books correctly
    */
-  private function cacheSort() {
-    if (isset($this->cache)) {
-      uasort($this->cache, [$this, 'compareBooksBySortOrder']);
-    }
-  }
+//  private function cacheSort() {
+//    if (isset($this->cache)) {
+//      uasort($this->cache, [$this, 'compareBooksBySortOrder']);
+//    }
+//  }
 
   /**
    * Modifies the book passed in by inserting new elements into the book's
@@ -57,13 +57,13 @@ class BookLoader {
    *
    * @param array &$book an array of properties which represent a book
    */
-  private function addStatsToBook(&$book) {
-    $this->addToBookDistinctVersions($book);
-    $this->addToBookIsMultiVersion($book);
-    $this->addToBookIsMultiLang($book);
-    $this->addToBookStableLangs($book);
-    $this->addtoBookIsMultiStableLang($book);
-  }
+//  private function addStatsToBook(&$book) {
+//    $this->addToBookDistinctVersions($book);
+//    $this->addToBookIsMultiVersion($book);
+//    $this->addToBookIsMultiLang($book);
+//    $this->addToBookStableLangs($book);
+//    $this->addtoBookIsMultiStableLang($book);
+//  }
 
   /**
    * Adds 'distinct_versions' element to a book which lists all the distinct
@@ -73,20 +73,20 @@ class BookLoader {
    * @param array &$book an array of properties which represent a book
    *
    */
-  private function addToBookDistinctVersions(&$book) {
-    foreach ($book['langs'] as &$lang) {
-      $lang['distinct_versions']['latest'] = $lang['latest'];
-      if (isset($lang['stable']) && $lang['stable'] != $lang['latest']) {
-        $lang['distinct_versions']['stable'] = $lang['stable'];
-      }
-      if (isset($lang['history'])) {
-        foreach ($lang['history'] as $version) {
-          $key = (string) $version;
-          $lang['distinct_versions'][$key] = $version;
-        }
-      }
-    }
-  }
+//  private function addToBookDistinctVersions(&$book) {
+//    foreach ($book['langs'] as &$lang) {
+//      $lang['distinct_versions']['latest'] = $lang['latest'];
+//      if (isset($lang['stable']) && $lang['stable'] != $lang['latest']) {
+//        $lang['distinct_versions']['stable'] = $lang['stable'];
+//      }
+//      if (isset($lang['history'])) {
+//        foreach ($lang['history'] as $version) {
+//          $key = (string) $version;
+//          $lang['distinct_versions'][$key] = $version;
+//        }
+//      }
+//    }
+//  }
 
   /**
    * Adds 'is_multi_version' to all language elements of a book to say
@@ -95,11 +95,11 @@ class BookLoader {
    *
    * @param array &$book an array of properties which represent a book
    */
-  private function addToBookIsMultiVersion(&$book) {
-    foreach ($book['langs'] as &$lang) {
-      $lang['is_multi_version'] = count($lang['distinct_versions']) > 1 ? 1 : 0;
-    }
-  }
+//  private function addToBookIsMultiVersion(&$book) {
+//    foreach ($book['langs'] as &$lang) {
+//      $lang['is_multi_version'] = count($lang['distinct_versions']) > 1 ? 1 : 0;
+//    }
+//  }
 
   /**
    * Adds 'is_multi_lang' element to a book to say whether the book has
@@ -107,9 +107,9 @@ class BookLoader {
    *
    * @param array &$book an array of properties which represent a book
    */
-  private function addToBookIsMultiLang(&$book) {
-    $book['is_multi_lang'] = count($book['langs']) > 1 ? 1 : 0;
-  }
+//  private function addToBookIsMultiLang(&$book) {
+//    $book['is_multi_lang'] = count($book['langs']) > 1 ? 1 : 0;
+//  }
 
   /**
    * Adds 'stable_langs' element to a book -- an array of all the languages
@@ -117,13 +117,13 @@ class BookLoader {
    *
    * @param array &$book an array of properties which represent a book
    */
-  private function addToBookStableLangs(&$book) {
-    foreach ($book['langs'] as $lang => $language) {
-      if (isset($language['stable'])) {
-        $book['stable_langs'][$lang] = $language;
-      }
-    }
-  }
+//  private function addToBookStableLangs(&$book) {
+//    foreach ($book['langs'] as $lang => $language) {
+//      if (isset($language['stable'])) {
+//        $book['stable_langs'][$lang] = $language;
+//      }
+//    }
+//  }
 
   /**
    * Adds 'is_multi_stable_lang' element to a book to say whether the book has
@@ -131,12 +131,12 @@ class BookLoader {
    *
    * @param array &$book an array of properties which represent a book
    */
-  private function addToBookIsMultiStableLang(&$book) {
-    if (!isset($book['stable_langs'])) {
-      $this->addToBookStableLangs($book);
-    }
-    $book['is_multi_stable_lang'] = count($book['stable_langs']) > 1 ? 1 : 0;
-  }
+//  private function addToBookIsMultiStableLang(&$book) {
+//    if (!isset($book['stable_langs'])) {
+//      $this->addToBookStableLangs($book);
+//    }
+//    $book['is_multi_stable_lang'] = count($book['stable_langs']) > 1 ? 1 : 0;
+//  }
 
   /**
    * Find all the books
@@ -145,23 +145,23 @@ class BookLoader {
    *
    * @return array all books
    */
-  public function find() {
-    if ($this->cache === NULL) {
-      $finder = new Finder();
-      $yaml = new Parser();
-      $books = array();
-      foreach ($finder->in($this->configDir)
-          ->name("*.yml") as $file) {
-        $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
-      }
-      foreach ($books as &$book) {
-        $this->addStatsToBook($book);
-      }
-      $this->cache = $books;
-      $this->cacheSort();
-    }
-    return $this->cache;
-  }
+//  public function find() {
+//    if ($this->cache === NULL) {
+//      $finder = new Finder();
+//      $yaml = new Parser();
+//      $books = array();
+//      foreach ($finder->in($this->configDir)
+//          ->name("*.yml") as $file) {
+//        $books[basename($file, '.yml')] = $yaml->parse(file_get_contents("$file"));
+//      }
+//      foreach ($books as &$book) {
+//        $this->addStatsToBook($book);
+//      }
+//      $this->cache = $books;
+//      $this->cacheSort();
+//    }
+//    return $this->cache;
+//  }
 
   /**
    * Get the list of books as a flat list of (book,lang,repo,branch) pairs.

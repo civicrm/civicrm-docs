@@ -6,9 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Parser;
-
 
 /**
  * @TODO Make the errors that will occur if the slugs don't pass the regexp
@@ -50,8 +47,7 @@ class PublishController extends Controller {
     $processor = $this->get('github.hook.processor');
     $processor->process($event, $payload);
     if (!$processor->published) {
-      return new Response('Something went wrong during publishing.', 200);
-      // @TODO Add more appropriate error code
+      return new Response('Something went wrong during publishing.', 200); // @TODO Add more appropriate error code
     }
     $messages = $processor->getMessages();
     $subject = $processor->getSubject();
@@ -62,15 +58,14 @@ class PublishController extends Controller {
         ->setFrom('no-reply@civicrm.org')
         ->setTo($recipients)
         ->setBody(
-          $this->renderView(
-              'Emails/notify.html.twig',
-              array(
-                'branch'   => $processor->publisher->branch,
-                'book'     => $processor->publisher->book,
-                'lang'     => $processor->publisher->lang,
-                'messages' => $processor->publisher->getMessages(),
-              )
-          ), 'text/html'
+            $this->renderView('Emails/notify.html.twig',
+                array(
+                  'branch' => $processor->publisher->branch,
+                  'book' => $processor->publisher->book,
+                  'lang' => $processor->publisher->lang,
+                  'messages' => $processor->publisher->getMessages(),
+                )
+            ), 'text/html'
         );
     $this->get('mailer')->send($mail);
     return new Response($subject, 200);

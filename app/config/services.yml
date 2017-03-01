@@ -4,6 +4,9 @@ parameters:
 #    parameter_name: value
 
 services:
+    library:
+        class: AppBundle\Model\Library
+        arguments: ['%kernel.root_dir%/config/books']
     book.loader:
         class: AppBundle\Utils\BookLoader
         arguments: ['%kernel.root_dir%/config/books']
