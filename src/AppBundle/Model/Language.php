@@ -2,15 +2,10 @@
 
 namespace AppBundle\Model;
 
-class Language {
-  
-  /**
-   * @var string $LOCALES_DIR the path to the symfony directory containing 
-   *                          locale information in the form of json files. 
-   *                          TODO: is there a better way to determine this 
-   *                          path?
-   */
-  const LOCALES_DIR = '../vendor/symfony/symfony/src/Symfony/Component/Intl/Resources/data/locales';
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use AppBundle\Utils\LocaleTools;
+
+class Language extends ContainerAwareCommand {
 
   /**
    *
@@ -32,7 +27,10 @@ class Language {
   public $code;
 
   /**
-   *
+   * Initialize a language with values in it. This function is separate from the
+   * constructor function only so that we have have a "language" service which
+   * gets the $localesDir passed in when the service is retrieved. 
+   * 
    * @param string $code two letter language code
    * @param array  $yaml language data from a book's yaml file
    */
@@ -54,28 +52,12 @@ class Language {
   }
   
   /**
-   * Returns the name of a language, in another language. For example, if 
-   * $languageCode = 'en' and $localeCode = 'es' this function would answer the
-   * question "what word do Spanish-speaking people use to refer to English?"
-   * 
-   * @param type $languageCode The language we're asking about
-   * @param type $localeCode   The language in which we want our answer
-   * 
-   * @return string 
-   */
-  private static function getLaguageNameInLocale($languageCode, $localeCode) {
-    $localesFiles = self::LOCALES_DIR . "/$localeCode.json"; 
-    $locales = json_decode(file_get_contents($localesFiles), TRUE);
-    return $locales['Names'][$languageCode];
-  }
-  
-  /**
    * The name of the language, in English (e.g. "Spanish")
    * 
    * @return string
    */
   public function englishName() {
-    return $this::getLaguageNameInLocale($this->code, 'en');
+    return LocaleTools::getLaguageNameInLocale($this->code, 'en');
   }
 
   /**
@@ -84,7 +66,7 @@ class Language {
    * @return string
    */  
   public function nativeName() {
-    return $this::getLaguageNameInLocale($this->code, $this->code);
+    return LocaleTools::getLaguageNameInLocale($this->code, $this->code);
   }
   
   public function descriptiveName() {

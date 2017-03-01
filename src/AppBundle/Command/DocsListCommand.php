@@ -16,11 +16,11 @@ class DocsListCommand extends ContainerAwareCommand {
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    /** @var \AppBundle\BookLoader $books */
-    $books = $this->getContainer()->get('book.loader');
+    /** @var \AppBundle\Model\Library $library */
+    $library = $this->getContainer()->get('library');
     $table = new Table($output);
-    $table->setHeaders(array('book', 'lang', 'repo', 'branch'));
-    $table->addRows($books->findAsList());
+    $table->setHeaders(array('book', 'language', 'repo', 'branch'));
+    $table->addRows($library->booksAsTable());
     $table->render();
   }
 
