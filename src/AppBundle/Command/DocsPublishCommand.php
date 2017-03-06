@@ -13,46 +13,23 @@ class DocsPublishCommand extends ContainerAwareCommand {
   protected function configure() {
     $this
       ->setName('docs:publish')
-      ->setDescription('...')
+      ->setDescription('Publish one or more books')
       ->addArgument(
-          'paths',
+          'identifiers',
           InputArgument::IS_ARRAY,
-          'One or more book expressions ("book/lang/branch"). (Default: all)');
+          'One or more book identifiers (e.g. "user/en/master"). Partial '
+          . 'identifiers are acceptable (e.g. "user/en" will publish all '
+          . 'English versions of the User Guide. If no identifiers are '
+          . 'specified, then all versions of all languages in all books will '
+          . 'be published.');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    /** @var \AppBundle\BookLoader $books */
-    $books = $this->getContainer()->get('book.loader');
-
     /** @var \AppBundle\Utils\Publisher $publisher */
     $publisher = $this->getContainer()->get('publisher');
-
-    $rows = $books->findAsList();
-
-    if (empty($rows)) {
-      $output->writeln("<error>No books found</error>");
-    }
-
-    if ($input->getArgument('paths')) {
-      $rowKeys = $input->getArgument('paths');
-    }
-    else {
-      $rowKeys = array_keys($rows);
-    }
-
-    foreach ($rowKeys as $rowKey) {
-      $row = $rows[$rowKey];
-      $output->writeln("");
-      $output->writeln(sprintf(
-          "Publish [%s/%s/%s] (from %s)",
-          $row['book'],
-          $row['lang'],
-          $row['branch'],
-          $row['repo'])
-          );
-
-      $publisher->publish($row['book'], $row['lang'], $row['branch']);
-
+    $identifiers = $input->getArgument('identifiers');
+    foreach ($identifiers as $identifier) {
+      $publisher->publish($identifier);
       foreach ($publisher->getMessages() as $message) {
         $output->writeln($message['label'] . ': ' . $message['content']);
       }
