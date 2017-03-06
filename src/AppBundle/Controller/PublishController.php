@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Model\Library;
 
 /**
  * @TODO Make the errors that will occur if the slugs don't pass the regexp
@@ -14,24 +15,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class PublishController extends Controller {
 
   /**
-   * @Route("/admin/publish")
+   * @Route("/admin/publish{identifier}" , requirements={"identifier": ".*"})
    */
-  public function PublishInstructionsAction() {
-    return $this->render('AppBundle:Publish:publish.html.twig');
-  }
-
-  /**
-   * @Route("/admin/publish/{book}/{lang}/{branch}", requirements={
-   *   "lang":"[[:alpha:]]{2}",
-   *   "book":"[[:alpha:]\-]+",
-   *   "branch":"[[:alnum:]\-\.]+",
-   * })
-   */
-  public function PublishAction(Request $request, $lang, $book, $branch) {
+  public function PublishAction(Request $request, $identifier) {
     /** @var \AppBundle\Utils\Publisher $publisher */
     $publisher = $this->get('publisher');
-    $publisher->publish($book, $lang, $branch);
-    $content['messages'] = $publisher->messages;
+    $bookSlug = Library::parseIdentifier($identifier)['bookSlug'];
+    if ($bookSlug) {
+      $publisher->publish($identifier);
+    }
+    else {
+      $publisher->addMessage('INFO', "Publish action called without a book "
+          . "specified, thus attempting to publish all books.");
+      $publisher->addMessage('CRITICAL', "Publishing all books it not "
+          . "supported through the web interface because it has the potential "
+          . "to really slow down the server. If you want to publish all books "
+          . "you can run 'docs:publish' from the command line interface.");
+    }
+    $content['messages'] = $publisher->getMessages();
     return $this->render('AppBundle:Publish:publish.html.twig', $content);
   }
 

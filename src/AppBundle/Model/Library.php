@@ -99,4 +99,24 @@ class Library {
     return $chosen;
   }
 
+  /**
+   * Parses an identifier into components we can use to identify a book
+   *
+   * @param string $identifier (e.g. "user/en/master", "user/en", "user", "")
+   *
+   * @return array The following keys/values are present:
+   *               "bookSlug" => (string/NULL) slug used to identify a book
+   *               "languageCode" => (string/NULL) two letter language code
+   *               "versionDescriptor" => (string/NULL)
+   */
+  public static function parseIdentifier($identifier) {
+    $identifier = preg_replace("#/+#", "/", trim($identifier)) ;
+    $identifier = trim($identifier, "/");
+    $parts = explode("/", $identifier);
+    $result['bookSlug']          =      ($parts[0]) ? $parts[0] : NULL;
+    $result['languageCode']      = isset($parts[1]) ? $parts[1] : NULL;
+    $result['versionDescriptor'] = isset($parts[2]) ? $parts[2] : NULL;
+    return $result;
+  }
+
 }

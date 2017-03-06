@@ -20,7 +20,7 @@ class StringTools {
    */
   public static function urlSafe($s) {
     $clean = iconv('UTF-8', 'ASCII//TRANSLIT', strtolower(trim($s)));
-    $clean = preg_replace('#[^a-zA-Z0-9/_|+ -]#', '', $clean);
+    $clean = preg_replace('#[^.a-zA-Z0-9/_|+ -]#', '', $clean);
     $clean = preg_replace('#[/_|+ -]+#', '-', $clean);
     return $clean;
   }

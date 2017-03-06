@@ -6,6 +6,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Filesystem\Filesystem;
+use AppBundle\Model\Library;
 
 class Publisher {
 
@@ -200,18 +201,25 @@ class Publisher {
           . "book '{$this->book->name}'.");
       return FALSE;
     }
-    else {
-      if ($this->version->aliases) {
-        $aliasText = " with aliases: "
-            . implode(', ', array_map(function ($s) {return "'".$s."'";},
-                $this->version->aliases));
-      }
-      else {
-        $aliasText = "";
-      }
-      $this->addMessage('INFO',
-          "Using branch: '{$this->version->branch}'$aliasText.");
+    try {
+      $this->version->validate();
     }
+    catch (\Exception $e) {
+      $this->addMessage('CRITICAL', "The settings for version "
+          . "'{$this->version->name}' could not be validated. Validation error"
+          . "is: ". $e->getMessage());
+      return FALSE;
+    }
+    if ($this->version->aliases) {
+      $aliasText = " with aliases: "
+          . implode(', ', array_map(function ($s) {return "'".$s."'";},
+              $this->version->aliases));
+    }
+    else {
+      $aliasText = "";
+    }
+    $this->addMessage('INFO',
+        "Using branch: '{$this->version->branch}'$aliasText.");
     return TRUE;
   }
 
@@ -359,20 +367,99 @@ class Publisher {
   }
 
   /**
-   * Publish a book based on certain identifiers
+   * Publish a book, or multiple books, based on a flexible identifier
    *
-   * @param string $bookSlug          The short name of the book
-   * @param string $languageCode      An ISO 639-1 two letter language code
+   * @param string $identifier A string describing the book, or books. For
+   *                           example, "user/en/latest" will publish one
+   *                           version of one language of one book, or "user"
+   *                           will publish all lanugages and all versions
+   *                           within the book "user".
+   *
+   * @return bool TRUE if all books were published, FALSE if there were any
+   *              errors while publishing any of the books
+   */
+  public function publish($identifier = NULL) {
+    $parts = Library::parseIdentifier($identifier);
+    $bookSlug =          $parts['bookSlug'];
+    $languageCode =      $parts['languageCode'];
+    $versionDescriptor = $parts['versionDescriptor'];
+    if ($versionDescriptor) {
+      return
+          $this->initializeBook($bookSlug) &&
+          $this->initializeLanguage($languageCode) &&
+          $this->publishVersion($versionDescriptor);
+    }
+    elseif ($languageCode) {
+      return
+          $this->initializeBook($bookSlug) &&
+          $this->publishLanguage($languageCode);
+    }
+    elseif ($bookSlug) {
+      return $this->publishBook($bookSlug);
+    }
+    return $this->publishLibrary();
+  }
+
+  /**
+   * Publishes all the things!
+   * All the versions of all the languages of all the books
+   *
+   * @return bool TRUE if all books were published, FALSE if there were any
+   *              errors while publishing any of the books
+   */
+  private function publishLibrary() {
+    $success = TRUE;
+    foreach ($this->library->books as $book) {
+      $success = $success && $this->publishBook($book->slug);
+    }
+    return $success;
+  }
+
+  /**
+   *
+   * @param string $bookSlug The short name of the book
+   *
+   * @return bool TRUE if all books were published, FALSE if there were any
+   *              errors while publishing any of the books
+   */
+  private function publishBook($bookSlug) {
+    $success = $this->initializeBook($bookSlug);
+    if ($success) {
+      foreach ($this->book->languages as $language) {
+        $success = $success && $this->publishLanguage($language->code);
+      }
+    }
+    return $success;
+  }
+
+  /**
+   *
+   * @param string $languageCode An ISO 639-1 two letter language code
+   *
+   * @return bool TRUE if all books were published, FALSE if there were any
+   *              errors while publishing any of the books
+   */
+  private function publishLanguage($languageCode) {
+    $success = $this->initializeLanguage($languageCode);
+    if ($success) {
+      foreach ($this->language->versions as $version) {
+        $success = $success && $this->publishVersion($version->branch);
+      }
+    }
+    return $success;
+  }
+
+  /**
+   * Publish a specific version of a book based on certain identifiers
+   *
    * @param string $versionDescriptor Can be the name of the version, the name
    *                                  of the git branch, or a name of an alias
    *                                  defined for the version
    *
    * @return bool TRUE if book was published, FALSE if there were errors
    */
-  public function publish($bookSlug, $languageCode, $versionDescriptor) {
+  private function publishVersion($versionDescriptor) {
     $success =
-      $this->initializeBook($bookSlug) &&
-      $this->initializeLanguage($languageCode) &&
       $this->initializeVersion($versionDescriptor) &&
       $this->initializeLocations() &&
       $this->initializeRepo() &&
@@ -387,9 +474,16 @@ class Publisher {
    * @param string $label should be 'INFO', 'WARNING', or 'CRITICAL'
    * @param string $content
    */
-  protected function addMessage($label, $content) {
+  public function addMessage($label, $content) {
     $this->messages[] = array('label' => $label, 'content' => $content);
     $this->logger->addRecord($this->logger->toMonologLevel($label), $content);
+  }
+
+  /**
+   * @return array
+   */
+  public function getMessages() {
+    return $this->messages;
   }
 
   /**

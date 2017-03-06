@@ -77,7 +77,7 @@ class Language {
    */
   public function validate() {
     $this->validateCode();
-    $this->validateVersions();
+    $this->validateAllVersionDescriptors();
   }
 
   private function validateCode() {
@@ -102,12 +102,16 @@ class Language {
   /**
    * Check all versions within this language to make sure there are no
    * collisions between name/branch/aliases across different versions.
+   * Note that this function does not perform validation at the version level,
+   * only at the language level. It finds problems when multiple versions are
+   * defined in ways that made a language invalid. It won't find problems when
+   * one version is defined in an invalid way. For that, use Version::validate
    *
    * If validation succeeds, this function returns nothing
    *
    * If validation fails, this function throws an exception.
    */
-  private function validateVersions() {
+  private function validateAllVersionDescriptors() {
     $descriptors = array();
     foreach ($this->versions as $version) {
       $descriptors = array_merge($descriptors, $version->allDescriptors());

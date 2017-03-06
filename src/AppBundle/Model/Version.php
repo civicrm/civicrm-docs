@@ -9,14 +9,17 @@ class Version {
   /**
    * @var string Version name (e.g. "4.6" or "latest"). This is what
    *             readers see. Sometimes it's the same as name of the
-   *             branch, but not always.
+   *             branch, but not always. It can contain pretty much whatever
+   *             characters you want.
    */
   public $name;
 
   /**
    * @var string The git branch that corresponds to this version
    *             (e.g. "master" or "4.6"). Sometimes it's the same as
-   *             $name but not always.
+   *             $name but not always. It can be any string that actually
+   *             maps to a real git branch, including strings with forward
+   *             slashes.
    */
   public $branch;
 
@@ -88,6 +91,20 @@ class Version {
     $result[] = $this->name;
     $result[] = $this->branch;
     return array_unique($result);
+  }
+
+
+  /**
+   * Check this version for any problems in the way it's defined.
+   *
+   * If validation succeeds, this function returns nothing
+   *
+   * If validation fails, this function throws an exception.
+   */
+  public function validate() {
+    if (preg_match("#/#", $this->branch)) {
+      throw new Exception("Branch name can not contain a forward slash.");
+    }
   }
 
 }
