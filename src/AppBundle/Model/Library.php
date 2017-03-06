@@ -8,15 +8,15 @@ class Library {
 
   /**
    *
-   * @var array $books An array (without keys) of Book objects to represent all
-   *                   the books in the system.
+   * @var array An array (without keys) of Book objects to represent all the
+   *            books in the system.
    */
   public $books;
 
   /**
    * Build a new Library based on a directory of book conf files.
    *
-   * @param type $configDir
+   * @param strig $configDir
    */
   public function __construct($configDir) {
     $finder = new Finder();
@@ -79,6 +79,24 @@ class Library {
       }
     }
     return $rows;
+  }
+
+  /**
+   * Selects one of the many books within the library
+   *
+   * @param string $slug The short name describing the book
+   *
+   * @return Book
+   */
+  public function getBookBySlug($slug) {
+    $chosen = NULL;
+    foreach ($this->books as $book) {
+      if ($book->slug == $slug) {
+        $chosen = $book;
+        break;
+      }
+    }
+    return $chosen;
   }
 
 }

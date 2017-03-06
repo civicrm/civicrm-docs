@@ -28,9 +28,10 @@ class PublishController extends Controller {
    * })
    */
   public function PublishAction(Request $request, $lang, $book, $branch) {
+    /** @var \AppBundle\Utils\Publisher $publisher */
     $publisher = $this->get('publisher');
     $publisher->publish($book, $lang, $branch);
-    $content['messages'] = $publisher->getMessages();
+    $content['messages'] = $publisher->messages;
     return $this->render('AppBundle:Publish:publish.html.twig', $content);
   }
 
@@ -41,8 +42,6 @@ class PublishController extends Controller {
     $body = $request->getContent();
     $event = $request->headers->get('X-GitHub-Event');
     $payload = json_decode($body);
-
-    $books = $this->get('book.loader')->find();
 
     $processor = $this->get('github.hook.processor');
     $processor->process($event, $payload);

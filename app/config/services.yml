@@ -9,7 +9,7 @@ services:
     class: AppBundle\Model\Library
     arguments:
       - %kernel.root_dir%/config/books
-  
+
   github.hook.processor:
     class: AppBundle\Utils\GitHubHookProcessor
     arguments:
@@ -22,7 +22,7 @@ services:
       - '@request_stack'
       - '@publish.logger'
       - '@filesystem'
-      - %kernel.root_dir%/config/books
+      - '@library'
       - %publisher_repos_dir%
       - %kernel.root_dir%/../web/static
 

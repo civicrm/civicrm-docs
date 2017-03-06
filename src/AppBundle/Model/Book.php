@@ -3,50 +3,46 @@
 namespace AppBundle\Model;
 
 use Symfony\Component\Yaml\Parser;
+use AppBundle\Utils\StringTools;
 
 class Book {
 
   /**
-   * @var string $shortName The reference identifier for this book, taken from
-   *                        the name of the book's .yml file.
+   * @var string The reference identifier for this book, taken from
+   *             the name of the book's .yml file.
    */
   public $slug;
-  
+
   /**
-   * @var string $fullName The title of the book, taken from the "name" 
-   *                       attribute in the book's .yml file.
+   * @var string The title of the book, taken from the "name"
    */
   public $name;
-  
+
   /**
-   * @var string $description Description of the book taken from the 
-   *                          "description" attribute in the book's .yml file
-   *                          and displayed on the home page. 
+   * @var string Short phrase describing the book, taken from the
    */
   public $description;
-  
+
   /**
-   * @var array $languages An array (without keys of Language objects to 
-   *                       represent the available languages for the book.
+   * @var array An array (without keys of Language objects to
    */
   public $languages;
-  
+
   /**
-   *
-   * @var int $weight Used to sort books
+   * @var int Used to sort books
    */
   public $weight;
-  
+
   /**
    * Creates a book based on a yaml conf file
-   * 
-   * @param string $confFile The path to the yaml configuration file which 
+   *
+   * @param string $confFile The path to the yaml configuration file which
    *                         defines the attributes of the book.
    */
   public function __construct($confFile) {
     $parser = new Parser();
     $yaml = $parser->parse(file_get_contents($confFile));
-    $this->slug        = basename($confFile, '.yml');
+    $this->slug        = StringTools::urlSafe(basename($confFile, '.yml'));
     $this->name        = $yaml['name'];
     $this->weight      = isset($yaml['weight'])      ? $yaml['weight']      : 0;
     $this->description = isset($yaml['description']) ? $yaml['description'] : "";
@@ -61,4 +57,23 @@ class Book {
   public function isMultiLanguage(){
     return count($this->languages) > 1;
   }
+
+  /**
+   * Selects one of the languages within the book
+   *
+   * @param string $code Two letter language code to describe the language
+   *
+   * @return Language
+   */
+  public function getLanguageByCode($code) {
+    $chosen = NULL;
+    foreach($this->languages as $language) {
+      if($language->code == $code) {
+        $chosen = $language;
+        break;
+      }
+    }
+    return $chosen;
+  }
+
 }
