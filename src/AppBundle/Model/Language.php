@@ -158,6 +158,7 @@ class Language {
   }
 
   /**
+   * Retrieves a version object defined for this language
    *
    * @param string $branch
    * @return \AppBundle\Model\Version The first version in $versions which
@@ -167,6 +168,25 @@ class Language {
     $chosen = NULL;
     foreach($this->versions as $version) {
       if($version->branch == $branch) {
+        $chosen = $version;
+        break;
+      }
+    }
+    return $chosen;
+  }
+
+  /**
+   * Retrieves a version object defined for this language, based on a descriptor
+   * which can be either a branch, or a name, or an alias.
+   *
+   * @param string $descriptor
+   * @return \AppBundle\Model\Version The first version in $versions which
+   *                                  matches the specified descriptor
+   */
+  public function getVersionByDescriptor($descriptor) {
+    $chosen = NULL;
+    foreach($this->versions as $version) {
+      if (in_array($descriptor, $version->allDescriptors())) {
         $chosen = $version;
         break;
       }

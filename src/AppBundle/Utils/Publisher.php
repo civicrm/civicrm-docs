@@ -186,16 +186,17 @@ class Publisher {
   /**
    * Find the requested version within the language
    *
-   * @param string $branchName
+   * @param string $versionDescriptor
    *
    * @return boolean TRUE if success
    */
-  private function initializeVersion($branchName) {
-    $this->version = $this->language->getVersionByBranch($branchName);
+  private function initializeVersion($versionDescriptor) {
+    $this->version
+        = $this->language->getVersionByDescriptor($versionDescriptor);
     if (!$this->version) {
       $this->addMessage('CRITICAL',
-          "Branch '{$branchName}' is not defined for "
-          . "language '{$this->language->englishName()}' within "
+          "Descriptor '{$versionDescriptor}' does not map to a version defined "
+          . "within language '{$this->language->englishName()}' for "
           . "book '{$this->book->name}'.");
       return FALSE;
     }
@@ -360,17 +361,19 @@ class Publisher {
   /**
    * Publish a book based on certain identifiers
    *
-   * @param string $bookSlug
-   * @param string $languageCode
-   * @param string $branchName
+   * @param string $bookSlug          The short name of the book
+   * @param string $languageCode      An ISO 639-1 two letter language code
+   * @param string $versionDescriptor Can be the name of the version, the name
+   *                                  of the git branch, or a name of an alias
+   *                                  defined for the version
    *
    * @return bool TRUE if book was published, FALSE if there were errors
    */
-  public function publish($bookSlug, $languageCode, $branchName) {
+  public function publish($bookSlug, $languageCode, $versionDescriptor) {
     $success =
       $this->initializeBook($bookSlug) &&
       $this->initializeLanguage($languageCode) &&
-      $this->initializeVersion($branchName) &&
+      $this->initializeVersion($versionDescriptor) &&
       $this->initializeLocations() &&
       $this->initializeRepo() &&
       $this->gitCheckout() &&
