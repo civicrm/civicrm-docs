@@ -24,7 +24,7 @@ services:
       - '@filesystem'
       - '@library'
       - %publisher_repos_dir%
-      - %kernel.root_dir%/../web/static
+      - %kernel.root_dir%/../web
 
   publish.logger:
     class: Monolog\Logger

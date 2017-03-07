@@ -150,6 +150,14 @@ class Publisher {
     else {
       $this->addMessage('INFO', "Using book: {$this->book->name}.");
     }
+    try {
+      $this->book->validate();
+    }
+    catch (Exception $e) {
+      $this->addMessage('CRITICAL', "The book settings for {$this->book->name}"
+          . "failed validation. Validation error is: " . $e->getMessage());
+      return FALSE;
+    }
     return TRUE;
   }
 

@@ -76,4 +76,23 @@ class Book {
     return $chosen;
   }
 
+  /**
+   * Check this book for any problems in the way it's defined.
+   *
+   * If validation succeeds, this function returns nothing
+   *
+   * If validation fails, this function throws an exception.
+   */
+  public function validate() {
+    $illegalBookSlugs = array(
+      "bundles",
+      "static",
+    );
+    if (in_array($this->slug, $illegalBookSlugs)) {
+      throw new Exception("Book slug is '{$this->slug}' but this word is "
+          . "reserved in order to maintain functionality within this app. "
+          . "Reserved words are: " . implode(", ", $illegalBookSlugs));
+    }
+  }
+
 }
