@@ -24,6 +24,14 @@ class Language {
   public $code;
 
   /**
+   *
+   * @var array email addresses for people who would like to receive a
+   *            notification any time a version within this language is
+   *            published
+   */
+  public $watchers = array();
+
+  /**
    * Initialize a language with values in it.
    *
    * @param string $code two letter language code
@@ -33,6 +41,11 @@ class Language {
     $this->code = $code;
     $this->repo = $yaml['repo'];
     $this->setupVersions($yaml);
+    if (isset($yaml['watchers'])) {
+      foreach ($yaml['watchers'] as $watcher) {
+        $this->watchers[] = $watcher;
+      }
+    }
   }
 
   /**
@@ -82,7 +95,7 @@ class Language {
 
   private function validateCode() {
     if (!LocaleTools::codeIsValid($this->code)) {
-      throw new Exception("Language code '{$this->code}' is not a valid "
+      throw new \Exception("Language code '{$this->code}' is not a valid "
       . "ISO 639-1 code.");
     }
   }
@@ -119,7 +132,7 @@ class Language {
     $duplicateDescriptors
         = array_diff_assoc($descriptors, array_unique($descriptors));
     if ($duplicateDescriptors) {
-      throw new Exception(
+      throw new \Exception(
           "Duplicate descriptors '" . implode(", ", $duplicateDescriptors)
           . "' found for the versions defined within language '{$this->code}'");
     }

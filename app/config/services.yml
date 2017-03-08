@@ -12,9 +12,6 @@ services:
 
   github.hook.processor:
     class: AppBundle\Utils\GitHubHookProcessor
-    arguments:
-      - '@publisher'
-      - '@library'
 
   publisher:
     class: AppBundle\Utils\Publisher

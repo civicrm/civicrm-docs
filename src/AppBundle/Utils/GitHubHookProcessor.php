@@ -4,65 +4,61 @@ namespace AppBundle\Utils;
 
 class GitHubHookProcessor {
 
-  protected $messages = array();
-  protected $recipients = array();
-  public $published = FALSE;
+  /**
+   * @var array of strings for email addresses of people to notify
+   */
+  public $recipients = array();
 
-  public function __construct($publisher, $bookLoader) {
-    $this->publisher = $publisher;
-    $this->books = $bookLoader->find();
+  /**
+   * @var string the URL for the repository
+   */
+  public $repo;
+
+  /**
+   * @var string the name of the branch to publish
+   */
+  public $branch;
+
+  /**
+   *
+   */
+  public function __construct() {
+
   }
 
+  /**
+   *
+   * @param string $event  (e.g. 'pull_request', 'push')
+   * @param mixed $payload An object given by json_decode()
+   */
   public function process($event, $payload) {
-
-    //The getDetailsFrom functions work out what branch and repo we are talking
-    //about, and the also work out what emails we should send.
-    switch ($event) {
-      case 'pull_request':
-        $this->getDetailsFromPullRequest($payload);
-        break;
-
-      case 'push':
-        $this->getDetailsFromPush($payload);
-        break;
-
+    if ($event == 'pull_request') {
+      $this->getDetailsFromPullRequest($payload);
     }
-    foreach ($this->books as $bookName => $bookConfig) {
-      foreach ($bookConfig['langs'] as $bookLang => $bookLangConfig) {
-        if ($bookLangConfig['repo'] == $this->repo) {
-          $this->book = $bookName;
-          $this->lang = $bookLang;
-          $config = $bookLangConfig;
-          break 2;
-        }
-      }
+    elseif ($event == 'push') {
+      $this->getDetailsFromPush($payload);
     }
-
-    // If the book (in a specific language) wants additional people to be
-    // notified on each publication, they can be added in the book yml
-    // definition and will get added here
-    if (isset($config['notify'])) {
-      foreach ($config['notify'] as $recipient) {
-        $this->recipients[] = $recipient;
-      }
+    if (!$this->branch) {
+      throw new \Exception("Unable to determine branch from payload data");
     }
-
-    $this->published = $this->publisher->publish(
-        $this->book, $this->lang, $this->branch);
-    $this->messages = $this->publisher->getMessages();
-    $this->subject = "Published '{$this->branch}' branch of '{$this->book}'"
-        . "in '{$this->lang}'";
-    $this->recipients = array_unique($this->recipients);
+    if (!$this->repo) {
+      throw new \Exception("Unable to determine repository from payload data");
+    }
   }
 
+  /**
+   * Use a pull request to figure out what branch and repo we are talking
+   * about, and the also work out what emails we should send.
+   *
+   * @param mixed $payload An object given by json_decode()
+   */
   public function getDetailsFromPullRequest($payload) {
-
-    //Only continue if this pull request is closed and merged
-    if ($payload->action != 'closed' OR !$payload->pull_request->merged) {
-      return;
+    if ($payload->action != 'closed') {
+      throw new \Exception("Pull request is not closed");
     }
-
-    //Work out what book, language and branch to publish
+    if (!$payload->pull_request->merged) {
+      throw new \Exception("Pull request is not merged");
+    }
     $this->branch = $payload->pull_request->base->ref;
     $this->repo = $payload->repository->html_url;
 
@@ -78,31 +74,37 @@ class GitHubHookProcessor {
     $this->commits = json_decode(curl_exec($ch));
 
     foreach ($this->commits as $commit) {
-      $this->recipients[] = $commit->commit->author->email;
-      $this->recipients[] = $commit->commit->committer->email;
+      $this->addRecipients($commit->commit->author->email);
+      $this->addRecipients($commit->commit->committer->email);
     }
   }
 
+  /**
+   * Use a pull request to figure out what branch and repo we are talking
+   * about, and the also work out what emails we should send.
+   *
+   * @param mixed $payload An object given by json_decode()
+   */
   public function getDetailsFromPush($payload) {
-    $this->branch = preg_replace("/.*\/(.*)/", "$1", $payload->ref);
+    $this->branch = preg_replace("#.*/(.*)#", "$1", $payload->ref);
     $this->repo = $payload->repository->html_url;
-
     foreach ($payload->commits as $commit) {
-      $this->recipients[] = $commit->author->email;
-      $this->recipients[] = $commit->committer->email;
+      $this->addRecipients($commit->author->email);
+      $this->addRecipients($commit->committer->email);
     }
   }
 
-  public function getMessages() {
-    return $this->messages;
-  }
-
-  public function getRecipients() {
-    return $this->recipients;
-  }
-
-  public function getSubject() {
-    return $this->subject;
+  /**
+   * Adds one or more email recipients, and makes sure all recipients are
+   * kept unique
+   *
+   * @param array $recipients Array of strings for emails of people to notify
+   */
+  public function addRecipients($recipients) {
+    if (!is_array($recipients)){
+      $recipients = array($recipients);
+    }
+    $this->recipients = array_unique(array_merge($this->recipients, $recipients));
   }
 
 }

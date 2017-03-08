@@ -100,6 +100,32 @@ class Library {
   }
 
   /**
+   * See which books/languages are using a given repository.
+   *
+   * @param string $repoURL
+   *
+   * @return array of strings to identify each occurence of a book/language
+   *               which matches the specified repository. Example return:
+   *               ["mybook/en", "mybook/es"]
+   *               Note that it's rare for a repository to map to multiple
+   *               identifiers. In most cases the return will be an array with
+   *               a single element.
+   *               Note also that the return identifier only has the book slug
+   *               and the language code, not the branch name.
+   */
+  public function getIdentifiersByRepo($repoURL) {
+    $identifiers = array();
+    foreach ($this->books as $book) {
+      foreach ($book->languages as $language) {
+        if ($language->repo == $repoURL) {
+          $identifiers[] = "$book->slug/$language->code";
+        }
+      }
+    }
+    return $identifiers;
+  }
+
+  /**
    * Parses an identifier into components we can use to identify a book
    *
    * @param string $identifier (e.g. "user/en/master", "user/en", "user", "")

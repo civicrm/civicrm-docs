@@ -89,7 +89,7 @@ class Book {
       "static",
     );
     if (in_array($this->slug, $illegalBookSlugs)) {
-      throw new Exception("Book slug is '{$this->slug}' but this word is "
+      throw new \Exception("Book slug is '{$this->slug}' but this word is "
           . "reserved in order to maintain functionality within this app. "
           . "Reserved words are: " . implode(", ", $illegalBookSlugs));
     }

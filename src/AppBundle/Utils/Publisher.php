@@ -39,7 +39,24 @@ class Publisher {
    * @var array Messages with key as a string to represent message type and
    *            value as a string with the message content
    */
-  public $messages;
+  public $messages = array();
+
+  /**
+   *
+   * @var string A simple description of the status of the publishing operation
+   */
+  public $status = "Book not published";
+
+  /**
+   * @var string the identifier passed in when calling publish()
+   */
+  private $suppliedIdentifier;
+
+  /**
+   *
+   * @var string (e.g. "user/en/4.6", "dev/en/master")
+   */
+  public $fullIdentifier;
 
   /**
    * @var string The domain name of the site (e.g. "https://docs.civicrm.org")
@@ -124,10 +141,10 @@ class Publisher {
    * @return boolean TRUE if success
    */
   private function initializeLocations() {
-    $this->publishURLFull = "{$this->publishURLBase}/{$this->book->slug}/"
-        . "{$this->language->code}/{$this->version->branch}";
-    $this->publishPath = "{$this->publishPathRoot}/{$this->book->slug}/"
-        . "{$this->language->code}/{$this->version->branch}";
+    $this->fullIdentifier = "{$this->book->slug}/{$this->language->code}/"
+    . "{$this->version->branch}";
+    $this->publishURLFull = "{$this->publishURLBase}/{$this->fullIdentifier}";
+    $this->publishPath = "{$this->publishPathRoot}/{$this->fullIdentifier}";
     $this->repoURL = $this->language->repo;
     $this->repoPath = $this->repoPathRoot . "/{$this->book->slug}/"
         . "{$this->language->code}";
@@ -386,26 +403,34 @@ class Publisher {
    * @return bool TRUE if all books were published, FALSE if there were any
    *              errors while publishing any of the books
    */
-  public function publish($identifier = NULL) {
+  public function publish($identifier = "") {
+    $this->suppliedIdentifier = $identifier;
+    $this->addMessage('NOTICE', "PUBLISHING $identifier");
     $parts = Library::parseIdentifier($identifier);
     $bookSlug =          $parts['bookSlug'];
     $languageCode =      $parts['languageCode'];
     $versionDescriptor = $parts['versionDescriptor'];
     if ($versionDescriptor) {
-      return
+      $success =
           $this->initializeBook($bookSlug) &&
           $this->initializeLanguage($languageCode) &&
           $this->publishVersion($versionDescriptor);
     }
     elseif ($languageCode) {
-      return
+      $success =
           $this->initializeBook($bookSlug) &&
           $this->publishLanguage($languageCode);
     }
     elseif ($bookSlug) {
-      return $this->publishBook($bookSlug);
+      $success = $this->publishBook($bookSlug);
     }
-    return $this->publishLibrary();
+    else {
+      $success = $this->publishLibrary();
+    }
+    if ($success) {
+      $this->setStatus('success');
+    }
+    return $success;
   }
 
   /**
@@ -479,12 +504,37 @@ class Publisher {
   }
 
   /**
-   * @param string $label should be 'INFO', 'WARNING', or 'CRITICAL'
+   * Set the publishing status based on available info
+   *
+   * @param string $type Should be either "failure" or "success"
+   */
+  private function setStatus($type) {
+    $phrase = $this->suppliedIdentifier;
+    if ($this->book) {
+      $phrase = $this->book->name;
+      if ($this->language) {
+        $phrase .= " / {$this->language->englishName()}";
+        if ($this->version) {
+          $phrase .= " / {$this->version->name}";
+        }
+      }
+    }
+    if ($type == 'failure') {
+      $this->status = "Errors trying to publish: $phrase";
+    }
+    elseif ($type == 'success') {
+      $this->status = "Published: $phrase";
+    }
+  }
+
+  /**
+   * @param string $label should be 'NOTICE', 'INFO', 'WARNING', or 'CRITICAL'
    * @param string $content
    */
   public function addMessage($label, $content) {
     $this->messages[] = array('label' => $label, 'content' => $content);
     $this->logger->addRecord($this->logger->toMonologLevel($label), $content);
+    $this->setStatus('failure'); // this gets set to 'success' when we're done
   }
 
   /**
@@ -492,6 +542,17 @@ class Publisher {
    */
   public function getMessages() {
     return $this->messages;
+  }
+
+  /**
+   * @return string all messages as lines in one big string
+   */
+  public function getMessagesInPlainText() {
+    $text = '';
+    foreach ($this->messages as $message) {
+      $text = "{$text}{$message['label']} - {$message['content']}\n";
+    }
+    return $text;
   }
 
   /**
