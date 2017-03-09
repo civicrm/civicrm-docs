@@ -65,7 +65,9 @@ class PublishController extends Controller {
       $this->publisher = $this->get('publisher');
       foreach ($identifiers as $identifier) {
         $this->publisher->publish("{$identifier}/{$processor->branch}");
-        $this->sendEmail($processor->recipients);
+        if ($this->publisher->version) {
+          $this->sendEmail($processor->recipients);
+        }
       }
       $response = $this->publisher->getMessagesInPlainText();
     }
