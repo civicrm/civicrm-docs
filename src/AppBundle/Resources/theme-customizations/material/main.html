@@ -2,10 +2,10 @@
 
 {% block htmltitle %}
   {% if page.title %}
-    <title>{{ page.title }} - {{ config.site_name }}</title>
+    <title>{{ page.title }} - {{ config.site_name }} - CiviCRM documentation</title>
   {% elif config.site_description %}
-    <title>{{ config.site_name }} - {{ config.site_description }}</title>
+    <title>{{ config.site_name }} - {{ config.site_description }} - CiviCRM documentation</title>
   {% else %}
-    <title>{{ config.site_name }}</title>
+    <title>{{ config.site_name }} - CiviCRM documentation</title>
   {% endif %}
 {% endblock %}
