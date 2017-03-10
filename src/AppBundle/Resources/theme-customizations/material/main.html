@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block htmltitle %}
+  {% if page.title %}
+    <title>{{ page.title }} - {{ config.site_name }}</title>
+  {% elif config.site_description %}
+    <title>{{ config.site_name }} - {{ config.site_description }}</title>
+  {% else %}
+    <title>{{ config.site_name }}</title>
+  {% endif %}
+{% endblock %}
