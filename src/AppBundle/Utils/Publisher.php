@@ -103,6 +103,11 @@ class Publisher {
   public $repoURL;
 
   /**
+   * @var \AppBundle\Utils\MkDocs
+   */
+  private $mkDocs;
+
+  /**
    *
    * @param RequestStack $requestStack
    * @param Monolog\Logger $logger
@@ -110,6 +115,7 @@ class Publisher {
    * @param Library $library
    * @param string $reposPathRoot
    * @param string $publishPathRoot
+   * @param \AppBundle\Utils\MkDocs $mkDocs
    */
   public function __construct(
       $requestStack,
@@ -117,12 +123,14 @@ class Publisher {
       $fs,
       $library,
       $reposPathRoot,
-      $publishPathRoot) {
+      $publishPathRoot,
+      $mkDocs) {
     $this->logger = $logger;
     $this->fs = $fs;
     $this->library = $library;
     $this->repoPathRoot = realpath($reposPathRoot);
     $this->publishPathRoot = realpath($publishPathRoot);
+    $this->mkDocs = $mkDocs;
     if ($requestStack->getCurrentRequest()) {
       $this->publishURLBase
         = $requestStack->getCurrentRequest()->getUriForPath('');
@@ -170,7 +178,7 @@ class Publisher {
     try {
       $this->book->validate();
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->addMessage('CRITICAL', "The book settings for {$this->book->name}"
           . "failed validation. Validation error is: " . $e->getMessage());
       return FALSE;
@@ -343,22 +351,13 @@ class Publisher {
    * @return boolean TRUE if success
    */
   private function build() {
-    $buildCommand = "mkdocs build "
-        . "--clean --strict --site-dir {$this->publishPath}";
-    $this->addMessage('INFO', "Running '{$buildCommand}'");
-    $mkdocs = new Process($buildCommand, $this->repoPath);
-    $mkdocs->run();
-    $mkdocsLogMessages = explode("\n", trim($mkdocs->getErrorOutput()));
-    $this->addMessage('INFO', "mkdocs output: '{$mkdocs->getErrorOutput()}'");
-    $mkdocsErrors = FALSE;
-    foreach ($mkdocsLogMessages as $mkdocsLogMessage) {
-      if (substr($mkdocsLogMessage, 0, 4) != 'INFO') {
-        $mkdocsErrors = TRUE;
-      }
+    try {
+      $this->mkDocs->build($this->repoPath, $this->publishPath);
     }
-    if ($mkdocsErrors) {
+    catch (\Exception $e) {
       $this->addMessage('CRITICAL',
-          "MkDocs build errors encountered. Book not published.");
+          "Build errors encountered. Book not published. Build error message: "
+          . $e->getMessage());
       return FALSE;
     }
     $this->addMessage('INFO', "Book published successfully at "
