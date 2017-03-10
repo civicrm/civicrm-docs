@@ -42,9 +42,9 @@ class Book {
   public function __construct($confFile) {
     $parser = new Parser();
     $yaml = $parser->parse(file_get_contents($confFile));
-    $this->slug        = StringTools::urlSafe(basename($confFile, '.yml'));
-    $this->name        = $yaml['name'];
-    $this->weight      = isset($yaml['weight'])      ? $yaml['weight']      : 0;
+    $this->slug = StringTools::urlSafe(basename($confFile, '.yml'));
+    $this->name = $yaml['name'];
+    $this->weight = isset($yaml['weight']) ? $yaml['weight'] : 0;
     $this->description = isset($yaml['description']) ? $yaml['description'] : "";
     foreach ($yaml['langs'] as $code => $languageData) {
       $this->languages[] = new Language($code, $languageData);
@@ -54,7 +54,7 @@ class Book {
   /**
    * @return bool True when the book contains multiple languages.
    */
-  public function isMultiLanguage(){
+  public function isMultiLanguage() {
     return count($this->languages) > 1;
   }
 
@@ -67,8 +67,8 @@ class Book {
    */
   public function getLanguageByCode($code) {
     $chosen = NULL;
-    foreach($this->languages as $language) {
-      if($language->code == $code) {
+    foreach ($this->languages as $language) {
+      if ($language->code == $code) {
         $chosen = $language;
         break;
       }

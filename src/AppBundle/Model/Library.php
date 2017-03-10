@@ -136,11 +136,11 @@ class Library {
    *               "versionDescriptor" => (string/NULL)
    */
   public static function parseIdentifier($identifier) {
-    $identifier = preg_replace("#/+#", "/", trim($identifier)) ;
+    $identifier = preg_replace("#/+#", "/", trim($identifier));
     $identifier = trim($identifier, "/");
     $parts = explode("/", $identifier);
-    $result['bookSlug']          =      ($parts[0]) ? $parts[0] : NULL;
-    $result['languageCode']      = isset($parts[1]) ? $parts[1] : NULL;
+    $result['bookSlug'] = ($parts[0]) ? $parts[0] : NULL;
+    $result['languageCode'] = isset($parts[1]) ? $parts[1] : NULL;
     $result['versionDescriptor'] = isset($parts[2]) ? $parts[2] : NULL;
     return $result;
   }

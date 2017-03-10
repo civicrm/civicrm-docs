@@ -101,7 +101,7 @@ class GitHubHookProcessor {
    * @param array $recipients Array of strings for emails of people to notify
    */
   public function addRecipients($recipients) {
-    if (!is_array($recipients)){
+    if (!is_array($recipients)) {
       $recipients = array($recipients);
     }
     $this->recipients = array_unique(array_merge($this->recipients, $recipients));

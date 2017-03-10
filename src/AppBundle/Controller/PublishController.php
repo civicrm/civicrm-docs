@@ -98,9 +98,9 @@ class PublishController extends Controller {
         ->setBody(
             $this->renderView('AppBundle:Emails:notify.html.twig',
                 array(
-                    'publishURLBase' => $this->publisher->publishURLBase,
-                    'status'         => $this->publisher->status,
-                    'messages'       => $this->publisher->messages,
+                  'publishURLBase' => $this->publisher->publishURLBase,
+                  'status'         => $this->publisher->status,
+                  'messages'       => $this->publisher->messages,
                 )
             ), 'text/html'
         );

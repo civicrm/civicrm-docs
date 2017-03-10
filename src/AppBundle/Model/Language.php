@@ -35,7 +35,7 @@ class Language {
    * Initialize a language with values in it.
    *
    * @param string $code two letter language code
-   * @param array  $yaml language data from a book's yaml file
+   * @param array $yaml language data from a book's yaml file
    */
   public function __construct($code, $yaml) {
     $this->code = $code;
@@ -130,7 +130,7 @@ class Language {
       $descriptors = array_merge($descriptors, $version->allDescriptors());
     }
     $duplicateDescriptors
-        = array_diff_assoc($descriptors, array_unique($descriptors));
+      = array_diff_assoc($descriptors, array_unique($descriptors));
     if ($duplicateDescriptors) {
       throw new \Exception(
           "Duplicate descriptors '" . implode(", ", $duplicateDescriptors)
@@ -157,7 +157,7 @@ class Language {
   }
 
   public function descriptiveName() {
-    if($this->code == 'en') {
+    if ($this->code == 'en') {
       return $this->englishName();
     }
     else {
@@ -183,8 +183,8 @@ class Language {
    */
   public function getVersionByBranch($branch) {
     $chosen = NULL;
-    foreach($this->versions as $version) {
-      if($version->branch == $branch) {
+    foreach ($this->versions as $version) {
+      if ($version->branch == $branch) {
         $chosen = $version;
         break;
       }
@@ -202,7 +202,7 @@ class Language {
    */
   public function getVersionByDescriptor($descriptor) {
     $chosen = NULL;
-    foreach($this->versions as $version) {
+    foreach ($this->versions as $version) {
       if (in_array($descriptor, $version->allDescriptors())) {
         $chosen = $version;
         break;

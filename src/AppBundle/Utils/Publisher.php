@@ -125,7 +125,7 @@ class Publisher {
     $this->publishPathRoot = realpath($publishPathRoot);
     if ($requestStack->getCurrentRequest()) {
       $this->publishURLBase
-          = $requestStack->getCurrentRequest()->getUriForPath('');
+        = $requestStack->getCurrentRequest()->getUriForPath('');
     }
     else {
       $this->publishURLBase = '/';
@@ -218,7 +218,7 @@ class Publisher {
    */
   private function initializeVersion($versionDescriptor) {
     $this->version
-        = $this->language->getVersionByDescriptor($versionDescriptor);
+      = $this->language->getVersionByDescriptor($versionDescriptor);
     if (!$this->version) {
       $this->addMessage('CRITICAL',
           "Descriptor '{$versionDescriptor}' does not map to a version defined "
@@ -232,13 +232,14 @@ class Publisher {
     catch (\Exception $e) {
       $this->addMessage('CRITICAL', "The settings for version "
           . "'{$this->version->name}' could not be validated. Validation error"
-          . "is: ". $e->getMessage());
+          . "is: " . $e->getMessage());
       return FALSE;
     }
     if ($this->version->aliases) {
       $aliasText = " with aliases: "
-          . implode(', ', array_map(function ($s) {return "'".$s."'";},
-              $this->version->aliases));
+          . implode(', ', array_map(function ($s) {
+            return "'$s'";
+          }, $this->version->aliases));
     }
     else {
       $aliasText = "";
@@ -279,7 +280,7 @@ class Publisher {
    *
    * @return boolean TRUE if success
    */
-  private function gitCheckout(){
+  private function gitCheckout() {
     $gitCheckCurrentBranch = new Process(
         'git rev-parse --abbrev-ref HEAD', $this->repoPath);
     $gitCheckCurrentBranch->run();
@@ -380,7 +381,7 @@ class Publisher {
     $purgeExisting->run();
 
     // Add new symlinks
-    foreach($this->version->aliases as $alias) {
+    foreach ($this->version->aliases as $alias) {
       $this->fs->symlink($this->publishPath, "$path/$alias");
       $url = "{$this->publishURLBase}/{$this->book->slug}/"
         . "{$this->language->code}/$alias";
@@ -407,18 +408,16 @@ class Publisher {
     $this->suppliedIdentifier = $identifier;
     $this->addMessage('NOTICE', "PUBLISHING $identifier");
     $parts = Library::parseIdentifier($identifier);
-    $bookSlug =          $parts['bookSlug'];
-    $languageCode =      $parts['languageCode'];
+    $bookSlug = $parts['bookSlug'];
+    $languageCode = $parts['languageCode'];
     $versionDescriptor = $parts['versionDescriptor'];
     if ($versionDescriptor) {
-      $success =
-          $this->initializeBook($bookSlug) &&
+      $success = $this->initializeBook($bookSlug) &&
           $this->initializeLanguage($languageCode) &&
           $this->publishVersion($versionDescriptor);
     }
     elseif ($languageCode) {
-      $success =
-          $this->initializeBook($bookSlug) &&
+      $success = $this->initializeBook($bookSlug) &&
           $this->publishLanguage($languageCode);
     }
     elseif ($bookSlug) {
@@ -492,8 +491,7 @@ class Publisher {
    * @return bool TRUE if book was published, FALSE if there were errors
    */
   private function publishVersion($versionDescriptor) {
-    $success =
-      $this->initializeVersion($versionDescriptor) &&
+    $success = $this->initializeVersion($versionDescriptor) &&
       $this->initializeLocations() &&
       $this->initializeRepo() &&
       $this->gitCheckout() &&

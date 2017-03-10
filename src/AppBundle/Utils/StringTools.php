@@ -2,12 +2,6 @@
 
 namespace AppBundle\Utils;
 
-/**
- * Description of StringTools
- *
- * @author sean
- */
-
 class StringTools {
 
   /**
