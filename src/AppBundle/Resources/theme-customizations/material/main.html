@@ -9,3 +9,8 @@
     <title>{{ config.site_name }} - CiviCRM documentation</title>
   {% endif %}
 {% endblock %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{{ base_url }}/assets/stylesheets/extra.css">
+  <script src="{{ base_url }}/assets/javascripts/extra.js"></script>
+{% endblock %}
