@@ -1,1 +1,19 @@
+header.md-header {
+  position: static;
+  height: auto;
+}
 
+.md-main__inner {
+  margin-top: 0;
+  padding-top: 1rem;
+}
+
+header .org-header {
+  padding-top: 0.8rem;
+  font-size: 1.4rem;
+  font-style: italic;
+}
+
+header .org-header span {
+  color: white;
+}
