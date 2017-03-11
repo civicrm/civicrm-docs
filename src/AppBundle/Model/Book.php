@@ -34,6 +34,12 @@ class Book {
   public $weight;
 
   /**
+   *
+   * @var string (e.g. "Core", "Extensions") Should be in sentence case
+   */
+  public $category;
+
+  /**
    * Creates a book based on a yaml conf file
    *
    * @param string $confFile The path to the yaml configuration file which
@@ -49,6 +55,8 @@ class Book {
     foreach ($yaml['langs'] as $code => $languageData) {
       $this->languages[] = new Language($code, $languageData);
     }
+    $category = isset($yaml['category']) ? $yaml['category'] : "Extensions";
+    $this->category = ucwords($category);
   }
 
   /**
