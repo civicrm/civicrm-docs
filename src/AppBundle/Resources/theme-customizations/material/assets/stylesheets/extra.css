@@ -3,6 +3,11 @@ header.md-header {
   height: auto;
 }
 
+.md-main__inner {
+  margin-top: 0;
+  padding-top: 1rem;
+}
+
 header.md-header .civi-logo {
   float: left;
   padding: 5px;
@@ -11,11 +16,6 @@ header.md-header .civi-logo {
 header.md-header .civi-logo a {
   margin: 0;
   padding: 0;
-}
-
-header.md-header .md-main__inner {
-  margin-top: 0;
-  padding-top: 1rem;
 }
 
 header.md-header .civi-header {
