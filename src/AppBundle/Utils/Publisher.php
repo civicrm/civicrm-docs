@@ -351,8 +351,11 @@ class Publisher {
    * @return boolean TRUE if success
    */
   private function build() {
+    $extraConfig['edition']
+      = "{$this->language->nativeName()} / {$this->version->name}";
+    $extraConfig['book_home'] = "/{$this->book->slug}";
     try {
-      $this->mkDocs->build($this->repoPath, $this->publishPath);
+      $this->mkDocs->build($this->repoPath, $this->publishPath, $extraConfig);
     }
     catch (\Exception $e) {
       $this->addMessage('CRITICAL',

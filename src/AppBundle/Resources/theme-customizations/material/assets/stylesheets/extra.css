@@ -13,20 +13,29 @@ header.md-header .civi-logo a {
   padding: 0;
 }
 
-.md-main__inner {
+header.md-header .md-main__inner {
   margin-top: 0;
   padding-top: 1rem;
 }
 
-header .civi-header {
+header.md-header .civi-header {
   padding-top: 0.8rem;
   padding-left: 2rem;
   font-size: 1.4rem;
   font-style: italic;
 }
 
-header .civi-header span {
+header.md-header .civi-header span {
   color: white;
+}
+
+header.md-header .edition, header.md-header .other-editions {
+  color: #A5CCDC !important;
+}
+
+header.md-header .other-editions {
+  padding-left: 2rem;
+  font-style: normal;
 }
 
 /* Custom colors */
@@ -45,3 +54,6 @@ button[data-md-color-accent=green]{background-color:#81c459}
 @media only screen and (max-width:76.1875em){html [data-md-color-primary=indigo] .md-nav--primary .md-nav__title--site{background-color:#3387ac}}
 @media only screen and (min-width:60em){[data-md-color-primary=indigo] .md-nav--secondary{border-left:.4rem solid #3387ac}}
 
+
+a:hover {text-decoration: underline; }
+md-header-nav__source a:hover {text-decoration: none;}

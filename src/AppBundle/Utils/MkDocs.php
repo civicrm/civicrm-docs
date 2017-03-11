@@ -46,6 +46,12 @@ class MkDocs {
   private $themeCustomPath;
 
   /**
+   * @var array A associative array with config values to put in the 'extra'
+   *            setting when building the book
+   */
+  private $extraConfig;
+
+  /**
    * @var string The full filesystem location of the mkdocs.yml config file to
    *             use when building the book. This is the file as it's stored
    *             after adjustments we make to it.
@@ -85,10 +91,21 @@ class MkDocs {
       $config['theme_dir'] = $this->themeCustomPath;
     }
 
-    // Set up custom colors in Material
+    // Set extra config which was passed into build()
+    foreach ($this->extraConfig as $key => $val) {
+      $config['extra'][$key] = $val;
+    }
+
+    // Set up custom config for our Material theme extension
     if ($theme == 'material') {
       $config['extra']['palette']['primary'] = 'indigo';
       $config['extra']['palette']['accent'] = 'green';
+      if (!isset($config['extra']['edition'])) {
+        $config['extra']['edition'] = "English / Latest";
+      }
+      if (!isset($config['extra']['book_home'])) {
+        $config['extra']['book_home'] = "/";
+      }
     }
 
     // Dump config out
@@ -122,10 +139,14 @@ class MkDocs {
    *
    * @param string $destinationPath The full filesystem path to the directory
    *                                where we want the published content to go
+   *
+   * @param array $extraConfig A associative array with config values to put in
+   *                           the 'extra' setting when building the book
    */
-  public function build($sourcePath, $destinationPath) {
+  public function build($sourcePath, $destinationPath, $extraConfig = array()) {
     $this->sourcePath = $sourcePath;
     $this->destinationPath = $destinationPath;
+    $this->extraConfig = $extraConfig;
 
     $this->customizeConfig();
 
