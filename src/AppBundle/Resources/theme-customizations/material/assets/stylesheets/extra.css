@@ -3,17 +3,45 @@ header.md-header {
   height: auto;
 }
 
+header.md-header .civi-logo {
+  float: left;
+  padding: 5px;
+}
+
+header.md-header .civi-logo a {
+  margin: 0;
+  padding: 0;
+}
+
 .md-main__inner {
   margin-top: 0;
   padding-top: 1rem;
 }
 
-header .org-header {
+header .civi-header {
   padding-top: 0.8rem;
+  padding-left: 2rem;
   font-size: 1.4rem;
   font-style: italic;
 }
 
-header .org-header span {
+header .civi-header span {
   color: white;
 }
+
+/* Custom colors */
+button[data-md-color-primary=indigo]{background-color:#3387ac}
+[data-md-color-primary=indigo] .md-typeset a{color:#3387ac}
+[data-md-color-primary=indigo] .md-header{background-color:#3387ac}
+[data-md-color-primary=indigo] .md-nav__link--active,[data-md-color-primary=indigo] .md-nav__link:active{color:#3387ac}
+button[data-md-color-accent=green]{background-color:#81c459}
+[data-md-color-accent=green] .md-typeset a:active,[data-md-color-accent=green] .md-typeset a:hover{color:#81c459}
+[data-md-color-accent=green] .md-typeset .codehilite::-webkit-scrollbar-thumb:hover,[data-md-color-accent=green] .md-typeset pre::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+[data-md-color-accent=green] .md-nav__link:hover,[data-md-color-accent=green] .md-typeset .footnote li:hover .footnote-backref:hover,[data-md-color-accent=green] .md-typeset .footnote li:target .footnote-backref,[data-md-color-accent=green] .md-typeset [id] .headerlink:focus,[data-md-color-accent=green] .md-typeset [id]:hover .headerlink:hover,[data-md-color-accent=green] .md-typeset [id]:target .headerlink{color:#81c459}
+[data-md-color-accent=green] .md-search__scrollwrap::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+[data-md-color-accent=green] .md-search-result__link:hover{background-color:rgba(129,196,89,.1)}
+[data-md-color-accent=green] .md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+@media only screen and (max-width:59.9375em){[data-md-color-primary=indigo] .md-nav__source{background-color:rgba(51,135,172,.9675)}}
+@media only screen and (max-width:76.1875em){html [data-md-color-primary=indigo] .md-nav--primary .md-nav__title--site{background-color:#3387ac}}
+@media only screen and (min-width:60em){[data-md-color-primary=indigo] .md-nav--secondary{border-left:.4rem solid #3387ac}}
+

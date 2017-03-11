@@ -85,6 +85,12 @@ class MkDocs {
       $config['theme_dir'] = $this->themeCustomPath;
     }
 
+    // Set up custom colors in Material
+    if ($theme == 'material') {
+      $config['extra']['palette']['primary'] = 'indigo';
+      $config['extra']['palette']['accent'] = 'green';
+    }
+
     // Dump config out
     $dumper = new Dumper();
     $this->configFile = dirname($this->destinationPath) . "/"
