@@ -12,6 +12,8 @@ header {
   padding: 10px 0px;
   color: #BBDEED;
   box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 10;
 }
 
 header .logo {
@@ -71,10 +73,26 @@ body, .footer {
 
 .book .name {
   font-weight: bold;
+  font-size: 120%;
+}
+
+.book .edition, 
+.book .other-editions a {
+  color: #C2CCCF;
+}
+
+.book a:hover .edition,
+.book .other-editions a:hover {
+  color: #056186;
+}
+
+.book .other-editions {
+  padding-left: 0.8em;
+  font-style: italic;
 }
 
 .book .description {
-  font-style: italic;
+  
 }
 
 
