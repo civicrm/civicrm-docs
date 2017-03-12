@@ -5,7 +5,7 @@ langs:
     en:
         repo: 'https://github.com/civicrm/civicrm-user-guide'
         latest: master
-        stable: 4.7
+        stable: master
         history:
             - 4.6
     ca:
