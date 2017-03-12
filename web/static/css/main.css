@@ -1,3 +1,68 @@
+/* Basic elements */
+
+h2 {
+  font-size: 160% !important;
+}
+
+
+/* Header */
+
+header {
+  background-color: #3387ac;
+  padding: 10px 0px;
+  color: #BBDEED;
+  box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+}
+
+header .logo {
+  height: 50px;
+}
+
+header nav a {
+  color: white;
+}
+
+header nav .separator {
+  padding: 5px;
+}
+
+header nav a:hover {
+  color: white;
+}
+
+
+/* Page */
+
+.page {
+  background-color: white;
+  min-height: 600px;
+}
+
+
+/* Footer */ 
+
+body, .footer {
+  background-color: #363333 !important;
+}
+
+.footer {
+  padding: 0px;
+  margin: 0px;
+  color: #DADADA;
+  font-size: 80%; 
+}
+
+.footer .container {
+  margin-top: 25px;
+}
+
+.footer a, .footer a:hover, .footer a:active {
+  color: #85D453;
+}
+
+
+
+
 /* Home page  */
 
 .book {
@@ -11,6 +76,47 @@
 .book .description {
   font-style: italic;
 }
+
+
+/* Editions table */
+
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+  padding: 5px !important;
+}
+
+.english-name, .version .branch {
+  font-style: italic;
+  font-size: 80%;
+  color: #888;
+}
+
+.button {
+  display: inline-block;
+  padding: 8px 12px;
+  background: #6FB346;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+}
+
+.button:hover {
+  box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.repo {
+  padding-left: 1em;
+  font-style: italic;
+  font-size: 80%;
+}
+
+
+
+
 
 /* Publishing messages */
 

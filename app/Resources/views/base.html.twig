@@ -4,20 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    <title>{% block title %}CiviCRM documentation{% endblock %}</title>
+    <title>
+      {% if page_title is defined %}
+        {{ page_title }} -
+      {% endif %}
+      CiviCRM documentation
+    </title>
+    <link media="all" href="https://civicrm.org/sites/all/themes/civicrm_bootstrap/css/style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('/static/css/main.css') }}" />
     {% block stylesheets %}{% endblock %}
-    <link media="all" href="https://civicrm.org/sites/all/themes/civicrm_bootstrap/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="row-stripe">
-            <div>
-                {% block body %}{% endblock %} {% block javascripts %}{% endblock %}
-            </div>
+
+
+<header>
+  <div class="container">
+    <nav>
+      <a href="https://civicrm.org">
+        <img class="logo" width="75" height="77" src="/static/images/logo.svg" alt=""/>
+        CiviCRM
+      </a>
+      <span class="separator">/</span>
+      <a href="/">Documentation</a>
+      {% if block('extra_links') is not empty %}
+        <span class="separator">/</span>
+      {% endif %}
+      {% block extra_links %}{% endblock %}
+    </nav>
+  </div>
+</header>
+
+<div class="page">
+  <div class="container">
+    <div class="row-stripe">
+
+        <h1>
+          {% if page_title is defined %}
+            {{ page_title }}
+          {% else %}
+            CiviCRM Documentation
+          {% endif %}
+        </h1>
+
+        <div class="content">
+          {% block content %}{% endblock %}
         </div>
+
     </div>
+  </div>
+</div>
+
+
+<div class="footer">
+  <div class="container">
+    <div class="row-stripe">
+      <div>
+
+        <p>CiviCRM documentation is maintained by community members, with
+          facilitation from the
+          <a href="https://civicrm.org/working-groups/documentation">
+            Documentation Working Group.</a>
+        </p>
+
+        <p>To get involved, read about <a href="/dev/en/latest/documentation/">
+            contributing to documentation</a>, or join us in the
+            <a href="https://chat.civicrm.org/civicrm/channels/documentation">
+              documentation chat room</a>!
+        </p>
+
+        <p>This site publishes documentation books using a
+          <a href="https://github.com/civicrm/civicrm-docs">custom system</a>
+          maintained by the community. To give feedback about this site, please
+          <a href="https://github.com/civicrm/civicrm-docs/issues">
+            file an issue</a>.
+        </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% block javascripts %}{% endblock %}
+
+
 </body>
 
 </html>

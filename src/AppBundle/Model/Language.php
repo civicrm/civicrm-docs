@@ -193,6 +193,13 @@ class Language {
   }
 
   /**
+   * @return \AppBundle\Model\Version
+   */
+  public function getDefaultVersion() {
+    return current($this->versions);
+  }
+
+  /**
    * Retrieves a version object defined for this language, based on a descriptor
    * which can be either a branch, or a name, or an alias.
    *

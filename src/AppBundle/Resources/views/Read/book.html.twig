@@ -1,0 +1,63 @@
+{% extends "::base.html.twig" %}
+
+{% set page_title = book.name %}
+
+{% block extra_links %}
+  <span>{{ book.name }}</span>
+{% endblock %}
+
+{% block content %}
+
+<ul>
+  {% set default_language = book.getDefaultLanguage() %}
+  {% set default_version = default_language.getDefaultVersion() %}
+  {% set default_url = book.slug ~ "/" ~ default_language.code ~ "/"
+         ~ default_version.name %}
+  {% set default_title = default_language.nativeName() ~ " / " ~ default_version.name %}
+  <li>Default edition: <a href="{{ default_url }}">{{ default_title }}</a></li>
+  {# <li>Category: {{ book.category }}</li> #} {# uncomment when we have categorization #}
+</ul>
+
+<h2>Description</h2>
+
+<p>{{ book.description }}</p>
+
+<h2>All available editions:</h2>
+
+<table class="editions">
+  <tr>
+    <th>Language</th>
+    <th>Version</th>
+    <th></th>
+  </tr>
+  {% for language in book.languages %}
+    {% for version in language.versions %}
+    {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.name %}
+    <tr>
+      <td class="language">
+        <span class="native-name">{{ language.nativeName }}</span>
+        {% if language.nativeName != language.englishName %}
+          <span class="english-name">({{ language.englishName }})</span>
+        {% endif %}
+      </td>
+      <td class="version">
+        <span class="version-name">{{ version.name }}</span>
+        <span class="branch">({{ version.branch }} branch)</span></td>
+      <td class="links">
+        <a href="{{ url }}" class="read button">Read</a>
+        {% if version.branch == 'master' %}
+          {% set repo_url = language.repo %}
+        {% else %}
+          {% set repo_url = language.repo ~ "/tree/" ~ version.branch %}
+        {% endif %}
+        <a href="{{ repo_url }}" class="repo">
+          Source&nbsp;code
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  {% endfor %}
+
+</table>
+
+{% endblock %}
