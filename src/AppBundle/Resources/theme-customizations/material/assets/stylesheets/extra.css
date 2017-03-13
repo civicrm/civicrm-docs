@@ -70,6 +70,13 @@ button[data-md-color-accent=green]{background-color:#81c459}
 @media only screen and (max-width:76.1875em){html [data-md-color-primary=indigo] .md-nav--primary .md-nav__title--site{background-color:#3387ac}}
 @media only screen and (min-width:60em){[data-md-color-primary=indigo] .md-nav--secondary{border-left:.4rem solid #3387ac}}
 
+/* definition lists */
+
+dt .inner {
+  border-bottom: solid 5px #B6D8E6;
+}
+
+/* hyperlinks */
 
 a:hover {text-decoration: underline; }
 
