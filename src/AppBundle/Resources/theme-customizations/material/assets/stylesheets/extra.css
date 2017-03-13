@@ -1,12 +1,26 @@
-header.md-header {
+/* make header non-fixed */
+
+.md-container,
+.md-main__inner {
+  padding-top: 0;
+}
+
+.md-header {
   position: static;
   height: auto;
 }
 
-.md-main__inner {
-  margin-top: 0;
-  padding-top: 1rem;
+.md-sidebar[data-md-state=lock] {
+  top: 0;
 }
+
+/* Header tweaks */
+
+header a.md-source:hover {
+  text-decoration: none;
+}
+
+/* Logo */
 
 header.md-header .civi-logo {
   float: left;
@@ -17,6 +31,8 @@ header.md-header .civi-logo a {
   margin: 0;
   padding: 0;
 }
+
+/* Nav for CiviCRM / Documentation */
 
 header.md-header .civi-header {
   padding-top: 0.8rem;
@@ -56,4 +72,4 @@ button[data-md-color-accent=green]{background-color:#81c459}
 
 
 a:hover {text-decoration: underline; }
-md-header-nav__source a:hover {text-decoration: none;}
+
