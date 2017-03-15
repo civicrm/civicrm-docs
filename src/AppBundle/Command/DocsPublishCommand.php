@@ -28,12 +28,16 @@ class DocsPublishCommand extends ContainerAwareCommand {
     /** @var \AppBundle\Utils\Publisher $publisher */
     $publisher = $this->getContainer()->get('publisher');
     $identifiers = $input->getArgument('identifiers');
-    foreach ($identifiers as $identifier) {
-      $publisher->publish($identifier);
-      foreach ($publisher->getMessages() as $message) {
-        $output->writeln($message['label'] . ': ' . $message['content']);
+    if ($identifiers) {
+      foreach ($identifiers as $identifier) {
+        $publisher->publish($identifier);
       }
-      $publisher->clearMessages();
+    }
+    else {
+      $publisher->publish();
+    }
+    foreach ($publisher->getMessages() as $message) {
+      $output->writeln($message['label'] . ': ' . $message['content']);
     }
   }
 
