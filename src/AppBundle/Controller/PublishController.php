@@ -40,6 +40,7 @@ class PublishController extends Controller {
           . "to really slow down the server. If you want to publish all books "
           . "you can run 'docs:publish' from the command line interface.");
     }
+    $content['identifier'] = trim($identifier, "/");
     $content['messages'] = $this->publisher->getMessages();
     return $this->render('AppBundle:Publish:publish.html.twig', $content);
   }

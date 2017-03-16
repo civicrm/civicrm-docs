@@ -1,19 +1,17 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}CiviCRM Documentation: Publish{% endblock %}
+{% set page_title = "Publishing " ~ identifier %}
 
-{% block body %}
+{% block content %}
 
-    <h1>Publish documentation</h1>
-    <p>For help and more information, consult the <a href="https://github.com/civicrm/civicrm-docs">documentation documentation,</a> and the <a href="/log">logs of the publishing process</a>.
-
-    {% if messages is defined %}
-        <h2>Results</h2>
-        {% for message in messages %}
-            <p>
-                <span class="message message-{{ message.label|lower }}">{{ message.label }}:</span>
-                {{ message.content|raw }}</p>
-        {% endfor %}
-    {% endif %}
+  {% for message in messages %}
+    <p>
+      <span class="message message-{{ message.label|lower }}">
+        {{ message.label }}
+      </span>
+      <span class="separator">:</span>
+      {{ message.content|raw }}
+    </p>
+  {% endfor %}
 
 {% endblock %}
