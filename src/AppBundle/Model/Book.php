@@ -85,6 +85,13 @@ class Book {
   }
 
   /**
+   * @return \AppBundle\Model\Language
+   */
+  public function getDefaultLanguage() {
+    return current($this->languages);
+  }
+
+  /**
    * Check this book for any problems in the way it's defined.
    *
    * If validation succeeds, this function returns nothing
