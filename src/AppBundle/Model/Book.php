@@ -67,6 +67,25 @@ class Book {
   }
 
   /**
+   * @return integer The total number of language/version combinations defined
+   *                 for this book
+   */
+  public function countEditions() {
+    $sum = 0;
+    foreach ($this->languages as $language) {
+      $sum = $sum + $language->countVersions();
+    }
+    return $sum;
+  }
+
+  /**
+   * @return bool TRUE if the book has more than one language/version combo
+   */
+  public function isMultiEdition() {
+    return $this->countEditions() > 1;
+  }
+
+  /**
    * Selects one of the languages within the book
    *
    * @param string $code Two letter language code to describe the language
@@ -88,7 +107,7 @@ class Book {
    * @return \AppBundle\Model\Language
    */
   public function getDefaultLanguage() {
-    return current($this->languages);
+    return $this->languages[0];
   }
 
   /**

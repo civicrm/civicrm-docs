@@ -41,7 +41,7 @@ header nav a:hover {
 }
 
 
-/* Footer */ 
+/* Footer */
 
 body, .footer {
   background-color: #363333 !important;
@@ -51,7 +51,7 @@ body, .footer {
   padding: 0px;
   margin: 0px;
   color: #DADADA;
-  font-size: 80%; 
+  font-size: 80%;
 }
 
 .footer .container {
@@ -65,7 +65,7 @@ body, .footer {
 
 
 
-/* Home page  */
+/* Book list (on Home page)  */
 
 .book {
   margin-bottom: 0.8em;
@@ -76,23 +76,13 @@ body, .footer {
   font-size: 120%;
 }
 
-.book .edition, 
-.book .other-editions a {
+.book.single_edition .edition{
   color: #C2CCCF;
 }
 
-.book a:hover .edition,
-.book .other-editions a:hover {
-  color: #056186;
-}
-
-.book .other-editions {
-  padding-left: 0.8em;
-  font-style: italic;
-}
-
-.book .description {
-  
+.book .or {
+  color: #C2CCCF;
+  padding: 0px 1em;
 }
 
 

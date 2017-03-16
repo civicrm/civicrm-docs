@@ -175,6 +175,13 @@ class Language {
   }
 
   /**
+   * @return integer
+   */
+  public function countVersions() {
+    return count($this->versions);
+  }
+
+  /**
    * Retrieves a version object defined for this language
    *
    * @param string $branch
@@ -196,7 +203,7 @@ class Language {
    * @return \AppBundle\Model\Version
    */
   public function getDefaultVersion() {
-    return current($this->versions);
+    return $this->versions[0];
   }
 
   /**

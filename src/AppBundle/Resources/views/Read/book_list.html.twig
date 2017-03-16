@@ -1,9 +1,10 @@
 <ul class="books">
 {% for book in books %}
-  <li class="book">
+  {% set editionClass = (book.isMultiEdition) ? 'multi_edition' : 'single_edition' %}
+  <li class="book {{ editionClass }}">
     <div>
-      {% set language = book.getDefaultLanguage() %}
-      {% set version = language.getDefaultVersion() %}
+      {% set language = book.getDefaultLanguage %}
+      {% set version = language.getDefaultVersion %}
       {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.name %}
       <a href="{{ url }}">
         <span class="name">
@@ -13,13 +14,18 @@
           ({{ language.nativeName() }} / {{ version.name }})
         </span>
       </a>
-      <span class="other-editions">
-        <a href="/{{ book.slug }}">(Other editions)</a>
-      </span>
+      {% set countOtherEditions = book.countEditions - 1 %}
+      {% if countOtherEditions > 0 %}
+        <span class="or">&ndash;&nbsp;or&nbsp;&ndash;</span>
+        <span class="other-editions">
+          <a href="/{{ book.slug }}">(See all {{ book.countEditions }} editions)</a>
+        </span>
+      {% endif %}
     </div>
     <div class="description">
       {{ book.description }}
     </div>
+
   </li>
 {% endfor %}
 </ul>
