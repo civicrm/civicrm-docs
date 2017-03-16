@@ -1,0 +1,8 @@
+{% for version in language.versions %}
+<ul class="versions">
+  <li class="version">
+    {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.name %}
+    <a href="{{ url }}">{{ version.name }} version</a>
+  </li>
+</ul>
+{% endfor %}

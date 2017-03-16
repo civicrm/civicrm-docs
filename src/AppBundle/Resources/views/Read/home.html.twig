@@ -3,30 +3,26 @@
 {% block title %}CiviCRM Documentation{% endblock %}
 
 {% block body %}
+  
+<a href="https://civicrm.org">CiviCRM home</a>
 
-    <h1>CiviCRM Documentation</h1>
+<h1>CiviCRM Documentation</h1>
 
-    {% for url, book in books %}
-        <h2>
-            <a href="/{{url}}">{{ book.name }}</a>
-        </h2>
-        <p>{{ book.description }}</p>
-        <ul>
-            {% for lang, language in book.langs if language.stable is defined %}
-                <li>
-                    {{ attribute(locales, lang) }}:
-                    <strong>
-                        <a href="/{{url}}/{{ lang }}/stable">Current edition</a>
-                    </strong>. Other editions:
-                </strong>
-                {% if language.history is defined %}
-                    {% for version in language.history %}
-                        <a href="/{{url}}/{{ lang }}/{{ version }}">{{ version }}</a>,
-                    {% endfor %}
-                {% endif %}
-                <a href="/{{url}}/{{ lang }}/latest">latest</a>.</li>
-        {% endfor %}
-    </ul>
-{% endfor %}
+<p>CiviCRM offers community contributed documentation in the form of digital
+  <em>books</em>, listed below. We encourage everyone to 
+  <a href="https://docs.civicrm.org/dev/en/latest/documentation/">
+    help contribute to documentation</a>.</p>
+
+<p><em>Note: some documentation has not yet been moved into book format and 
+    can still be found on our 
+    <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/CiviCRM+Documentation">wiki</a>
+    while it awaits migration. In particular, information about 
+    <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/Installation+and+Upgrades">
+      installation and upgrades</a>
+    is still on the wiki.</em></p>
+
+<h2>Books</h2>
+
+{% include 'AppBundle:Read:book_list.html.twig' %}
 
 {% endblock %}

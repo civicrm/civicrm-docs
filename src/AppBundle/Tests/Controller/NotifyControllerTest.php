@@ -4,13 +4,12 @@ namespace AppBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class NotifyControllerTest extends WebTestCase
-{
-    public function testNotify()
-    {
-        $client = static::createClient();
+class NotifyControllerTest extends WebTestCase {
 
-        $crawler = $client->request('GET', '/Notify');
-    }
+  public function testNotify() {
+    $client = static::createClient();
+
+    $crawler = $client->request('GET', '/Notify');
+  }
 
 }

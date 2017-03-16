@@ -4,18 +4,32 @@ parameters:
 #    parameter_name: value
 
 services:
-    book.loader:
-        class: AppBundle\Utils\BookLoader
-        arguments: ['%kernel.root_dir%/config/books']
-    github.hook.processor:
-        class: AppBundle\Utils\GitHubHookProcessor
-        arguments: ['@publisher', '@book.loader']
-    publisher:
-        class: AppBundle\Utils\Publisher
-        arguments: ['@request_stack', '@publish.logger', '@filesystem', %kernel.root_dir%/config/books, %publisher_repos_dir%, %kernel.root_dir%/../web/static]
-    publish.logger:
-        class: Monolog\Logger
-        arguments: ['publish', ['@streamhandler']]
-    streamhandler:
-        class: Monolog\Handler\StreamHandler
-        arguments: [%kernel.logs_dir%/publish.log]
+
+  library:
+    class: AppBundle\Model\Library
+    arguments:
+      - %kernel.root_dir%/../books
+
+  github.hook.processor:
+    class: AppBundle\Utils\GitHubHookProcessor
+
+  publisher:
+    class: AppBundle\Utils\Publisher
+    arguments:
+      - '@request_stack'
+      - '@publish.logger'
+      - '@filesystem'
+      - '@library'
+      - %publisher_repos_dir%
+      - %kernel.root_dir%/../web
+
+  publish.logger:
+    class: Monolog\Logger
+    arguments:
+      - 'publish'
+      - ['@streamhandler']
+
+  streamhandler:
+    class: Monolog\Handler\StreamHandler
+    arguments:
+      - %kernel.logs_dir%/publish.log

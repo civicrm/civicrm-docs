@@ -1,3 +1,19 @@
+/* Home page  */
+
+.book {
+  margin-bottom: 0.8em;
+}
+
+.book .name {
+  font-weight: bold;
+}
+
+.book .description {
+  font-style: italic;
+}
+
+/* Publishing messages */
+
 .message {
     font-weight: bold;
 }
