@@ -11,11 +11,11 @@
 <ul>
   {% set default_language = book.getDefaultLanguage() %}
   {% set default_version = default_language.getDefaultVersion() %}
-  {% set default_url = book.slug ~ "/" ~ default_language.code ~ "/"
+  {% set default_url = "/" ~ book.slug ~ "/" ~ default_language.code ~ "/"
          ~ default_version.name %}
   {% set default_title = default_language.nativeName() ~ " / " ~ default_version.name %}
   <li>Default edition: <a href="{{ default_url }}">{{ default_title }}</a></li>
-  {# <li>Category: {{ book.category }}</li> #} {# uncomment when we have categorization #}
+  <li>Category: {{ book.category }}</li>
 </ul>
 
 <h2>Description</h2>
