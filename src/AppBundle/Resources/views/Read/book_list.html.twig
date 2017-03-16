@@ -1,5 +1,5 @@
 <ul class="books">
-{% for book in library.books %}
+{% for book in books %}
   <li class="book">
     <span class="name">
       {% if book.isMultiLanguage or book.languages|first.isMultiVersion %}
@@ -15,7 +15,7 @@
     {% if book.isMultiLanguage %}
       {% include 'AppBundle:Read:language_list.html.twig' %}
     {% elseif book.languages|first.isMultiVersion %}
-      {% include 'AppBundle:Read:version_list.html.twig' 
+      {% include 'AppBundle:Read:version_list.html.twig'
          with {language: book.languages|first}  %}
     {% endif %}
   </li>
