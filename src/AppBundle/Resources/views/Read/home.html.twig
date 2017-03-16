@@ -15,8 +15,12 @@
       installation and upgrades</a>
     is still on the wiki.</em></p>
 
-<h2>Books</h2>
+<h2>Core Books</h2>
 
-{% include 'AppBundle:Read:book_list.html.twig' with {books: library.books} %}
+{% include 'AppBundle:Read:book_list.html.twig' with {books: core_books} %}
+
+<h2>Extensions Books</h2>
+
+{% include 'AppBundle:Read:book_list.html.twig' with {books: extensions_books} %}
 
 {% endblock %}

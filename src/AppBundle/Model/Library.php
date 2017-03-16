@@ -100,6 +100,23 @@ class Library {
   }
 
   /**
+   * Gives an array of book objects which match a given category
+   *
+   * @param string $category
+   *
+   * @return array of Book objects
+   */
+  public function getBooksByCategory($category) {
+    $books = array();
+    foreach ($this->books as $book) {
+      if ($book->category == $category) {
+        $books[] = $book;
+      }
+    }
+    return $books;
+  }
+
+  /**
    * See which books/languages are using a given repository.
    *
    * @param string $repoURL

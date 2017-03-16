@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block htmltitle %}
+  {% if page.title %}
+    <title>{{ page.title }} - {{ config.site_name }} - CiviCRM documentation</title>
+  {% elif config.site_description %}
+    <title>{{ config.site_name }} - {{ config.site_description }} - CiviCRM documentation</title>
+  {% else %}
+    <title>{{ config.site_name }} - CiviCRM documentation</title>
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{{ base_url }}/assets/stylesheets/extra.css">
+  <script src="/static/js/jquery-3.1.1.min.js"></script>
+  <script src="{{ base_url }}/assets/javascripts/extra.js"></script>
+{% endblock %}
