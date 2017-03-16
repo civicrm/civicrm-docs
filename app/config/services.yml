@@ -1,17 +1,24 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+  books_dir: %kernel.root_dir%/../books
+  publish_path_root: %kernel.root_dir%/../web
 
 services:
 
   library:
     class: AppBundle\Model\Library
     arguments:
-      - %kernel.root_dir%/../books
+      - %books_dir%
 
   github.hook.processor:
     class: AppBundle\Utils\GitHubHookProcessor
+
+  mkdocs:
+    class: AppBundle\Utils\MkDocs
+    arguments:
+      - '@filesystem'
+      - '@file_locator'
 
   publisher:
     class: AppBundle\Utils\Publisher
@@ -21,7 +28,8 @@ services:
       - '@filesystem'
       - '@library'
       - %publisher_repos_dir%
-      - %kernel.root_dir%/../web
+      - %publish_path_root%
+      - '@mkdocs'
 
   publish.logger:
     class: Monolog\Logger

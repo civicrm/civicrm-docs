@@ -1,0 +1,82 @@
+/* make header non-fixed */
+
+.md-container,
+.md-main__inner {
+  padding-top: 0;
+}
+
+.md-header {
+  position: static;
+  height: auto;
+}
+
+.md-sidebar[data-md-state=lock] {
+  top: 0;
+}
+
+/* Header tweaks */
+
+header a.md-source:hover {
+  text-decoration: none;
+}
+
+/* Logo */
+
+header.md-header .civi-logo {
+  float: left;
+  padding: 5px;
+}
+
+header.md-header .civi-logo a {
+  margin: 0;
+  padding: 0;
+}
+
+/* Nav for CiviCRM / Documentation */
+
+header.md-header .civi-header {
+  padding-top: 0.8rem;
+  padding-left: 2rem;
+  font-size: 1.4rem;
+  font-style: italic;
+}
+
+header.md-header .civi-header span {
+  color: white;
+}
+
+header.md-header .edition, header.md-header .other-editions {
+  color: #A5CCDC !important;
+}
+
+header.md-header .other-editions {
+  padding-left: 2rem;
+  font-style: normal;
+}
+
+/* Custom colors */
+button[data-md-color-primary=indigo]{background-color:#3387ac}
+[data-md-color-primary=indigo] .md-typeset a{color:#3387ac}
+[data-md-color-primary=indigo] .md-header{background-color:#3387ac}
+[data-md-color-primary=indigo] .md-nav__item--active > .md-nav__link,[data-md-color-primary=indigo] .md-nav__link:active{color:#3387ac}
+button[data-md-color-accent=green]{background-color:#81c459}
+[data-md-color-accent=green] .md-typeset a:active,[data-md-color-accent=green] .md-typeset a:hover{color:#81c459}
+[data-md-color-accent=green] .md-typeset .codehilite::-webkit-scrollbar-thumb:hover,[data-md-color-accent=green] .md-typeset pre::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+[data-md-color-accent=green] .md-nav__link:hover,[data-md-color-accent=green] .md-typeset .footnote li:hover .footnote-backref:hover,[data-md-color-accent=green] .md-typeset .footnote li:target .footnote-backref,[data-md-color-accent=green] .md-typeset [id] .headerlink:focus,[data-md-color-accent=green] .md-typeset [id]:hover .headerlink:hover,[data-md-color-accent=green] .md-typeset [id]:target .headerlink{color:#81c459}
+[data-md-color-accent=green] .md-search__scrollwrap::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+[data-md-color-accent=green] .md-search-result__link:hover{background-color:rgba(129,196,89,.1)}
+[data-md-color-accent=green] .md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover{background-color:#81c459}
+@media only screen and (max-width:59.9375em){[data-md-color-primary=indigo] .md-nav__source{background-color:rgba(51,135,172,.9675)}}
+@media only screen and (max-width:76.1875em){html [data-md-color-primary=indigo] .md-nav--primary .md-nav__title--site{background-color:#3387ac}}
+@media only screen and (min-width:60em){[data-md-color-primary=indigo] .md-nav--secondary{border-left:.4rem solid #3387ac}}
+
+/* definition lists */
+
+dt .inner {
+  border-bottom: solid 5px #B6D8E6;
+}
+
+/* hyperlinks */
+
+a:hover {text-decoration: underline; }
+

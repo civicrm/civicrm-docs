@@ -1,0 +1,60 @@
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex civi-logo">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a class="md-logo md-header-nav__button" href="https://civicrm.org" title="CiviCRM home">
+          <img src="/static/images/logo.svg" height="60" alt="logo" />
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+    </div>
+    <div class="md-flex civi-header">
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-header-nav__parent">
+          <a href="https://civicrm.org">CiviCRM</a>
+        </span>
+        <span class="md-header-nav__parent">
+          <a href="/">Documentation</a>
+        </span>
+        <a href="{{ base_url }}">
+          {{ config.site_name }}
+          <span class="edition">({{ config.extra.edition }})</span>
+        </a>
+        <a href="{{ config.extra.book_home }}" class="other-editions">
+          (Other editions)
+        </a>
+      </div>
+    </div>
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          {% block site_name %}
+            {% if page %}
+              {% for parent in page.ancestors %}
+                <span class="md-header-nav__parent">
+                  {{ parent.title }}
+                </span>
+              {% endfor %}
+            {% endif %}
+            {{ page.title | default(config.site_name, true) }}
+          {% endblock %}
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        {% block search_box %}
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          {% include "partials/search.html" %}
+        {% endblock %}
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            {% if config.repo_url %}
+              {% include "partials/source.html" %}
+            {% endif %}
+          </div>
+      </div>
+    </div>
+  </nav>
+</header>
