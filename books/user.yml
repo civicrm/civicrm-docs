@@ -8,15 +8,14 @@ langs:
         latest: master
         stable: master
         history:
-            - 4.7
             - 4.6
-    ca:
-        repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
-        latest: master
+    #ca:
+        #repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
+        #latest: master
     fr:
         repo: 'https://github.com/civicrm-french/civicrm-user-guide'
         latest: master
-        stable: 4.7
-    es:
-        repo: 'https://github.com/alejandro-ixiam/civicrm-user-guide-spanish'
-        latest: master
+        stable: master
+    #es:
+        #repo: 'https://github.com/alejandro-ixiam/civicrm-user-guide-spanish'
+        #latest: master
