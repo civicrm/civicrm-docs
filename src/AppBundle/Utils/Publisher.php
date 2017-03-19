@@ -128,8 +128,14 @@ class Publisher {
     $this->logger = $logger;
     $this->fs = $fs;
     $this->library = $library;
-    $this->repoPathRoot = realpath($reposPathRoot);
-    $this->publishPathRoot = realpath($publishPathRoot);
+    if (empty($reposPathRoot)) {
+      throw new \Exception("Unable to determine root path to all repositories");
+    }
+    $this->repoPathRoot = $reposPathRoot;
+    if (empty($publishPathRoot)) {
+      throw new \Exception("Unable to determine root path for publishing all books");
+    }
+    $this->publishPathRoot = $publishPathRoot;
     $this->mkDocs = $mkDocs;
     if ($requestStack->getCurrentRequest()) {
       $this->publishURLBase
@@ -152,10 +158,17 @@ class Publisher {
     $this->fullIdentifier = "{$this->book->slug}/{$this->language->code}/"
     . "{$this->version->branch}";
     $this->publishURLFull = "{$this->publishURLBase}/{$this->fullIdentifier}";
-    $this->publishPath = "{$this->publishPathRoot}/{$this->fullIdentifier}";
     $this->repoURL = $this->language->repo;
+
+    $this->publishPath = "{$this->publishPathRoot}/{$this->fullIdentifier}";
+    $this->fs->mkdir($this->publishPath);
+    $this->publishPath = realpath($this->publishPath);
+
     $this->repoPath = $this->repoPathRoot . "/{$this->book->slug}/"
         . "{$this->language->code}";
+    $this->fs->mkdir($this->repoPath);
+    $this->repoPath = realpath($this->repoPath);
+
     return TRUE;
   }
 

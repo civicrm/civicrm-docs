@@ -3,6 +3,7 @@
 parameters:
   books_dir: %kernel.root_dir%/../books
   publish_path_root: %kernel.root_dir%/../web
+  repos_path_root: %kernel.root_dir%/../var/repos
 
 services:
 
@@ -27,7 +28,7 @@ services:
       - '@publish.logger'
       - '@filesystem'
       - '@library'
-      - %publisher_repos_dir%
+      - %repos_path_root%
       - %publish_path_root%
       - '@mkdocs'
 
