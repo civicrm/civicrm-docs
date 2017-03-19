@@ -98,6 +98,7 @@ class MkDocs {
 
     // Set up custom config for our Material theme extension
     if ($theme == 'material') {
+      $config['site_favicon'] = 'assets/images/favicon.ico';
       $config['extra']['palette']['primary'] = 'indigo';
       $config['extra']['palette']['accent'] = 'green';
       if (!isset($config['extra']['edition'])) {
