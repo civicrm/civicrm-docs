@@ -10,17 +10,33 @@
 <p><em>Note: some documentation has not yet been moved into book format and
     can still be found on our
     <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/CiviCRM+Documentation">wiki</a>
-    while it awaits migration. In particular, information about
-    <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/Installation+and+Upgrades">
-      installation and upgrades</a>
-    is still on the wiki.</em></p>
+    while it awaits migration.</em></p>
 
 <h2>Core Books</h2>
 
+<p>These books pertain to CiviCRM "Core", that is, CiviCRM when it is installed
+  without any extensions.</p>
+
 {% include 'AppBundle:Read:book_list.html.twig' with {books: core_books} %}
+
+<p><em>Also, our <b>
+      <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/Installation+and+Upgrades">
+      Administrator Guide</a></b>
+    (for installing and upgrading CiviCRM)
+    is still on the wiki. It will be migrated to book format eventually.</em></p>
 
 <h2>Extensions Books</h2>
 
+<p>Extensions can be installed within CiviCRM to provide new functionality not
+  available in core. Below are our extensions-specific documentation books
+  &mdash; but note that many extensions do not have dedicated books,
+  so this list represents only a small fraction of
+  <a href="https://civicrm.org/extensions">all the available extensions</a>.</p>
+
 {% include 'AppBundle:Read:book_list.html.twig' with {books: extensions_books} %}
+
+<p>If you are an extensions maintainer, you may follow these instructions to
+  <a href="https://docs.civicrm.org/dev/en/latest/documentation/extensions/">
+    create a book for your extension</a>.</p>
 
 {% endblock %}
