@@ -1,6 +1,6 @@
-name: User guide
+name: User Guide
 weight: -100
-description: Aimed at day to day users of CiviCRM.
+description: For staff members who regularly use CiviCRM's web-based interface as part of their job at an organization
 category: Core
 langs:
     en:

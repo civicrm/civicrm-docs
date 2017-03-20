@@ -19,11 +19,21 @@
 
 {% include 'AppBundle:Read:book_list.html.twig' with {books: core_books} %}
 
-<p><em>Also, our <b>
+<ul>
+  <li class="book single_edition">
+    <div>
       <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/Installation+and+Upgrades">
-      Administrator Guide</a></b>
-    (for installing and upgrading CiviCRM)
-    is still on the wiki. It will be migrated to book format eventually.</em></p>
+        <span class="name">Administrator Guide</span>
+        <span class="edition">
+          (on the wiki, will be migrated to book format eventually)
+        </span>
+      </a>
+    </div>
+    <div class="description">
+      For tech savvy people who install, upgrade, and maintain CiviCRM for an organization
+    </div>
+  </li>
+</ul>
 
 <h2>Extensions Books</h2>
 

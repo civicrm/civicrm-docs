@@ -1,6 +1,6 @@
-name: Developer guide
+name: Developer Guide
 weight: 10
-description: For CiviCRM developers
+description: For computer programmers who create and improve functionality within CiviCRM
 category: Core
 langs:
     en:
