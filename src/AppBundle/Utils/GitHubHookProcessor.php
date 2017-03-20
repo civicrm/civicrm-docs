@@ -39,62 +39,27 @@ class GitHubHookProcessor {
       throw new \Exception("Unable to determine webhook event type from "
           . "request headers");
     }
-    if ($event == 'pull_request') {
-      $this->getDetailsFromPullRequest($payload);
+    if ($event != 'push') {
+      throw new \Exception("Webhook event type is not 'push'");
     }
-    elseif ($event == 'push') {
-      $this->getDetailsFromPush($payload);
-    }
-    if (!$this->branch) {
-      throw new \Exception("Unable to determine branch from payload data");
-    }
-    if (!$this->repo) {
-      throw new \Exception("Unable to determine repository from payload data");
-    }
+    $this->getDetailsFromPush($payload);
   }
 
   /**
-   * Use a pull request to figure out what branch and repo we are talking
-   * about, and the also work out what emails we should send.
-   *
-   * @param mixed $payload An object given by json_decode()
-   */
-  public function getDetailsFromPullRequest($payload) {
-    if ($payload->action != 'closed') {
-      throw new \Exception("Pull request is not closed");
-    }
-    if (!$payload->pull_request->merged) {
-      throw new \Exception("Pull request is not merged");
-    }
-    $this->branch = $payload->pull_request->base->ref;
-    $this->repo = $payload->repository->html_url;
-
-    //Get emails of people that should be notified
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $payload->pull_request->commits_url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      'Content-type: application/json',
-      'User-Agent: civicrm-docs',
-        )
-    ); // Assuming you're requesting JSON
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $this->commits = json_decode(curl_exec($ch));
-
-    foreach ($this->commits as $commit) {
-      $this->addRecipients($commit->commit->author->email);
-      $this->addRecipients($commit->commit->committer->email);
-    }
-  }
-
-  /**
-   * Use a pull request to figure out what branch and repo we are talking
+   * Use a "push" event to figure out what branch and repo we are talking
    * about, and the also work out what emails we should send.
    *
    * @param mixed $payload An object given by json_decode()
    */
   public function getDetailsFromPush($payload) {
     $this->branch = preg_replace("#.*/(.*)#", "$1", $payload->ref);
+    if (empty($this->branch)) {
+      throw new \Exception("Unable to determine branch from payload data");
+    }
     $this->repo = $payload->repository->html_url;
+    if (empty($this->repo)) {
+      throw new \Exception("Unable to determine repository from payload data");
+    }
     foreach ($payload->commits as $commit) {
       $this->addRecipients($commit->author->email);
       $this->addRecipients($commit->committer->email);
@@ -113,7 +78,7 @@ class GitHubHookProcessor {
     }
     // remove any email addresses begins with "donotreply@" or "noreply"
     $recipients = preg_grep('/^(donot|no)reply@/', $recipients, PREG_GREP_INVERT);
-    
+
     $this->recipients = array_unique(array_merge($this->recipients, $recipients));
   }
 
