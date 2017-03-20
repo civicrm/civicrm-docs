@@ -32,6 +32,13 @@ class GitHubHookProcessor {
    * @param mixed $payload An object given by json_decode()
    */
   public function process($event, $payload) {
+    if (empty($payload)) {
+      throw new \Exception("No payload data supplied");
+    }
+    if (empty($event)) {
+      throw new \Exception("Unable to determine webhook event type from "
+          . "request headers");
+    }
     if ($event == 'pull_request') {
       $this->getDetailsFromPullRequest($payload);
     }
@@ -104,6 +111,9 @@ class GitHubHookProcessor {
     if (!is_array($recipients)) {
       $recipients = array($recipients);
     }
+    // remove any email addresses begins with "donotreply@" or "noreply"
+    $recipients = preg_grep('/^(donot|no)reply@/', $recipients, PREG_GREP_INVERT);
+    
     $this->recipients = array_unique(array_merge($this->recipients, $recipients));
   }
 
