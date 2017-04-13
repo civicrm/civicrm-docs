@@ -2,19 +2,17 @@
 
 {% block content %}
 
-<p>CiviCRM offers community contributed documentation in the form of digital
-  <em>books</em>, listed below. We encourage everyone to
+<p>CiviCRM offers community contributed documentation below. We encourage everyone to
   <a href="https://docs.civicrm.org/dev/en/latest/documentation/">
     help contribute to documentation</a>.</p>
 
-<p><em>Note: some documentation has not yet been moved into book format and
-    can still be found on our
-    <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/CiviCRM+Documentation">wiki</a>
-    while it awaits migration.</em></p>
+<p><em>Some older documentation has not yet been migrated to this format and can still be found on the
+    <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/CiviCRM+Documentation">CiviCRM wiki</a>.
+    </em></p>
 
-<h2>Core Books</h2>
+<h2>Core Docs</h2>
 
-<p>These books pertain to CiviCRM "Core", that is, CiviCRM when it is installed
+<p>Documentation for CiviCRM "Core", that is, CiviCRM when it is installed
   without any extensions.</p>
 
 {% include 'AppBundle:Read:book_list.html.twig' with {books: core_books} %}
@@ -25,7 +23,7 @@
       <a href="https://wiki.civicrm.org/confluence/display/CRMDOC/Installation+and+Upgrades">
         <span class="name">Administrator Guide</span>
         <span class="edition">
-          (on the wiki, will be migrated to book format eventually)
+          (on the wiki, will be migrated here eventually)
         </span>
       </a>
     </div>
@@ -35,18 +33,17 @@
   </li>
 </ul>
 
-<h2>Extensions Books</h2>
+<h2>Extension-specific Docs</h2>
 
 <p>Extensions can be installed within CiviCRM to provide new functionality not
-  available in core. Below are our extensions-specific documentation books
-  &mdash; but note that many extensions do not have dedicated books,
-  so this list represents only a small fraction of
-  <a href="https://civicrm.org/extensions">all the available extensions</a>.</p>
+  available in core. Below are extensions-specific documentation for those
+  extensions which have documentation provided - currently only a small fraction of
+  <a href="https://civicrm.org/extensions">all available extensions</a>.</p>
 
 {% include 'AppBundle:Read:book_list.html.twig' with {books: extensions_books} %}
 
 <p>If you are an extensions maintainer, you may follow these instructions to
   <a href="https://docs.civicrm.org/dev/en/latest/documentation/extensions/">
-    create a book for your extension</a>.</p>
+    add documentation for your extension</a>.</p>
 
 {% endblock %}
