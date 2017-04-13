@@ -1,0 +1,5 @@
+name: CiviVolunteer
+description: Provides tools for signing up, managing, and tracking volunteers
+langs:
+  en:
+    repo: 'https://github.com/civicrm/org.civicrm.volunteer'
