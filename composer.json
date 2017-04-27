@@ -17,9 +17,10 @@
         }
     },
     "require": {
-        "php": "^5.6",
+        "php": "^5.6|^7.0",
         "symfony/symfony": "3.0.*",
         "doctrine/orm": "^2.5",
+        "twig/twig": "^1.33",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
