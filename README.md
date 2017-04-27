@@ -73,11 +73,41 @@ https://docs.civicrm.org/admin/publish/{book}/{lang}/{branch}
 
 ## Installing a local copy of the docs infrastructure
 
+### Docker
+
+The repo includes a dockerfile which you can use to create a container which has everything needed to run the application.
+
+To build the container and install composer dependencies just run (from the project directory):
+
+```bash
+docker build -t civicrm-docs .
+docker run -v $PWD:/var/www civicrm-docs composer install --working-dir=/var/www
+```
+
+And then to run it:
+
+```bash
+docker run -v $PWD:/var/www -p 8080:8080 civicrm-docs
+```
+
+You might want to change the first 8080 in the port argument if you've already got something listening on that port. 
+
+You may need to give write permissions on these directories:
+
+- var/cache
+- var/logs
+- web/dev
+- var/repos
+
+You should be able to see the app at http://localhost:8080.
+
+### On your host machine
+
 **Note**: the following steps are only useful and necessary for people looking after CiviCRM's documentation *infrastructure*. You don't need to do this if you just want to [contribute to documentation content](https://docs.civicrm.org/dev/en/master/documentation/).
 
 1. Ensure that that you have [pip](https://packaging.python.org/en/latest/install_requirements_linux/#installing-pip-setuptools-wheel-with-linux-package-managers) (for python) and [composer](https://getcomposer.org/) (for php) installed..
 
-2. Install MkDocs (`$ sudo pip install mkdocs`). ***Note:*** *Ensure that MkDocs is installed as root so that it can be accessed from the src/publish.php script (typically invoked as https://docs.civicrm.org/publish.php)*
+2. [Install MkDocs](https://docs.civicrm.org/dev/en/master/documentation/#mkdocs). Ensure that MkDocs is installed as root so that it can be accessed from the src/publish.php script (typically invoked as https://docs.civicrm.org/publish.php)*
 
 3. clone this repository to somewhere like /var/www/civicrm-docs and run `composer install`
 
