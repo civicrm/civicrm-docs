@@ -92,12 +92,11 @@ docker run -v $PWD:/var/www -p 8080:8080 civicrm-docs
 
 You might want to change the first 8080 in the port argument if you've already got something listening on that port. 
 
-You may need to give write permissions on these directories:
+The `nginx` user in the container will need to be able to write to these directories.
 
-- var/cache
-- var/logs
-- web/dev
-- var/repos
+```bash
+sudo chmod -R a+rwx var/cache var/logs/ web/dev/ var/repos/
+```
 
 You should be able to see the app at http://localhost:8080.
 
