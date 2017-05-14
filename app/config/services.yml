@@ -42,3 +42,9 @@ services:
     class: Monolog\Handler\StreamHandler
     arguments:
       - %kernel.logs_dir%/publish.log
+
+  lockfile_handler:
+    class: AppBundle\Utils\LockFileHandler
+    arguments:
+     - '%kernel.cache_dir%'
+     - 1800

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Model\Library;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 
 class PublishController extends Controller {
@@ -25,8 +26,20 @@ class PublishController extends Controller {
 
   /**
    * @Route("/admin/publish{identifier}" , requirements={"identifier": ".*"})
+   *
+   * @param Request $request
+   * @param $identifier
+   *
+   * @return Response
    */
   public function PublishAction(Request $request, $identifier) {
+    $lockFileHandler = $this->get('lockfile_handler');
+    if ($lockFileHandler->exists('publishing')) {
+      $err = 'Publishing is already in process, please try again later';
+      throw new ConflictHttpException($err);
+    }
+    $lockFileHandler->create('publishing');
+
     $this->publisher = $this->get('publisher');
     $bookSlug = Library::parseIdentifier($identifier)['bookSlug'];
     if ($bookSlug) {
@@ -42,6 +55,9 @@ class PublishController extends Controller {
     }
     $content['identifier'] = trim($identifier, "/");
     $content['messages'] = $this->publisher->getMessages();
+
+    $lockFileHandler->release('publishing');
+
     return $this->render('AppBundle:Publish:publish.html.twig', $content);
   }
 
