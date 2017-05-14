@@ -1,24 +1,22 @@
 /.idea/
+
 /app/config/parameters.yml
+
 /build/
 /phpunit.xml
-/var/*
-!/var/cache
-/var/cache/*
-!var/cache/.gitkeep
-!/var/logs
-/var/logs/*
+
+var/*
 !var/logs/.gitkeep
-!/var/sessions
-/var/sessions/*
 !var/sessions/.gitkeep
+!var/repos/.gitkeep
 !var/SymfonyRequirements.php
-/vendor/
 
-/web/*
-!/web/.htaccess
-!/web/app.php
-!/web/app_dev.php
-!/web/robots.txt
-!/web/static
+vendor/
 
+web/*
+!web/dev/.gitkeep
+!web/.htaccess
+!web/app.php
+!web/app_dev.php
+!web/robots.txt
+!web/static
