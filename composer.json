@@ -1,6 +1,6 @@
 {
-    "name": "michael/civicrm.docs",
-    "license": "proprietary",
+    "name": "civicrm/civicrm-docs",
+    "license": "MIT",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -17,9 +17,10 @@
         }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": "^5.6|^7.0",
         "symfony/symfony": "3.0.*",
         "doctrine/orm": "^2.5",
+        "twig/twig": "^1.33",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
@@ -30,7 +31,8 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.0",
+        "phpunit/phpunit": "^5.7"
     },
     "scripts": {
         "post-install-cmd": [
@@ -49,11 +51,6 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ]
-    },
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
     },
     "extra": {
         "symfony-app-dir": "app",
