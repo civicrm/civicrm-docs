@@ -1,0 +1,5 @@
+name: CiviRules
+description: Rule based engine to automate administrative processes
+langs:
+  en:
+    repo: 'https://github.com/CiviCooP/org.civicoop.civirules'    
