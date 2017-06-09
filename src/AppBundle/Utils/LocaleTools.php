@@ -22,7 +22,7 @@ class LocaleTools {
    *
    * @return string
    */
-  public static function getLaguageNameInLocale($languageCode, $localeCode) {
+  public static function getLanguageNameInLocale($languageCode, $localeCode) {
     $localeFile = self::LOCALES_DIR . "/$localeCode.json";
     $locales = json_decode(file_get_contents($localeFile), TRUE);
     return $locales['Names'][$languageCode];

@@ -144,7 +144,7 @@ class Language {
    * @return string
    */
   public function englishName() {
-    return LocaleTools::getLaguageNameInLocale($this->code, 'en');
+    return LocaleTools::getLanguageNameInLocale($this->code, 'en');
   }
 
   /**
@@ -153,7 +153,7 @@ class Language {
    * @return string
    */
   public function nativeName() {
-    return LocaleTools::getLaguageNameInLocale($this->code, $this->code);
+    return LocaleTools::getLanguageNameInLocale($this->code, $this->code);
   }
 
   public function descriptiveName() {
