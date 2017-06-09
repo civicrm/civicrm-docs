@@ -80,14 +80,14 @@ The repo includes a dockerfile which you can use to create a container which has
 To build the container and install composer dependencies just run (from the project directory):
 
 ```bash
-docker build -t civicrm-docs .
-docker run -v $PWD:/var/www civicrm-docs composer install --working-dir=/var/www
+docker build -t docs-publisher .
+docker run --rm -v $PWD:/var/www docs-publisher composer install --working-dir=/var/www
 ```
 
 And then to run it:
 
 ```bash
-docker run -v $PWD:/var/www -p 8080:8080 civicrm-docs
+docker run --rm -v $PWD:/var/www -p 8080:8080 docs-publisher
 ```
 
 You might want to change the first 8080 in the port argument if you've already got something listening on that port. 
@@ -95,7 +95,7 @@ You might want to change the first 8080 in the port argument if you've already g
 The `nginx` user in the container will need to be able to write to these directories.
 
 ```bash
-sudo chmod -R a+rwx var/cache var/logs/ web/dev/ var/repos/
+sudo chmod -R a+rw var/cache var/logs/ web/dev/ var/repos/
 ```
 
 You should be able to see the app at http://localhost:8080.
