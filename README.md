@@ -110,16 +110,32 @@ You should be able to see the app at http://localhost:8080.
 
 3. clone this repository to somewhere like /var/www/civicrm-docs and run `composer install`
 
-        $ git clone /var/www/civicrm-docs
-        $ cd /var/www/civicrm-docs
-        $ composer install
+```bash
+$ git clone /var/www/civicrm-docs
+$ cd /var/www/civicrm-docs
+$ composer install
+```
 
 4. Set appropriate permissions on web/static
 
 5. Configure an nginx virtual host
 
-        $ cd /etc/nginx/sites-enabled
-        $ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
+```bash
+$ cd /etc/nginx/sites-enabled
+$ ln -s /var/www/civicrm-docs/app/config/nginx.conf civicrm-docs
+```
 
 6. Reload your nginx config and you should be up and running.
 
+### Debugging
+
+You will need xdebug installed and configured to debug from your IDE. In this case
+we assume you're using PHPStorm. 
+
+The docker image comes with xdebug pre-installed and configured. From there the steps you need to take to get it working are:
+
+- From "Settings > Languages and Frameworks > PHP > Debug" change the xdebug port to 9000
+- From "Settings > Languages and Frameworks > PHP > Servers" add a new server with any name, host of "localhost", port of 8080. 
+- In the same screen enable path mappings and map the project directory to "/var/www" under "Absolute path on the server"
+- Install the xdebug helper for [chrome](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc?hl=en) or [firefox](https://addons.mozilla.org/en-gb/firefox/addon/the-easiest-xdebug/), setting the IDE key to "PHPSTORM" if necessary.
+- Enable the xdebug helper, put a breakpoint somewhere in web/app_dev.php and visit http://localhost:8080 and the debugged should open PHPStorm
