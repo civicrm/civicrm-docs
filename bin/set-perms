@@ -1,0 +1,9 @@
+#!/bin/bash
+
+find web/static var -exec setfacl -m u:www-data:rwx {} \;
+find web/static var -exec setfacl -m u:docs:rwx {} \;
+find web/static var -exec setfacl -x u:co {} \;
+
+find web/static var -type d -exec setfacl -m d:u:www-data:rwx {} \;
+find web/static var -type d -exec setfacl -m d:u:docs:rwx {} \;
+find web/static var -type d -exec setfacl -x d:u:co {} \;
