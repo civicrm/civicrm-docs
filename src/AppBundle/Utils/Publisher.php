@@ -408,6 +408,21 @@ class Publisher {
   }
 
   /**
+   * If we have an internal redirects file in the repo, then copy it to the
+   * path where the book is published. This app will look for redirects in this
+   * file when it can't find static HTML files to serve.
+   *
+   * @return bool
+   */
+  private function setupRedirects() {
+    $redirectsFile = $this->repoPath . '/redirects/internal.txt';
+    if (file_exists($redirectsFile)) {
+      copy($redirectsFile, $this->publishPath . '/redirects.txt');
+    }
+    return TRUE;
+  }
+
+  /**
    * Publish a book, or multiple books, based on a flexible identifier
    *
    * @param string $identifier A string describing the book, or books. For
@@ -512,7 +527,8 @@ class Publisher {
       $this->gitCheckout() &&
       $this->gitPull() &&
       $this->build() &&
-      $this->setupSymlinks();
+      $this->setupSymlinks() &&
+      $this->setupRedirects();
     return $success;
   }
 

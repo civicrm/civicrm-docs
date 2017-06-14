@@ -40,4 +40,82 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
       ],
     ];
   }
+
+  /**
+   * @param $rule
+   * @param $expected
+   * @dataProvider redirectRuleProvider
+   */
+  public function testParseRedirectRule($rule, $expected) {
+    $this->assertEquals($expected, StringTools::parseRedirectRule($rule));
+  }
+
+  /**
+   * @return array
+   */
+  public function redirectRuleProvider() {
+    return [
+      [
+        'foo/bar baz/bat',
+        [
+          'from' => 'foo/bar',
+          'to' => 'baz/bat',
+        ]
+      ],
+
+      [
+        '/foo/bar/ /baz/bat/',
+        [
+          'from' => 'foo/bar',
+          'to' => 'baz/bat',
+        ]
+      ],
+
+      [
+        'foo///bar baz///bat',
+        [
+          'from' => 'foo///bar',
+          'to' => 'baz///bat',
+        ]
+      ],
+
+      [
+        "   /foo/bar   /baz/bat   \n",
+        [
+          'from' => 'foo/bar',
+          'to' => 'baz/bat',
+        ]
+      ],
+
+      [
+        '#foo/bar baz/bat',
+        NULL,
+      ],
+
+      [
+        'foo/bar/baz/bat',
+        NULL,
+      ],
+
+      [
+        ' ',
+        NULL,
+      ],
+
+      [
+        'foo/bar baz/bat spam/eggs',
+        [
+          'from' => 'foo/bar',
+          'to' => 'baz/bat',
+        ]
+      ],
+
+      [
+        NULL,
+        NULL,
+      ],
+
+    ];
+  }
+
 }

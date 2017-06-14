@@ -20,4 +20,36 @@ class StringTools {
     return $clean;
   }
 
+  /**
+   * Look at one redirect rule, as it is written in a text file, and determine
+   * the "from" and "to" elements.
+   *
+   * See StringToolsTest::redirectRuleProvider() for examples
+   *
+   * @param string $rule
+   *
+   * @return array
+   */
+  public static function parseRedirectRule($rule) {
+    $rule = trim($rule);
+
+    // ignore comments (lines beginning with #)
+    if (preg_match('_^#_', $rule)) {
+      return NULL;
+    }
+
+    // Split by spaces
+    $redirectParts = array_values(array_filter(explode(' ', $rule)));
+
+    // Trim slashes from results
+    $redirectParts = array_map(function($v) {
+      return trim($v,'/');
+    }, $redirectParts);
+
+    $from = $redirectParts[0] ?? NULL;
+    $to = $redirectParts[1] ?? NULL;
+
+    return ($from && $to) ? ['from' => $from, 'to' => $to] : NULL;
+  }
+
 }

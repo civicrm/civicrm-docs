@@ -16,7 +16,7 @@ class Library {
   /**
    * Build a new Library based on a directory of book conf files.
    *
-   * @param strig $configDir
+   * @param string $configDir
    */
   public function __construct($configDir) {
     $finder = new Finder();
@@ -147,18 +147,38 @@ class Library {
    *
    * @param string $identifier (e.g. "user/en/master", "user/en", "user", "")
    *
-   * @return array The following keys/values are present:
-   *               "bookSlug" => (string/NULL) slug used to identify a book
-   *               "languageCode" => (string/NULL) two letter language code
-   *               "versionDescriptor" => (string/NULL)
+   * @return array See LibraryTest::identifierProvider() for examples
    */
   public static function parseIdentifier($identifier) {
-    $identifier = preg_replace("#/+#", "/", trim($identifier));
-    $identifier = trim($identifier, "/");
-    $parts = explode("/", $identifier);
-    $result['bookSlug'] = ($parts[0]) ? $parts[0] : NULL;
-    $result['languageCode'] = isset($parts[1]) ? $parts[1] : NULL;
-    $result['versionDescriptor'] = isset($parts[2]) ? $parts[2] : NULL;
+    // Remove junk chars from both ends
+    $identifier = trim($identifier, "/# \t\n\r\0\x0B");
+
+    // Ensure there are no repeated occurrences of "/" or "#"
+    $identifier = preg_replace("_(/|#)+_", "$1", $identifier);
+
+    // Split into 2 parts based on the first "#" character
+    $hashSplit = explode('#', $identifier, 2);
+    $fragment = $hashSplit[1] ?? NULL;
+    $preFragment = $hashSplit[0] ?? NULL;
+
+    // Take everything before "#" and split it into 4 parts
+    $slashSplit = explode("/", $preFragment, 4);
+
+    // Assign parts
+    $result['bookSlug'] = $slashSplit[0] ?? NULL;
+    $result['languageCode'] = $slashSplit[1] ?? NULL;
+    $result['versionDescriptor'] = $slashSplit[2] ?? NULL;
+    $editionParts = [
+      $result['bookSlug'],
+      $result['languageCode'],
+      $result['versionDescriptor']
+    ];
+    $result['editionIdentifier'] = in_array(FALSE, $editionParts)
+      ? NULL
+      : implode('/', $editionParts);
+    $result['path'] = $slashSplit[3] ?? NULL;
+    $result['fragment'] = $fragment;
+
     return $result;
   }
 
