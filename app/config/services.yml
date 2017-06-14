@@ -42,3 +42,10 @@ services:
     class: Monolog\Handler\StreamHandler
     arguments:
       - %kernel.logs_dir%/publish.log
+
+  app.exception_listener:
+    class: AppBundle\EventListener\ExceptionListener
+    arguments:
+      - %publish_path_root%
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
