@@ -20,16 +20,22 @@ class GitHubHookProcessor {
   public $branch;
 
   /**
-   *
+   * Constructor
    */
   public function __construct() {
 
   }
 
   /**
+   * Process a GitHub webhook
    *
-   * @param string $event  (e.g. 'pull_request', 'push')
-   * @param mixed $payload An object given by json_decode()
+   * @param string $event
+   *   e.g. 'pull_request', 'push'
+   *
+   * @param mixed $payload
+   *   An object given by json_decode()
+   *
+   * @throws \Exception
    */
   public function process($event, $payload) {
     if (empty($payload)) {
@@ -49,7 +55,10 @@ class GitHubHookProcessor {
    * Use a "push" event to figure out what branch and repo we are talking
    * about, and the also work out what emails we should send.
    *
-   * @param mixed $payload An object given by json_decode()
+   * @param mixed $payload
+   *   An object given by json_decode()
+   *
+   * @throws \Exception
    */
   public function getDetailsFromPush($payload) {
     $this->branch = preg_replace("#.*/(.*)#", "$1", $payload->ref);
@@ -70,7 +79,8 @@ class GitHubHookProcessor {
    * Adds one or more email recipients, and makes sure all recipients are
    * kept unique
    *
-   * @param array $recipients Array of strings for emails of people to notify
+   * @param array $recipients
+   *   Array of strings for emails of people to notify
    */
   public function addRecipients($recipients) {
     if (!is_array($recipients)) {

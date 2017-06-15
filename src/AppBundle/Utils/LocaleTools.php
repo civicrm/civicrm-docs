@@ -17,8 +17,11 @@ class LocaleTools {
    * $languageCode = 'en' and $localeCode = 'es' this function would answer the
    * question "what word do Spanish-speaking people use to refer to English?"
    *
-   * @param string $languageCode The language we're asking about
-   * @param string $localeCode   The language in which we want our answer
+   * @param string $languageCode
+   *   The language we're asking about
+   *
+   * @param string $localeCode
+   *   The language in which we want our answer
    *
    * @return string
    */
@@ -31,8 +34,11 @@ class LocaleTools {
   /**
    * Checks to see whether a given language code is a valid ISO-639-1 code.
    *
-   * @param string $languageCode (e.g. "en", or "es")
-   * @return boolean TRUE if the code is valid
+   * @param string $languageCode
+   *   e.g. "en", or "es"
+   *
+   * @return boolean
+   *   TRUE if the code is valid
    */
   public static function codeIsValid($languageCode) {
     return file_exists(self::LOCALES_DIR . "/$languageCode.json");

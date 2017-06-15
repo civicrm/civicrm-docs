@@ -18,24 +18,28 @@ class Language {
   public $versions;
 
   /**
-   * @var string The two letter language code for this language as
-   *             specified by https://en.wikipedia.org/wiki/ISO_639-1
+   * @var string
+   *   The two letter language code for this language as specified by
+   *   https://en.wikipedia.org/wiki/ISO_639-1
    */
   public $code;
 
   /**
    *
-   * @var array email addresses for people who would like to receive a
-   *            notification any time a version within this language is
-   *            published
+   * @var array
+   *   Email addresses for people who would like to receive a notification any
+   *   time a version within this language is published
    */
   public $watchers = array();
 
   /**
    * Initialize a language with values in it.
    *
-   * @param string $code two letter language code
-   * @param array $yaml language data from a book's yaml file
+   * @param string $code
+   *   Two letter language code
+   *
+   * @param array $yaml
+   *   Language data from a book's yaml file
    */
   public function __construct($code, $yaml) {
     $this->code = $code;
@@ -51,7 +55,8 @@ class Language {
   /**
    * Set up $this->versions based on parsed yaml data in $yaml
    *
-   * @param array $yaml Data passed into the language constructor.
+   * @param array $yaml
+   *   Data passed into the language constructor.
    */
   private function setupVersions($yaml) {
     $latestBranch = isset($yaml['latest']) ? $yaml['latest'] : NULL;
@@ -86,13 +91,22 @@ class Language {
    *
    * If validation succeeds, this function returns nothing
    *
-   * If validation fails, this function throws an exception.
+   * @throws \Exception
+   *   If validation fails
    */
   public function validate() {
     $this->validateCode();
     $this->validateAllVersionDescriptors();
   }
 
+  /**
+   * Check the code definied for this language to see if it's valid
+   *
+   * If validation succeeds, this function returns nothing
+   *
+   * @throws \Exception
+   *   If validation fails
+   */
   private function validateCode() {
     if (!LocaleTools::codeIsValid($this->code)) {
       throw new \Exception("Language code '{$this->code}' is not a valid "
@@ -103,10 +117,13 @@ class Language {
   /**
    * Adds a new version to this branch
    *
-   * @param string $name (e.g. "latest", "master", "4.7", etc.)
-   * @param string $branch (e.g "master", "4.7", etc)
-   * @param array $aliases Array of strings containing names which can also be
-   *                       used to reference the version.
+   * @param string $name
+   *   (e.g. "latest", "master", "4.7", etc.)
+   * @param string $branch
+   *   (e.g "master", "4.7", etc)
+   * @param array $aliases
+   *   Array of strings containing names which can also be used to reference
+   *   the version.
    */
   public function addVersion($name, $branch = NULL, $aliases = array()) {
     $this->versions[] = new Version($name, $branch, $aliases);
@@ -122,7 +139,8 @@ class Language {
    *
    * If validation succeeds, this function returns nothing
    *
-   * If validation fails, this function throws an exception.
+   * @throws \Exception
+   *   If validation fails
    */
   private function validateAllVersionDescriptors() {
     $descriptors = array();
@@ -139,23 +157,32 @@ class Language {
   }
 
   /**
-   * The name of the language, in English (e.g. "Spanish")
+   * The name of the language, in English
    *
    * @return string
+   *   e.g. "Spanish"
    */
   public function englishName() {
     return LocaleTools::getLanguageNameInLocale($this->code, 'en');
   }
 
   /**
-   * The native name of the language, in the language (e.g. "Español")
+   * The native name of the language, in the language
    *
    * @return string
+   *   e.g. "español"
    */
   public function nativeName() {
     return LocaleTools::getLanguageNameInLocale($this->code, $this->code);
   }
 
+  /**
+   * A string which refers to this language by both its native name and its
+   * English name
+   *
+   * @return string
+   *   e.g. "español (Spanish)"
+   */
   public function descriptiveName() {
     if ($this->code == 'en') {
       return $this->englishName();
@@ -166,7 +193,7 @@ class Language {
   }
 
   /**
-   * True when this language contains multiple distinct versions.
+   * True when this language contains multiple distinct versions
    *
    * @return bool
    */
@@ -175,6 +202,8 @@ class Language {
   }
 
   /**
+   * Count the number of versions defined within this language
+   *
    * @return integer
    */
   public function countVersions() {
@@ -185,8 +214,9 @@ class Language {
    * Retrieves a version object defined for this language
    *
    * @param string $branch
-   * @return \AppBundle\Model\Version The first version in $versions which
-   *                                  matches the specified branch
+   *
+   * @return \AppBundle\Model\Version
+   *   The first version in $versions which matches the specified branch
    */
   public function getVersionByBranch($branch) {
     $chosen = NULL;
@@ -211,8 +241,9 @@ class Language {
    * which can be either a branch, or a name, or an alias.
    *
    * @param string $descriptor
-   * @return \AppBundle\Model\Version The first version in $versions which
-   *                                  matches the specified descriptor
+   *
+   * @return \AppBundle\Model\Version
+   *   The first version in $versions which matches the specified descriptor
    */
   public function getVersionByDescriptor($descriptor) {
     $chosen = NULL;

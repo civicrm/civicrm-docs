@@ -12,13 +12,11 @@ use AppBundle\Model\Library;
 class PublishController extends Controller {
 
   /**
-   *
    * @var \AppBundle\Utils\Publisher
    */
   private $publisher;
 
   /**
-   *
    * @var bool TRUE if the book was published without any errors
    */
   private $publishSuccess;
@@ -81,11 +79,10 @@ class PublishController extends Controller {
   /**
    * Send notification emails after publishing
    *
-   * @param array $extraRecipients Array of strings for email addresses that
-   *                               should receive the notification email. If
-   *                               non are specified, then the email will be
-   *                               sent to all addresses set in the book's yaml
-   *                               configuration.
+   * @param array $extraRecipients
+   *   Array of strings for email addresses that should receive the
+   *   notification email. If non are specified, then the email will be sent to
+   *   all addresses set in the book's yaml configuration.
    */
   private function sendEmail($extraRecipients = array()) {
     $subject = $this->publisher->status;

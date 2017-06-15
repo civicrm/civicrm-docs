@@ -7,9 +7,9 @@ use Symfony\Component\Finder\Finder;
 class Library {
 
   /**
-   *
-   * @var array An array (without keys) of Book objects to represent all the
-   *            books in the system.
+   * @var array
+   *   An array (without keys) of Book objects to represent all the books in
+   *   the system.
    */
   public $books;
 
@@ -33,10 +33,12 @@ class Library {
    * books with uasort()
    *
    * @param Book $a
+   *
    * @param Book $b
-   * @return int - Negative when $a comes before $b.
-   *               Zero when $a and $b have identical sort orders.
-   *               Positive when $b comes before $a.
+   *
+   * @return int
+   *   Negative when $a comes before $b.Zero when $a and $b have identical sort
+   *   orders. Positive when $b comes before $a.
    */
   public static function compareBooksBySortOrder($a, $b) {
     $weightDiff = $a->weight - $b->weight;
@@ -53,8 +55,8 @@ class Library {
   }
 
   /**
-   * @return array Book data in 2-dimensional array format.
-   *               Used for the docs:list command.
+   * @return array
+   *   Book data in 2-dimensional array format. Used for the docs:list command.
    *
    *   Each item in the array contains keys:
    *     - book: string (ex: 'dev')
@@ -84,7 +86,8 @@ class Library {
   /**
    * Selects one of the many books within the library
    *
-   * @param string $slug The short name describing the book
+   * @param string $slug
+   *   The short name describing the book
    *
    * @return Book
    */
@@ -104,7 +107,8 @@ class Library {
    *
    * @param string $category
    *
-   * @return array of Book objects
+   * @return array
+   *   Array of Book objects (without keys)
    */
   public function getBooksByCategory($category) {
     $books = array();
@@ -121,14 +125,17 @@ class Library {
    *
    * @param string $repoURL
    *
-   * @return array of strings to identify each occurence of a book/language
-   *               which matches the specified repository. Example return:
-   *               ["mybook/en", "mybook/es"]
-   *               Note that it's rare for a repository to map to multiple
-   *               identifiers. In most cases the return will be an array with
-   *               a single element.
-   *               Note also that the return identifier only has the book slug
-   *               and the language code, not the branch name.
+   * @return array
+   *   Array of strings to identify each occurrence of a book/language
+   *   which matches the specified repository.
+   *
+   *   e.g. ["mybook/en", "mybook/es"]
+   *
+   *   Note that it's rare for a repository to map to multiple identifiers.
+   *   In most cases the return will be an array with a single element.
+   *
+   *   Note also that the return identifier only has the book slug and the
+   *   language code, not the branch name.
    */
   public function getIdentifiersByRepo($repoURL) {
     $identifiers = array();
@@ -145,10 +152,25 @@ class Library {
   /**
    * Parses an identifier into components we can use to identify a book
    *
-   * @param string $identifier (e.g. "user/en/master", "user/en", "user", "")
+   * See LibraryTest::identifierProvider() for examples
    *
-   * @return array See LibraryTest::identifierProvider() for examples
-   */
+   * @param string $identifier
+   *   examples: "user/en/master", "user/en", "user", ""
+   *
+   * @return array
+   *   example:
+   *     [
+   *       'bookSlug' => 'dev',
+   *       'languageCode' => 'en',
+   *       'versionDescriptor' => 'latest',
+   *       'editionIdentifier' => 'dev/en/latest',
+   *       'path' => 'category/foo/my-page',
+   *       'fragment' => 'some-section',
+   *     ]
+   *
+   *   The array will aways have the keys shown above, but values will be NULL
+   *   if those components do not exist in the given identifier
+ */
   public static function parseIdentifier($identifier) {
     // Remove junk chars from both ends
     $identifier = trim($identifier, "/# \t\n\r\0\x0B");

@@ -21,22 +21,24 @@ class MkDocs {
   private $fileLocator;
 
   /**
-   * @var string The full filesystem path to the directory containing the
-   *             markdown files
+   * @var string
+   *   The full filesystem path to the directory containing the markdown files
    */
   private $sourcePath;
 
   /**
-   * @var string $destinationPath The full filesystem path to the directory
-   *                              where we want the published content to go
+   * @var string $destinationPath
+   *   The full filesystem path to the directory where we want the published
+   *   content to go
    */
   private $destinationPath;
 
   /**
-   * @var string The full filesystem path to the directory which stores
-   *             different possible theme customizations. Within this directory,
-   *             separate directories should exist, per theme, for the
-   *             customizations, named with the same name as the theme.
+   * @var string
+   *   The full filesystem path to the directory which stores different
+   *   possible theme customizations. Within this directory, separate
+   *   directories should exist, per theme, for the customizations, named with
+   *   the same name as the theme.
    */
   private $themeCustomPathRoot;
 
@@ -46,20 +48,23 @@ class MkDocs {
   private $themeCustomPath;
 
   /**
-   * @var array A associative array with config values to put in the 'extra'
-   *            setting when building the book
+   * @var array
+   *   A associative array with config values to put in the 'extra' setting
+   *   when building the book
    */
   private $extraConfig;
 
   /**
-   * @var string The full filesystem location of the mkdocs.yml config file to
-   *             use when building the book. This is the file as it's stored
-   *             after adjustments we make to it.
+   * @var string
+   *   The full filesystem location of the mkdocs.yml config file to use when
+   *   building the book. This is the file as it's stored after adjustments we
+   *   make to it.
    */
   private $configFile;
 
   /**
    * @param Filesystem $fs
+   *
    * @param FileLocator $fileLocator
    */
   public function __construct(Filesystem $fs, FileLocator $fileLocator) {
@@ -135,14 +140,19 @@ class MkDocs {
   /**
    * Run MkDocs to build a book
    *
-   * @param string $sourcePath The full filesystem path to the directory
-   *                           containing the markdown files
+   * @param string $sourcePath
+   *   The full filesystem path to the directory containing the markdown files
    *
-   * @param string $destinationPath The full filesystem path to the directory
-   *                                where we want the published content to go
+   * @param string $destinationPath
+   *   The full filesystem path to the directory where we want the published
+   *   content to go
    *
-   * @param array $extraConfig A associative array with config values to put in
-   *                           the 'extra' setting when building the book
+   * @param array $extraConfig
+   *   A associative array with config values to put in the 'extra' setting
+   *   when building the book
+   *
+   * @throws \Exception
+   *   If build process fails
    */
   public function build($sourcePath, $destinationPath, $extraConfig = array()) {
     $this->sourcePath = $sourcePath;

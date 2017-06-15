@@ -8,8 +8,9 @@ use AppBundle\Utils\StringTools;
 class Book {
 
   /**
-   * @var string The reference identifier for this book, taken from
-   *             the name of the book's .yml file.
+   * @var string
+   *   The reference identifier for this book, taken from the name of the
+   *   book's .yml file.
    */
   public $slug;
 
@@ -34,7 +35,6 @@ class Book {
   public $weight;
 
   /**
-   *
    * @var string (e.g. "Core", "Extensions") Should be in sentence case
    */
   public $category;
@@ -42,8 +42,9 @@ class Book {
   /**
    * Creates a book based on a yaml conf file
    *
-   * @param string $confFile The path to the yaml configuration file which
-   *                         defines the attributes of the book.
+   * @param string $confFile
+   *   The path to the yaml configuration file which defines the attributes
+   *   of the book.
    */
   public function __construct($confFile) {
     $parser = new Parser();
@@ -60,15 +61,16 @@ class Book {
   }
 
   /**
-   * @return bool True when the book contains multiple languages.
+   * @return bool
+   *   True when the book contains multiple languages.
    */
   public function isMultiLanguage() {
     return count($this->languages) > 1;
   }
 
   /**
-   * @return integer The total number of language/version combinations defined
-   *                 for this book
+   * @return integer
+   *   The total number of language/version combinations defined for this book
    */
   public function countEditions() {
     $sum = 0;
@@ -79,7 +81,8 @@ class Book {
   }
 
   /**
-   * @return bool TRUE if the book has more than one language/version combo
+   * @return bool
+   *   TRUE if the book has more than one language/version combo
    */
   public function isMultiEdition() {
     return $this->countEditions() > 1;
@@ -88,7 +91,8 @@ class Book {
   /**
    * Selects one of the languages within the book
    *
-   * @param string $code Two letter language code to describe the language
+   * @param string $code
+   *   Two letter language code to describe the language
    *
    * @return Language
    */
@@ -115,7 +119,8 @@ class Book {
    *
    * If validation succeeds, this function returns nothing
    *
-   * If validation fails, this function throws an exception.
+   * @throws \Exception
+   *   If validation fails
    */
   public function validate() {
     $illegalBookSlugs = array(

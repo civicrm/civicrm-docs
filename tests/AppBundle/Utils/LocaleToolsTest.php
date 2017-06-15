@@ -8,8 +8,11 @@ class LocaleToolsTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * @param string $languageCode
+   *
    * @param string $localeCode
+   *
    * @param string $expected
+   *
    * @dataProvider languageNameInLocaleProvider
    */
   public function testGetLanguageNameInLocale($languageCode, $localeCode, $expected) {
@@ -36,6 +39,7 @@ class LocaleToolsTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * @param string $languageCode
+   *
    * @dataProvider codeProvider
    */
   public function testCodeIsValid($languageCode, $expected) {

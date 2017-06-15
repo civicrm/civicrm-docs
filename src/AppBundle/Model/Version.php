@@ -7,28 +7,28 @@ use AppBundle\Utils\StringTools;
 class Version {
 
   /**
-   * @var string Version name (e.g. "4.6" or "latest"). This is what
-   *             readers see. Sometimes it's the same as name of the
-   *             branch, but not always. It can contain pretty much whatever
-   *             characters you want.
+   * @var string
+   *   Version name (e.g. "4.6" or "latest"). This is what readers see.
+   *   Sometimes it's the same as name of the branch, but not always. It can
+   *   contain pretty much whatever characters you want.
    */
   public $name;
 
   /**
-   * @var string The git branch that corresponds to this version
-   *             (e.g. "master" or "4.6"). Sometimes it's the same as
-   *             $name but not always. It can be any string that actually
-   *             maps to a real git branch, including strings with forward
-   *             slashes.
+   * @var string
+   *   The git branch that corresponds to this version (e.g. "master" or "4.6").
+   *   Sometimes it's the same as $name but not always. It can be any string
+   *   that actually maps to a real git branch, including strings with forward
+   *   slashes.
    */
   public $branch;
 
   /**
-   * @var array An array (without keys) of strings which represent
-   *            aliases to this version of the book. For each alias,
-   *            we will create symbolic links so that a reader can also
-   *            access this version of the book at a URL with that
-   *            alias.
+   * @var array
+   *   An array (without keys) of strings which represent aliases to this
+   *   version of the book. For each alias, we will create symbolic links so
+   *   that a reader can also access this version of the book at a URL with that
+   *   alias.
    */
   public $aliases;
 
@@ -47,10 +47,15 @@ class Version {
    * If the constructor receives different $name and $branch values, it will
    * automatically add an alias for $name.
    *
-   * @param string $name (e.g. "latest", "master", "4.7", etc.)
-   * @param string $branch (e.g "master", "4.7", etc)
-   * @param array $aliases Array of strings containing names which can also be
-   *                       used to reference this version.
+   * @param string $name
+   *   e.g. "latest", "master", "4.7"
+   *
+   * @param string $branch
+   *   e.g "master", "4.7"
+   *
+   * @param array $aliases
+   *   Array of strings containing names which can also be used to reference
+   *   this version.
    */
   public function __construct($name, $branch = NULL, $aliases = array()) {
     $this->name = $name;
@@ -58,6 +63,10 @@ class Version {
     $this->setupAliases($aliases);
   }
 
+  /**
+   * @param $aliases array|string
+   *   e.g. "latest"
+   */
   private function setupAliases($aliases) {
     // wrap $aliases in array, if necessary
     if (!is_array($aliases)) {
@@ -84,7 +93,8 @@ class Version {
    * Gives an array of all unique strings that can be used to describe this
    * version, including branch, name, and any aliases.
    *
-   * @return array of strings (without keys)
+   * @return array
+   *   Array of strings (without keys)
    */
   public function allDescriptors() {
     $result = $this->aliases;
@@ -99,7 +109,8 @@ class Version {
    *
    * If validation succeeds, this function returns nothing
    *
-   * If validation fails, this function throws an exception.
+   * @throws \Exception
+   *   If validation fails
    */
   public function validate() {
     if (preg_match("#/#", $this->branch)) {

@@ -9,8 +9,10 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
   /**
    * @param string $string
    *  The string to make safe for usage in URLs
+   *
    * @param string $expected
    *  The expected result
+   *
    * @dataProvider urlProvider
    */
   public function testUrlSafe($string, $expected) {
@@ -43,7 +45,9 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
 
   /**
    * @param $rule
+   *
    * @param $expected
+   *
    * @dataProvider redirectRuleProvider
    */
   public function testParseRedirectRule($rule, $expected) {

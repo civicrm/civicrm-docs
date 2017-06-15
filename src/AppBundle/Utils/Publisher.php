@@ -36,8 +36,9 @@ class Publisher {
   public $logger;
 
   /**
-   * @var array Messages with key as a string to represent message type and
-   *            value as a string with the message content
+   * @var array
+   *   Messages with key as a string to represent message type and value as a
+   *   string with the message content
    */
   public $messages = array();
 
@@ -65,8 +66,9 @@ class Publisher {
 
   /**
    *
-   * @var string The full URL of the published book
-   *             (e.g. "https://docs.civicrm.org/user/en/latest")
+   * @var string
+   *   The full URL of the published book
+   *   e.g. "https://docs.civicrm.org/user/en/latest"
    */
   public $publishURLFull;
 
@@ -76,14 +78,15 @@ class Publisher {
   public $publishPathRoot;
 
   /**
-   * @var string The full filesystem path to the directory where the book
-   *             is to be published
+   * @var string
+   *   The full filesystem path to the directory where the book is to be
+   *   published
    */
   public $publishPath;
 
   /**
-   * @var string  The filesystem path to the directory containing all the
-   *              git repositories.
+   * @var string
+   *   The filesystem path to the directory containing all the git repositories.
    */
   public $repoPathRoot;
 
@@ -98,7 +101,7 @@ class Publisher {
   public $version;
 
   /**
-   * @var string the URL of the repository (e.g. https://github.com/foo/bar
+   * @var string the URL of the repository e.g. https://github.com/foo/bar
    */
   public $repoURL;
 
@@ -116,6 +119,7 @@ class Publisher {
    * @param string $reposPathRoot
    * @param string $publishPathRoot
    * @param \AppBundle\Utils\MkDocs $mkDocs
+   * @throws \Exception
    */
   public function __construct(
       $requestStack,
@@ -425,14 +429,14 @@ class Publisher {
   /**
    * Publish a book, or multiple books, based on a flexible identifier
    *
-   * @param string $identifier A string describing the book, or books. For
-   *                           example, "user/en/latest" will publish one
-   *                           version of one language of one book, or "user"
-   *                           will publish all lanugages and all versions
-   *                           within the book "user".
+   * @param string $identifier
+   *   A string describing the book, or books. For example "user/en/latest" will
+   *   publish one version of one language of one book, or "user" will publish
+   *   all lanugages and all versions within the book "user".
    *
-   * @return bool TRUE if all books were published, FALSE if there were any
-   *              errors while publishing any of the books
+   * @return bool
+   *   TRUE if all books were published, FALSE if there were any errors while
+   *   publishing any of the books
    */
   public function publish($identifier = "") {
     $this->suppliedIdentifier = $identifier;
@@ -464,10 +468,12 @@ class Publisher {
 
   /**
    * Publishes all the things!
+   *
    * All the versions of all the languages of all the books
    *
-   * @return bool TRUE if all books were published, FALSE if there were any
-   *              errors while publishing any of the books
+   * @return bool
+   *   TRUE if all books were published, FALSE if there were any errors while
+   *   publishing any of the books
    */
   private function publishLibrary() {
     $success = TRUE;
@@ -478,11 +484,13 @@ class Publisher {
   }
 
   /**
+   * Publish a book
    *
    * @param string $bookSlug The short name of the book
    *
-   * @return bool TRUE if all books were published, FALSE if there were any
-   *              errors while publishing any of the books
+   * @return bool
+   *   TRUE if all books were published, FALSE if there were any errors while
+   *   publishing any of the books
    */
   private function publishBook($bookSlug) {
     $success = $this->initializeBook($bookSlug);
@@ -495,11 +503,13 @@ class Publisher {
   }
 
   /**
+   * Publish a language
    *
    * @param string $languageCode An ISO 639-1 two letter language code
    *
-   * @return bool TRUE if all books were published, FALSE if there were any
-   *              errors while publishing any of the books
+   * @return bool
+   *   TRUE if all books were published, FALSE if there were any errors while
+   *   publishing any of the books
    */
   private function publishLanguage($languageCode) {
     $success = $this->initializeLanguage($languageCode);
@@ -514,11 +524,12 @@ class Publisher {
   /**
    * Publish a specific version of a book based on certain identifiers
    *
-   * @param string $versionDescriptor Can be the name of the version, the name
-   *                                  of the git branch, or a name of an alias
-   *                                  defined for the version
+   * @param string $versionDescriptor
+   *   Can be the name of the version, the name of the git branch, or a name
+   *   of an alias defined for the version
    *
-   * @return bool TRUE if book was published, FALSE if there were errors
+   * @return bool
+   *   TRUE if book was published, FALSE if there were errors
    */
   private function publishVersion($versionDescriptor) {
     $success = $this->initializeVersion($versionDescriptor) &&
@@ -535,7 +546,8 @@ class Publisher {
   /**
    * Set the publishing status based on available info
    *
-   * @param string $type Should be either "failure" or "success"
+   * @param string $type
+   *   Should be either "failure" or "success"
    */
   private function setStatus($type) {
     $phrase = $this->suppliedIdentifier;
@@ -557,7 +569,9 @@ class Publisher {
   }
 
   /**
-   * @param string $label should be 'NOTICE', 'INFO', 'WARNING', or 'CRITICAL'
+   * @param string $label
+   *   Should be 'NOTICE', 'INFO', 'WARNING', or 'CRITICAL'
+   *
    * @param string $content
    */
   public function addMessage($label, $content) {
@@ -574,7 +588,8 @@ class Publisher {
   }
 
   /**
-   * @return string all messages as lines in one big string
+   * @return string
+   *   All messages as lines in one big string
    */
   public function getMessagesInPlainText() {
     $text = '';

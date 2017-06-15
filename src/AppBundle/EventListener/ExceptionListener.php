@@ -17,7 +17,9 @@ class ExceptionListener {
 
   /**
    * ExceptionListener constructor.
+   *
    * @param string $publishPathRoot
+   *   Full filesystem path to the directory where books are to be published
    */
   public function __construct($publishPathRoot) {
     $this->publishPathRoot = $publishPathRoot;
@@ -25,6 +27,7 @@ class ExceptionListener {
 
   /**
    * This method is called by some sort of Symfony magic for every exception
+   *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    */
   public function onKernelException(GetResponseForExceptionEvent $event) {
@@ -42,8 +45,12 @@ class ExceptionListener {
   /**
    * See if we have a redirect stored for the given URI. If so, return the full
    * path to it as a string (which begins with a slash). If not, return NULL
+   *
    * @param string $requestUri
+   *   e.g. "/dev/en/latest/my-category/my-page"
+   *
    * @return null|string
+   *   e.g. "/dev/en/latest/foo/bar"
    */
   private function lookupRedirect($requestUri) {
     // Give up right away if the request contains two dots (for security)

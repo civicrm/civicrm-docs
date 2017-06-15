@@ -8,9 +8,11 @@ class StringTools {
    * Cleans up strings to be used for within URLs. For example, it makes them
    * lowercase and replaces spaces with dashes.
    *
-   * @param string $s the string to clean up
+   * @param string $s
+   *   the string to clean up
    *
-   * @return string The cleaned string, safe for use in URLs
+   * @return string
+   *   The cleaned string, safe for use in URLs
    */
   public static function urlSafe($s) {
     $clean = iconv('UTF-8', 'ASCII', strtolower(trim($s)));
@@ -27,9 +29,13 @@ class StringTools {
    * See StringToolsTest::redirectRuleProvider() for examples
    *
    * @param string $rule
+   *   e.g. "foo/bar baz/bat" or "#Ignorable comment"
    *
-   * @return array
-   */
+   * @return null|array
+   *   An array with keys "from" and "to".
+   *     e.g. ["from" => "old/page", "to"=> "new/page"]
+   *   Will be NULL if the input is not a valid redirect rule
+ */
   public static function parseRedirectRule($rule) {
     $rule = trim($rule);
 
