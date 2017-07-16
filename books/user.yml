@@ -9,9 +9,9 @@ langs:
         stable: master
         history:
             - 4.6
-    #ca:
-        #repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
-        #latest: master
+    ca:
+        repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
+        latest: master
     fr:
         repo: 'https://github.com/civicrm-french/civicrm-user-guide'
         latest: master
