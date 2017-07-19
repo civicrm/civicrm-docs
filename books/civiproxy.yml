@@ -1,0 +1,5 @@
+name: CiviProxy
+description: Scripts to install on separate server to police data traffic between CiviCRM on a secure server and the outside world
+langs:
+  en:
+repo: 'https://github.com/systopia/CiviProxy' 
