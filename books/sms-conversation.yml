@@ -1,0 +1,8 @@
+name: SMS conversation
+description: Automate SMS conversations with your contacts
+type: extension
+langs:
+    en:
+        repo: https://github.com/3sd/civicrm-sms-conversation/
+        latest: master
+        stable: master
