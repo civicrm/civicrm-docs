@@ -31,6 +31,10 @@ services:
       - %repos_path_root%
       - %publish_path_root%
       - '@mkdocs'
+      - '@git'
+
+  git:
+    class: AppBundle\Utils\GitTools
 
   publish.logger:
     class: Monolog\Logger
