@@ -2,8 +2,12 @@
 
 namespace AppBundle\Utils;
 
+use AppBundle\Model\Book;
+use AppBundle\Model\Language;
+use AppBundle\Model\Version;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Filesystem\Filesystem;
 use AppBundle\Model\Library;
@@ -11,22 +15,22 @@ use AppBundle\Model\Library;
 class Publisher {
 
   /**
-   * @var \AppBundle\Model\Book The book to be published
+   * @var Book The book to be published
    */
   public $book;
 
   /**
-   * @var \Symfony\Component\Filesystem\Filesystem
+   * @var Filesystem
    */
   public $fs;
 
   /**
-   * @var \AppBundle\Model\Language The language to be published
+   * @var Language The language to be published
    */
   public $language;
 
   /**
-   * @var \AppBundle\Model\Library The library of all books
+   * @var Library The library of all books
    */
   public $library;
 
@@ -96,7 +100,7 @@ class Publisher {
   public $repoPath;
 
   /**
-   * @var \AppBundle\Model\Version The version to be published
+   * @var Version The version to be published
    */
   public $version;
 
@@ -106,19 +110,19 @@ class Publisher {
   public $repoURL;
 
   /**
-   * @var \AppBundle\Utils\MkDocs
+   * @var MkDocs
    */
   private $mkDocs;
 
   /**
    *
    * @param RequestStack $requestStack
-   * @param Monolog\Logger $logger
+   * @param LoggerInterface $logger
    * @param Filesystem $fs
    * @param Library $library
    * @param string $reposPathRoot
    * @param string $publishPathRoot
-   * @param \AppBundle\Utils\MkDocs $mkDocs
+   * @param MkDocs $mkDocs
    * @throws \Exception
    */
   public function __construct(
@@ -597,13 +601,6 @@ class Publisher {
       $text = "{$text}{$message['label']} - {$message['content']}\n";
     }
     return $text;
-  }
-
-  /**
-   * Deletes all stored messages
-   */
-  public function clearMessages() {
-    $this->messages = array();
   }
 
 }
