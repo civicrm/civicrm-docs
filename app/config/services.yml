@@ -24,7 +24,6 @@ services:
   publisher:
     class: AppBundle\Utils\Publisher
     arguments:
-      - '@request_stack'
       - '@publish.logger'
       - '@filesystem'
       - '@library'
@@ -35,8 +34,8 @@ services:
   paths:
     class: AppBundle\Utils\Paths
     arguments:
-      - '%repos_path_root%'
       - '%publish_path_root%'
+      - '%repos_path_root%'
 
   git:
     class: AppBundle\Utils\GitTools

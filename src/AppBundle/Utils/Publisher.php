@@ -84,7 +84,7 @@ class Publisher {
     $this->publishingMessages = [];
     $this->addMessage('NOTICE', "PUBLISHING $identifier");
 
-    $parts = Library::parseIdentifier($identifier);
+    $parts = $this->library::parseIdentifier($identifier);
     $bookSlug = $parts['bookSlug'];
     $languageCode = $parts['languageCode'];
     $versionDescriptor = $parts['versionDescriptor'];
@@ -298,7 +298,7 @@ class Publisher {
    * @param string $repoURL
    */
   private function initializeRepo($repoPath, $repoURL) {
-    $repoExists = (bool)$this->fs->exists($repoPath . '/.git');
+    $repoExists = (bool) $this->fs->exists($repoPath . '/.git');
 
     if ($repoExists) {
       return;
