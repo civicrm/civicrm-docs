@@ -17,32 +17,22 @@ class Publisher {
   /**
    * @var Filesystem
    */
-  public $fs;
+  protected $fs;
 
   /**
    * @var Library The library of all books
    */
-  public $library;
+  protected $library;
 
   /**
    * @var Logger
    */
-  public $logger;
+  protected $logger;
 
   /**
-   * @var string The domain name of the site (e.g. "https://docs.civicrm.org")
+   * @var Paths
    */
-  public $publishURLBase;
-
-  /**
-   * @var string Directory where all published books go
-   */
-  public $publishPathRoot;
-
-  /**
-   * @var string Directory containing all the git repositories.
-   */
-  public $repoPathRoot;
+  protected $paths;
 
   /**
    * @var MkDocs
@@ -60,40 +50,35 @@ class Publisher {
   private $publishingMessages = [];
 
   /**
+   * @var string
+   */
+  protected $publishURLBase;
+
+  /**
    *
    * @param RequestStack $requestStack
    * @param LoggerInterface $logger
    * @param Filesystem $fs
    * @param Library $library
-   * @param string $reposPathRoot
-   * @param string $publishPathRoot
    * @param MkDocs $mkDocs
    * @param GitTools $git
+   * @param Paths $paths
    */
   public function __construct(
-    $requestStack,
-    $logger,
-    $fs,
-    $library,
-    $reposPathRoot,
-    $publishPathRoot,
-    $mkDocs,
-    $git
+    RequestStack $requestStack,
+    Logger $logger,
+    Filesystem $fs,
+    Library $library,
+    MkDocs $mkDocs,
+    GitTools $git,
+    Paths $paths
   ) {
-    if (empty($reposPathRoot)) {
-      throw new \Exception("Unable to determine root path for repositories");
-    }
-    if (empty($publishPathRoot)) {
-      throw new \Exception("Unable to determine root path publishing books");
-    }
-
     $this->logger = $logger;
     $this->fs = $fs;
     $this->library = $library;
     $this->git = $git;
-    $this->repoPathRoot = $reposPathRoot;
-    $this->publishPathRoot = $publishPathRoot;
     $this->mkDocs = $mkDocs;
+    $this->paths = $paths;
 
     if ($requestStack->getCurrentRequest()) {
       $this->publishURLBase
@@ -232,10 +217,10 @@ class Publisher {
     $publishURLFull = "{$this->publishURLBase}/{$fullIdentifier}";
     $repoURL = $language->repo;
 
-    $publishPath = "{$this->publishPathRoot}/{$fullIdentifier}";
+    $publishPath = $this->paths->getPublishPathRoot() . "/{$fullIdentifier}";
     $this->fs->mkdir($publishPath);
 
-    $repoPath = $this->repoPathRoot . "/{$book->slug}/" . "{$language->code}";
+    $repoPath = $this->paths->getRepoPathRoot() . "/{$book->slug}/" . "{$language->code}";
     $this->fs->mkdir($repoPath);
 
     $this->initializeRepo($repoPath, $repoURL);
@@ -383,7 +368,8 @@ class Publisher {
     Version $version,
     string $publishPath
   ) {
-    $path = "{$this->publishPathRoot}/{$book->slug}/{$language->code}";
+    $publishPathRoot = $this->paths->getPublishPathRoot();
+    $path = sprintf('%s/%s/%s', $publishPathRoot, $book->slug, $language->code);
 
     // Remove any existing symlinks to the branch
     $cmd = "rm $(find -L '$path' -xtype l -samefile '$publishPath')";

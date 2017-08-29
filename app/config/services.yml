@@ -28,10 +28,15 @@ services:
       - '@publish.logger'
       - '@filesystem'
       - '@library'
-      - %repos_path_root%
-      - %publish_path_root%
       - '@mkdocs'
       - '@git'
+      - '@paths'
+
+  paths:
+    class: AppBundle\Utils\Paths
+    arguments:
+      - '%repos_path_root%'
+      - '%publish_path_root%'
 
   git:
     class: AppBundle\Utils\GitTools
