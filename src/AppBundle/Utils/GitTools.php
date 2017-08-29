@@ -19,15 +19,6 @@ class GitTools {
   }
 
   /**
-   * @param $repoPath
-   * @param $branch
-   */
-  public function checkoutBranch($repoPath, $branch) {
-    $gitCheckoutBranch = new Process("git checkout {$branch}", $repoPath);
-    $gitCheckoutBranch->run();
-  }
-
-  /**
    * @param string $repoPath
    */
   public function pull($repoPath) {
@@ -73,7 +64,14 @@ class GitTools {
           throw new \Exception($err);
         }
       }
-      $this->checkoutBranch($repoPath, $branch);
+
+      $process = new Process("git checkout {$branch}", $repoPath);
+      $process->run();
+
+      if (!$process->isSuccessful()) {
+        $err = "Unable to run 'git checkout'\n" . $process->getErrorOutput();
+        throw new \Exception($err);
+      }
     }
   }
 
