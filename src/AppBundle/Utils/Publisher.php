@@ -8,7 +8,6 @@ use AppBundle\Model\Version;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Filesystem\Filesystem;
 use AppBundle\Model\Library;
 
@@ -50,13 +49,6 @@ class Publisher {
   private $publishingMessages = [];
 
   /**
-   * @var string
-   */
-  protected $publishURLBase;
-
-  /**
-   *
-   * @param RequestStack $requestStack
    * @param LoggerInterface $logger
    * @param Filesystem $fs
    * @param Library $library
@@ -65,7 +57,6 @@ class Publisher {
    * @param Paths $paths
    */
   public function __construct(
-    RequestStack $requestStack,
     Logger $logger,
     Filesystem $fs,
     Library $library,
@@ -79,13 +70,6 @@ class Publisher {
     $this->git = $git;
     $this->mkDocs = $mkDocs;
     $this->paths = $paths;
-
-    if ($requestStack->getCurrentRequest()) {
-      $this->publishURLBase
-        = $requestStack->getCurrentRequest()->getUriForPath('');
-    } else {
-      $this->publishURLBase = '/';
-    }
   }
 
   /**
@@ -214,7 +198,6 @@ class Publisher {
     $this->addMessage('INFO', $msg);
 
     $fullIdentifier = "{$book->slug}/{$language->code}/" . "{$version->branch}";
-    $publishURLFull = "{$this->publishURLBase}/{$fullIdentifier}";
     $repoURL = $language->repo;
 
     $publishPath = $this->paths->getPublishPathRoot() . "/{$fullIdentifier}";
@@ -234,8 +217,8 @@ class Publisher {
     $this->git->pull($repoPath);
 
     $this->build($book, $language, $version, $repoPath, $publishPath);
-    $format = "Book published successfully at <a href='%s'>%s</a>.";
-    $msg = sprintf($format, $publishURLFull, $publishURLFull);
+    $format = "<a href='/%s'>Book published successfully</a>.";
+    $msg = sprintf($format, $fullIdentifier);
     $this->addMessage('INFO', $msg);
 
     $this->setupSymlinks($book, $language, $version, $publishPath);
@@ -379,9 +362,8 @@ class Publisher {
     // Add new symlinks
     foreach ($version->aliases as $alias) {
       $this->fs->symlink($publishPath, "$path/$alias");
-      $url = "{$this->publishURLBase}/{$book->slug}/{$language->code}/$alias";
-      $a = "<a href='$url'>$url</a>";
-      $this->addMessage('INFO', "Adding alias '{$alias}' at $a.");
+      $msg = sprintf("Adding alias '%s' for %s.", $alias, $version->name);
+      $this->addMessage('INFO', $msg);
     }
   }
 
@@ -399,6 +381,5 @@ class Publisher {
       copy($redirectsFile, $publishPath . '/redirects.txt');
     }
   }
-
 
 }
