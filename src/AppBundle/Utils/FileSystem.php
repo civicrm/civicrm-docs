@@ -32,6 +32,11 @@ class FileSystem extends BaseFileSystem {
    * @param string $dir
    */
   public function removeDir($dir) {
+
+    if (!$this->exists($dir)) {
+      return;
+    }
+
     $childFirst = \RecursiveIteratorIterator::CHILD_FIRST;
     $noDots = \RecursiveDirectoryIterator::SKIP_DOTS;
     $directoryIterator = new \RecursiveDirectoryIterator($dir, $noDots);
