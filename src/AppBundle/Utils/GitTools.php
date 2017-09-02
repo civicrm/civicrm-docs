@@ -48,6 +48,21 @@ class GitTools {
   }
 
   /**
+   * @param $repoPath
+   *
+   * @throws \Exception
+   */
+  public function fetch($repoPath) {
+    $process = new Process('git fetch', $repoPath);
+    $process->run();
+
+    if (!$process->isSuccessful()) {
+      $msg = "Unable to run 'git fetch'. Output: " . $process->getErrorOutput();
+      throw new \Exception($msg);
+    }
+  }
+
+  /**
    * If we are on the not on the correct branch, attempt to check it out
    * (first locally, then remotely).
    *
