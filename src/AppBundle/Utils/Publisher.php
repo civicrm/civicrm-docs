@@ -8,13 +8,12 @@ use AppBundle\Model\Version;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Filesystem\Filesystem;
 use AppBundle\Model\Library;
 
 class Publisher {
 
   /**
-   * @var Filesystem
+   * @var FileSystem
    */
   protected $fs;
 
@@ -185,44 +184,35 @@ class Publisher {
    */
   private function publishVersion($book, $language, $versionDescriptor) {
     $version = $this->getVersion($book, $language, $versionDescriptor);
+    $branch = $version->branch;
+    $bookRepo = $language->repo;
 
-    // info text
-    $this->addMessage('INFO', "Using book: " . $book->name);
-    $aliasText = "";
-    if ($version->aliases) {
-      $aliasList = implode('", "', $version->aliases);
-      $aliasText = sprintf("with aliases: %s", $aliasList);
-    }
-    $this->addMessage('INFO', "Using language: " . $language->getEnglishName());
-    $msg = sprintf("Using branch: '%s' %s", $version->branch, $aliasText);
-    $this->addMessage('INFO', $msg);
+    $this->showVersionInfo($book, $language, $version);
 
-    $fullIdentifier = "{$book->slug}/{$language->code}/" . "{$version->branch}";
-    $repoURL = $language->repo;
+    $repoRoot = $this->paths->getRepoPathRoot();
+    $masterRepoDir = sprintf('%s/%s/%s', $repoRoot, $book->slug, $language->code);
 
-    $publishPath = $this->paths->getPublishPathRoot() . "/{$fullIdentifier}";
-    $this->fs->mkdir($publishPath);
+    $this->setupLocalRepo($masterRepoDir, $bookRepo);
+    $tmpRepoDir = $this->makeTmpRepo($book, $language, $masterRepoDir);
 
-    $repoPath = $this->paths->getRepoPathRoot() . "/{$book->slug}/" . "{$language->code}";
-    $this->fs->mkdir($repoPath);
+    $this->git->checkout($tmpRepoDir, $branch);
+    $this->git->pull($tmpRepoDir);
+    $this->addMessage('INFO', sprintf("Checked out branch '%s'", $branch));
 
-    $this->initializeRepo($repoPath, $repoURL);
+    $path = "{$book->slug}/{$language->code}/{$branch}";
+    $webRoot = $this->paths->getPublishPathRoot() . "/{$path}";
+    $this->fs->mkdir($webRoot);
+    $this->build($book, $language, $version, $tmpRepoDir, $webRoot);
 
-    $this->git->checkout($repoPath, $version->branch);
-    $msg = sprintf("Checked out branch '%s'", $version->branch);
-    $this->addMessage('INFO', $msg);
-
-    $msg = sprintf("Running 'git pull' to update '%s' branch.", $repoPath);
-    $this->addMessage('INFO', $msg);
-    $this->git->pull($repoPath);
-
-    $this->build($book, $language, $version, $repoPath, $publishPath);
     $format = "<a href='/%s'>Book published successfully</a>.";
-    $msg = sprintf($format, $fullIdentifier);
+    $msg = sprintf($format, $path);
     $this->addMessage('INFO', $msg);
 
-    $this->setupSymlinks($book, $language, $version, $publishPath);
-    $this->setupRedirects($repoPath, $publishPath);
+    $this->setupSymlinks($book, $language, $version, $webRoot);
+    $this->setupRedirects($tmpRepoDir, $webRoot);
+
+    $this->fs->removeDir($tmpRepoDir);
+    // todo change publish dir to tmp dir
   }
 
   /**
@@ -289,22 +279,6 @@ class Publisher {
     $version->validate();
 
     return $version;
-  }
-
-  /**
-   * Ensure that we have the repository locally
-   *
-   * @param string $repoPath
-   * @param string $repoURL
-   */
-  private function initializeRepo($repoPath, $repoURL) {
-    $repoExists = (bool) $this->fs->exists($repoPath . '/.git');
-
-    if ($repoExists) {
-      return;
-    }
-
-    $this->git->clone($repoURL, $repoPath);
   }
 
   /**
@@ -380,6 +354,59 @@ class Publisher {
     if (file_exists($redirectsFile)) {
       copy($redirectsFile, $publishPath . '/redirects.txt');
     }
+  }
+
+  /**
+   * @param $book
+   * @param $language
+   * @param $version
+   */
+  private function showVersionInfo(
+    Book $book,
+    Language $language,
+    Version $version
+  ) {
+    $this->addMessage('INFO', "Using book: " . $book->name);
+
+    $aliasText = "";
+    if ($version->aliases) {
+      $aliasList = implode('", "', $version->aliases);
+      $aliasText = sprintf("with aliases: %s", $aliasList);
+    }
+
+    $this->addMessage('INFO', "Using language: " . $language->getEnglishName());
+    $msg = sprintf("Using branch: '%s' %s", $version->branch, $aliasText);
+    $this->addMessage('INFO', $msg);
+  }
+
+  /**
+   * @param $masterRepoDir
+   * @param $bookRepo
+   */
+  private function setupLocalRepo($masterRepoDir, $bookRepo) {
+    if (!$this->fs->exists($masterRepoDir)) {
+      $this->fs->mkdir($masterRepoDir);
+      $this->git->clone($bookRepo, $masterRepoDir);
+    }
+    $this->git->fetch($masterRepoDir);
+  }
+
+  /**
+   * @param $book
+   * @param $language
+   * @param $masterRepoDir
+   *
+   * @return string
+   */
+  private function makeTmpRepo($book, $language, $masterRepoDir): string {
+    $cacheDir = $this->paths->getCacheDir() . '/publishing';
+    $this->fs->mkdir($cacheDir);
+    $prefix = $book->slug . '_' . $language->code . '_' . time();
+    $tmpRepoDir = $cacheDir . '/' . $prefix;
+    $this->fs->mkdir($tmpRepoDir);
+    $this->fs->copyDir($masterRepoDir, $tmpRepoDir);
+
+    return $tmpRepoDir;
   }
 
 }
