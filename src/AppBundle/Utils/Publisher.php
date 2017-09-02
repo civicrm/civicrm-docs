@@ -185,42 +185,43 @@ class Publisher {
   private function publishVersion($book, $language, $versionDescriptor) {
     $version = $this->getVersion($book, $language, $versionDescriptor);
     $branch = $version->branch;
-    $bookRepo = $language->repo;
     $langCode = $language->code;
-    $tmpPrefix = $book->slug . '_' . $langCode . '_' . time();
+    $slug = $book->slug;
+    $tmpPrefix = $slug . '_' . $langCode . '_' . time();
+    $tmpRepoDir = $this->makeTmpDir('repo_' . $tmpPrefix);
+    $tmpPublishDir = $this->makeTmpDir('publish_' . $tmpPrefix);
     $repoRoot = $this->paths->getRepoPathRoot();
+    $masterRepoDir = sprintf('%s/%s/%s', $repoRoot, $slug, $langCode);
+    $webPath = sprintf('%s/%s/%s', $slug, $langCode, $branch);
+    $webRoot = $this->paths->getPublishPathRoot() . "/" . $webPath;
 
-    $this->showVersionInfo($book, $language, $version);
+    try {
+      $this->showVersionInfo($book, $language, $version);
 
-    $masterRepoDir = sprintf('%s/%s/%s', $repoRoot, $book->slug, $langCode);
-    $this->setupLocalRepo($masterRepoDir, $bookRepo);
-    $repoPrefix = 'repo_' . $tmpPrefix;
-    $tmpRepoDir = $this->makeTmpRepo($repoPrefix, $masterRepoDir);
+      // setup temp repo to build from
+      $this->setupLocalRepo($masterRepoDir, $language->repo);
+      $this->fs->copyDir($masterRepoDir, $tmpRepoDir);
+      $this->git->checkout($tmpRepoDir, $branch);
+      $this->git->pull($tmpRepoDir);
+      $this->addMessage('INFO', sprintf("Checked out branch '%s'", $branch));
 
-    $this->git->checkout($tmpRepoDir, $branch);
-    $this->git->pull($tmpRepoDir);
-    $this->addMessage('INFO', sprintf("Checked out branch '%s'", $branch));
+      $this->build($book, $language, $version, $tmpRepoDir, $tmpPublishDir);
 
-    $publishPrefix = 'publish_' . $tmpPrefix;
-    $tmpPublishDir = $this->makeTmpDir($publishPrefix);
+      // remove existing and copy new
+      $this->fs->removeDir($webRoot);
+      $this->fs->copyDir($tmpPublishDir, $webRoot);
+      $this->setupSymlinks($book, $language, $version, $webRoot);
+      $this->setupRedirects($tmpRepoDir, $webRoot);
 
-    $this->build($book, $language, $version, $tmpRepoDir, $tmpPublishDir);
+      $msg = sprintf("<a href='/%s'>Book published!</a>.", $webPath);
+      $this->addMessage('INFO', $msg);
 
-    $path = "{$book->slug}/{$langCode}/{$branch}";
-    $webRoot = $this->paths->getPublishPathRoot() . "/{$path}";
-    $this->fs->mkdir($webRoot);
+    } catch (\Exception $e) {
+      $this->cleanup($tmpRepoDir, $tmpPublishDir);
+      throw $e;
+    }
 
-    $this->fs->removeDir($webRoot);
-    $this->fs->copyDir($tmpPublishDir, $webRoot);
-
-    $format = "<a href='/%s'>Book published successfully</a>.";
-    $msg = sprintf($format, $path);
-    $this->addMessage('INFO', $msg);
-
-    $this->setupSymlinks($book, $language, $version, $webRoot);
-    $this->setupRedirects($tmpRepoDir, $webRoot);
-
-    $this->cleanup($tmpRepoDir, $tmpPublishDir, $publishPrefix);
+    $this->cleanup($tmpRepoDir, $tmpPublishDir);
   }
 
   /**
@@ -400,19 +401,6 @@ class Publisher {
   }
 
   /**
-   * @param string $prefix
-   * @param string $masterRepoDir
-   *
-   * @return string
-   */
-  private function makeTmpRepo($prefix, $masterRepoDir): string {
-    $tmpRepoDir = $this->makeTmpDir($prefix);
-    $this->fs->copyDir($masterRepoDir, $tmpRepoDir);
-
-    return $tmpRepoDir;
-  }
-
-  /**
    * @param $prefix
    *
    * @return string
@@ -429,12 +417,11 @@ class Publisher {
   /**
    * @param $tmpRepoDir
    * @param $tmpPublishDir
-   * @param $publishPrefix
    */
-  private function cleanup($tmpRepoDir, $tmpPublishDir, $publishPrefix) {
+  private function cleanup($tmpRepoDir, $tmpPublishDir) {
     $this->fs->removeDir($tmpRepoDir);
     $this->fs->removeDir($tmpPublishDir);
-    $mkdocsSiteFile = $publishPrefix . '-mkdocs.yml';
+    $mkdocsSiteFile = $tmpPublishDir . '-mkdocs.yml';
     $this->fs->remove($mkdocsSiteFile);
   }
 
