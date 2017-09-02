@@ -5,36 +5,50 @@ namespace AppBundle\Utils;
 class Paths {
 
   /**
-   * @var string Directory where all published books go
+   * @var string The root of the application
    */
-  protected $publishPathRoot;
+  protected $kernelRoot;
 
   /**
-   * @var string Directory containing all the git repositories.
+   * @var string The cache directory for the current environment
    */
-  protected $repoPathRoot;
+  protected $cacheDir;
 
   /**
-   * @param string $publishPathRoot
-   * @param string $repoPathRoot
+   * @param string $kernelRoot
+   * @param string $cacheDir
    */
-  public function __construct($publishPathRoot, $repoPathRoot) {
-    $this->publishPathRoot = $publishPathRoot;
-    $this->repoPathRoot = $repoPathRoot;
+  public function __construct($kernelRoot, $cacheDir) {
+    $this->kernelRoot = $kernelRoot;
+    $this->cacheDir = $cacheDir;
+  }
+
+  /**
+   * @return string
+   */
+  public function getKernelRoot(): string {
+    return $this->kernelRoot;
   }
 
   /**
    * @return string
    */
   public function getPublishPathRoot(): string {
-    return $this->publishPathRoot;
+    return $this->kernelRoot . '/../web';
   }
 
   /**
    * @return string
    */
   public function getRepoPathRoot(): string {
-    return $this->repoPathRoot;
+    return $this->kernelRoot . '/../var/repos';
+  }
+
+  /**
+   * @return string
+   */
+  public function getCacheDir(): string {
+    return $this->cacheDir;
   }
 
 }
