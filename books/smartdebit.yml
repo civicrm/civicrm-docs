@@ -1,0 +1,5 @@
+name: Smart Debit
+description: Smart Debit Payment Processor (UK Direct Debit Handler)
+langs:
+  en:
+    repo: 'https://github.com/mattwire/org.civicrm.smartdebit'
