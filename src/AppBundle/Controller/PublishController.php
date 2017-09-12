@@ -74,7 +74,7 @@ class PublishController extends Controller {
       foreach ($identifiers as $identifier) {
         $fullIdentifier = "{$identifier}/{$processor->branch}";
         $this->publisher->publish($fullIdentifier);
-        $this->sendEmail($identifier);
+        $this->sendEmail($fullIdentifier);
       }
       $response = $this->publisher->getMessagesInPlainText();
     }
