@@ -1,0 +1,9 @@
+name: System Administrator Guide
+weight: 0
+description: For tech savvy people who install, upgrade, and maintain CiviCRM for an organization
+category: Core
+langs:
+    en:
+        repo: 'https://github.com/civicrm/civicrm-sysadmin-guide'
+        latest: master
+        stable: master
