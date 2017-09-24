@@ -25,17 +25,24 @@ class StringTools {
   /**
    * Look at one redirect rule, as it is written in a text file, and determine
    * the "from" and "to" elements.
-   *
    * See StringToolsTest::redirectRuleProvider() for examples
    *
    * @param string $rule
    *   e.g. "foo/bar baz/bat" or "#Ignorable comment"
    *
    * @return null|array
-   *   An array with keys "from" and "to".
-   *     e.g. ["from" => "old/page", "to"=> "new/page"]
-   *   Will be NULL if the input is not a valid redirect rule
- */
+   *   Will be NULL if the input is not a valid redirect rule.
+   *
+   *   If valid, will be an array which looks like this
+   *   [
+   *     "from" => "old/page",
+   *     "to"=> "new/page",
+   *     "type" => "internal"
+   *   ]
+   *
+   *   The "type" setting above, will either be "internal" (for redirects within
+   *   one guide, or "external" for redirects which point outside of the guide.)
+   */
   public static function parseRedirectRule($rule) {
     $rule = trim($rule);
 
@@ -54,8 +61,15 @@ class StringTools {
 
     $from = $redirectParts[0] ?? NULL;
     $to = $redirectParts[1] ?? NULL;
+    $isValid = (!empty($from) && !empty($to));
 
-    return ($from && $to) ? ['from' => $from, 'to' => $to] : NULL;
+    if ($isValid) {
+      $type = (preg_match('_^https?://_', $to)) ? 'external' : 'internal';
+      return ['from' => $from, 'to' => $to, 'type' => $type];
+    }
+    else {
+      return NULL;
+    }
   }
 
 }
