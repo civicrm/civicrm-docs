@@ -73,8 +73,18 @@ class ExceptionListener {
     $redirects = file($redirectsFile);
     foreach ($redirects as $redirect) {
       $rule = StringTools::parseRedirectRule($redirect);
-      if ($rule && $rule['from'] == $path) {
-        return "/$edition/${rule['to']}$fragment";
+      if (empty($rule)) {
+        // Skip any rules that are invalid
+        break;
+      }
+      $ruleMatchesRequest = ($rule['from'] == $path);
+      if ($ruleMatchesRequest) {
+        if ($rule['type'] == 'internal') {
+          return "/$edition/${rule['to']}$fragment";
+        }
+        else {
+          return $rule['to'];
+        }
       }
     }
 
