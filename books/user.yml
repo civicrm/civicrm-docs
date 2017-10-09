@@ -17,6 +17,6 @@ langs:
         latest: master
         stable: master
     es:
-        repo: 'https://github.com/alejandro-ixiam/civicrm-user-guide-spanish'
+        repo: 'https://github.com/ixiam/civicrm-user-guide-spanish'
         latest: master
         stable: master
