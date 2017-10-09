@@ -168,7 +168,7 @@ class Publisher {
     $language = $this->getLanguage($book, $languageCode);
     if ($language) {
       foreach ($language->versions as $version) {
-        $this->publishVersion($book, $language, $version->branch);
+        $this->publishVersion($book, $language, $version->slug);
       }
     }
   }
@@ -180,7 +180,7 @@ class Publisher {
    * @param Language $language
    * @param string $versionDescriptor
    *   Can be the name of the version, the name of the git branch, or a name
-   *   of an alias defined for the version
+   *   of a redirect defined for the version
    */
   private function publishVersion($book, $language, $versionDescriptor) {
     $version = $this->getVersion($book, $language, $versionDescriptor);
@@ -192,7 +192,7 @@ class Publisher {
     $tmpPublishDir = $this->makeTmpDir('publish_' . $tmpPrefix);
     $repoRoot = $this->paths->getRepoPathRoot();
     $masterRepoDir = sprintf('%s/%s/%s', $repoRoot, $slug, $langCode);
-    $webPath = sprintf('%s/%s/%s', $slug, $langCode, $branch);
+    $webPath = sprintf('%s/%s/%s', $slug, $langCode, $version->path);
     $webRoot = $this->paths->getPublishPathRoot() . "/" . $webPath;
 
     try {
@@ -210,7 +210,6 @@ class Publisher {
       // remove existing and copy new
       $this->fs->removeDir($webRoot);
       $this->fs->copyDir($tmpPublishDir, $webRoot);
-      $this->setupSymlinks($book, $language, $version, $webRoot);
       $this->setupRedirects($tmpRepoDir, $webRoot);
 
       $msg = sprintf("<a href='/%s'>Book published!</a>.", $webPath);
@@ -272,6 +271,7 @@ class Publisher {
    * @param string $versionDescriptor
    *
    * @return Version
+   *
    */
   private function getVersion($book, $language, $versionDescriptor) {
     $version = $language->getVersionByDescriptor($versionDescriptor);
@@ -316,37 +316,6 @@ class Publisher {
         $e->getMessage()
       );
       throw new \Exception($msg);
-    }
-  }
-
-  /**
-   * Check and update symlinks so that latest and stable point to the right
-   * places
-   *
-   * @param Book $book
-   * @param Language $language
-   * @param Version $version
-   * @param string $publishPath
-   */
-  private function setupSymlinks(
-    Book $book,
-    Language $language,
-    Version $version,
-    string $publishPath
-  ) {
-    $publishPathRoot = $this->paths->getPublishPathRoot();
-    $path = sprintf('%s/%s/%s', $publishPathRoot, $book->slug, $language->code);
-
-    // Remove any existing symlinks to the branch
-    $cmd = "rm $(find -L '$path' -xtype l -samefile '$publishPath')";
-    $purgeExisting = new Process($cmd);
-    $purgeExisting->run();
-
-    // Add new symlinks
-    foreach ($version->redirects as $redirect) {
-      $this->fs->symlink($publishPath, "$path/$redirect");
-      $msg = sprintf("Adding alias '%s' for %s.", $redirect, $version->name);
-      $this->addMessage('INFO', $msg);
     }
   }
 
