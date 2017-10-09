@@ -3,7 +3,6 @@
 parameters:
   books_dir: %kernel.root_dir%/../books
   publish_path_root: %kernel.root_dir%/../web
-  repos_path_root: %kernel.root_dir%/../var/repos
 
 services:
 
@@ -24,13 +23,24 @@ services:
   publisher:
     class: AppBundle\Utils\Publisher
     arguments:
-      - '@request_stack'
       - '@publish.logger'
       - '@filesystem'
       - '@library'
-      - %repos_path_root%
-      - %publish_path_root%
       - '@mkdocs'
+      - '@git'
+      - '@paths'
+
+  filesystem:
+    class: AppBundle\Utils\FileSystem
+
+  paths:
+    class: AppBundle\Utils\Paths
+    arguments:
+      - '%kernel.root_dir%'
+      - '%kernel.cache_dir%'
+
+  git:
+    class: AppBundle\Utils\GitTools
 
   publish.logger:
     class: Monolog\Logger

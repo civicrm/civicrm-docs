@@ -3,7 +3,6 @@
 namespace AppBundle\Model;
 
 use AppBundle\Utils\LocaleTools;
-use \AppBundle\Model\Version;
 
 class Language {
 
@@ -162,7 +161,7 @@ class Language {
    * @return string
    *   e.g. "Spanish"
    */
-  public function englishName() {
+  public function getEnglishName() {
     return LocaleTools::getLanguageNameInLocale($this->code, 'en');
   }
 
@@ -185,10 +184,10 @@ class Language {
    */
   public function descriptiveName() {
     if ($this->code == 'en') {
-      return $this->englishName();
+      return $this->getEnglishName();
     }
     else {
-      return $this->nativeName() . " (" . $this->englishName() . ")";
+      return $this->nativeName() . " (" . $this->getEnglishName() . ")";
     }
   }
 
