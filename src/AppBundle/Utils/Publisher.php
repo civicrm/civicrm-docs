@@ -343,9 +343,9 @@ class Publisher {
     $purgeExisting->run();
 
     // Add new symlinks
-    foreach ($version->aliases as $alias) {
-      $this->fs->symlink($publishPath, "$path/$alias");
-      $msg = sprintf("Adding alias '%s' for %s.", $alias, $version->name);
+    foreach ($version->redirects as $redirect) {
+      $this->fs->symlink($publishPath, "$path/$redirect");
+      $msg = sprintf("Adding alias '%s' for %s.", $redirect, $version->name);
       $this->addMessage('INFO', $msg);
     }
   }
@@ -378,8 +378,8 @@ class Publisher {
     $this->addMessage('INFO', "Using book: " . $book->name);
 
     $aliasText = "";
-    if ($version->aliases) {
-      $aliasList = implode('", "', $version->aliases);
+    if ($version->redirects) {
+      $aliasList = implode('", "', $version->redirects);
       $aliasText = sprintf("with aliases: %s", $aliasList);
     }
 

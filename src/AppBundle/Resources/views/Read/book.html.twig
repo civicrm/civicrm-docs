@@ -12,7 +12,7 @@
   {% set default_language = book.getDefaultLanguage() %}
   {% set default_version = default_language.getDefaultVersion() %}
   {% set default_url = "/" ~ book.slug ~ "/" ~ default_language.code ~ "/"
-         ~ default_version.name %}
+         ~ default_version.path %}
   {% set default_title = default_language.nativeName() ~ " / " ~ default_version.name %}
   <li>Default edition: <a href="{{ default_url }}">{{ default_title }}</a></li>
   <li>Category: {{ book.category }}</li>
@@ -32,7 +32,7 @@
   </tr>
   {% for language in book.languages %}
     {% for version in language.versions %}
-    {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.name %}
+    {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.path %}
     <tr>
       <td class="language">
         <span class="native-name">{{ language.nativeName }}</span>
