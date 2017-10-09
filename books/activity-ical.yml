@@ -2,7 +2,5 @@ name: Activity iCal
 description: Provides an iCalendar feed of assigned activities per contact
 type: extension
 langs:
-    en:
-        repo: 'https://github.com/twomice/com.joineryhq.activityical'
-        latest: master
-        stable: master
+  en:
+    repo: 'https://github.com/twomice/com.joineryhq.activityical'

@@ -3,7 +3,5 @@ weight: 10
 description: For computer programmers who create and improve functionality within CiviCRM
 category: Core
 langs:
-    en:
-        repo: 'https://github.com/civicrm/civicrm-dev-docs'
-        latest: master
-        stable: master
+  en:
+    repo: 'https://github.com/civicrm/civicrm-dev-docs'
