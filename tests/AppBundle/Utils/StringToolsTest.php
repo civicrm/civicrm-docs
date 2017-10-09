@@ -64,6 +64,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         [
           'from' => 'foo/bar',
           'to' => 'baz/bat',
+          'type' => 'internal',
         ]
       ],
 
@@ -72,6 +73,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         [
           'from' => 'foo/bar',
           'to' => 'baz/bat',
+          'type' => 'internal',
         ]
       ],
 
@@ -80,6 +82,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         [
           'from' => 'foo///bar',
           'to' => 'baz///bat',
+          'type' => 'internal',
         ]
       ],
 
@@ -88,6 +91,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         [
           'from' => 'foo/bar',
           'to' => 'baz/bat',
+          'type' => 'internal',
         ]
       ],
 
@@ -111,6 +115,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         [
           'from' => 'foo/bar',
           'to' => 'baz/bat',
+          'type' => 'internal',
         ]
       ],
 
