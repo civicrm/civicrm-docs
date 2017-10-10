@@ -38,15 +38,7 @@ class PublishControllerTest extends WebTestCase {
    * @return string
    */
   private function getGithubRequestBody(): string {
-    $body = [
-      'ref' => 'refs/heads/master',
-      'commits' => [],
-      'repository' => [
-        'html_url' => 'https://github.com/civicrm/civicrm-dev-docs',
-      ],
-    ];
-
-    return json_encode($body);
+    return file_get_contents(__DIR__ . '/../Files/webhook-push-sample.json');
   }
 
   /**
