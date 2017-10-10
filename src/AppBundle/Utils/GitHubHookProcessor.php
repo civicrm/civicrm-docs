@@ -7,7 +7,12 @@ class GitHubHookProcessor {
   /**
    * @var array of strings for email addresses of people to notify
    */
-  public $recipients = array();
+  public $recipients = [];
+
+  /**
+   * @var array
+   */
+  public $commits = [];
 
   /**
    * @var string the URL for the repository
@@ -73,6 +78,8 @@ class GitHubHookProcessor {
       $this->addRecipients($commit->author->email);
       $this->addRecipients($commit->committer->email);
     }
+
+    $this->commits = $payload->commits;
   }
 
   /**
@@ -91,5 +98,4 @@ class GitHubHookProcessor {
 
     $this->recipients = array_unique(array_merge($this->recipients, $recipients));
   }
-
 }

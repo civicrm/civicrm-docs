@@ -98,6 +98,7 @@ class PublishController extends Controller {
      * all addresses set in the book's yaml configuration
     */
     $extraRecipients = $this->get('github.hook.processor')->recipients;
+    $commits = $this->get('github.hook.processor')->commits;
     $library = $this->get('library');
     $messages = $this->get('publisher')->getMessages();
     $parts = $library::parseIdentifier($identifier);
@@ -111,8 +112,9 @@ class PublishController extends Controller {
 
     $renderParams = [
       'publishURLBase' => $webPath,
-      'status'         => $subject,
-      'messages'       => $messages,
+      'status' => $subject,
+      'messages' => $messages,
+      'commits' => $commits,
     ];
     $body = $this->renderView('AppBundle:Emails:notify.html.twig', $renderParams);
     $mail = \Swift_Message::newInstance()
