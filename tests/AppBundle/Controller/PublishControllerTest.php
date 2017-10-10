@@ -15,11 +15,11 @@ class PublishControllerTest extends WebTestCase {
     $client = static::createClient();
     $client->enableProfiler();
 
-    $body = $this->getGithubRequestBody();
+    $hookBody = $this->getGithubRequestBody();
     $headers = $this->getHeaders();
     $endpoint = '/admin/listen';
 
-    $client->request('POST', $endpoint, [], [], $headers, $body);
+    $client->request('POST', $endpoint, [], [], $headers, $hookBody);
     $statusCode = $client->getResponse()->getStatusCode();
 
     $this->assertEquals(Response::HTTP_OK, $statusCode);
@@ -30,8 +30,12 @@ class PublishControllerTest extends WebTestCase {
     $mails = $mailCollector->getMessages();
     $this->assertCount(1, $mails);
 
+    $hookData = json_decode($hookBody, true);
+    $sampleCommitHash = current($hookData['commits'])['id'];
     $sentMessage = array_shift($mails);
+
     $this->assertContains('Publishing Successful', $sentMessage->getBody());
+    $this->assertContains($sampleCommitHash, $sentMessage->getBody());
   }
 
   /**
