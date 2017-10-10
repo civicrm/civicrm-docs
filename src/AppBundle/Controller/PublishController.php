@@ -60,7 +60,7 @@ class PublishController extends Controller {
     $event = $request->headers->get('X-GitHub-Event');
     $processor = $this->get('github.hook.processor');
     try {
-      $processor->process($event, json_decode($body));
+      $hookData = $processor->process($event, json_decode($body));
     }
     catch (\Exception $e) {
       $response = "CRITICAL - Skipping the publishing process due to the "
@@ -74,7 +74,7 @@ class PublishController extends Controller {
       foreach ($identifiers as $identifier) {
         $fullIdentifier = "{$identifier}/{$processor->branch}";
         $this->publisher->publish($fullIdentifier);
-        $this->sendEmail($fullIdentifier);
+        $this->sendEmail($fullIdentifier, $hookData);
       }
       $response = $this->publisher->getMessagesInPlainText();
     }
@@ -89,16 +89,17 @@ class PublishController extends Controller {
    * Send notification emails after publishing
    *
    * @param string $identifier
+   * @param array $hookData
    */
-  private function sendEmail(string $identifier) {
+  private function sendEmail(string $identifier, $hookData) {
 
     /**
      * Array of strings for email addresses that should receive the
      * notification email. If none are specified, then the email will be sent to
      * all addresses set in the book's yaml configuration
     */
-    $extraRecipients = $this->get('github.hook.processor')->recipients;
-    $commits = $this->get('github.hook.processor')->commits;
+    $extraRecipients = $hookData['recipients'];
+    $commits = $hookData['commits'];
     $library = $this->get('library');
     $messages = $this->get('publisher')->getMessages();
     $parts = $library::parseIdentifier($identifier);
