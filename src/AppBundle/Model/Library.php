@@ -68,11 +68,13 @@ class Library {
     $rows = array();
     foreach ($this->books as $book) {
       foreach ($book->languages as $language) {
+        /* @var \AppBundle\Model\Language $language */
         foreach ($language->versions as $version) {
+          /* @var \AppBundle\Model\Version $version */
           $key = "$book->slug/$language->code/$version->branch";
           $row = array(
             'book' => $book->name,
-            'language' => $language->englishName(),
+            'language' => $language->getEnglishName(),
             'repo' => $language->repo,
             'branch' => $version->branch,
           );
@@ -152,6 +154,8 @@ class Library {
   /**
    * Parses an identifier into components we can use to identify a book
    *
+   * This is the reverse of assembleIdentifier.
+   *
    * See LibraryTest::identifierProvider() for examples
    *
    * @param string $identifier
@@ -167,7 +171,6 @@ class Library {
    *       'path' => 'category/foo/my-page',
    *       'fragment' => 'some-section',
    *     ]
-   *
    *   The array will aways have the keys shown above, but values will be NULL
    *   if those components do not exist in the given identifier
  */
@@ -202,6 +205,82 @@ class Library {
     $result['fragment'] = $fragment;
 
     return $result;
+  }
+
+  /**
+   * Take several pieces of a docs URL, and combined them into a full identifier
+   *
+   * This is the reverse of parseIdentifier.
+   *
+   * If 'editionIdentifier' is present, it will trump the values in 'bookSlug',
+   * 'languageCode', and 'versionDescriptor'.
+   *
+   * @param array $pieces
+   *   e.g.
+   *     [
+   *       'bookSlug' => 'dev',
+   *       'languageCode' => 'en',
+   *       'versionDescriptor' => 'latest',
+   *       'editionIdentifier' => 'dev/en/latest',
+   *       'path' => 'category/foo/my-page',
+   *       'fragment' => 'some-section',
+   *     ]
+   *
+   * @return string
+   */
+  public static function assembleIdentifier($pieces) {
+    $result = '';
+    if ($pieces['editionIdentifier']) {
+      $result .= $pieces['editionIdentifier'];
+    }
+    else {
+      if ($pieces['bookSlug']) {
+        $result .= $pieces['bookSlug'];
+      }
+      else {
+        return $result;
+      }
+      if ($pieces['languageCode']) {
+        $result .= '/' . $pieces['languageCode'];
+      }
+      else {
+        return $result;
+      }
+      if ($pieces['versionDescriptor']) {
+        $result .= '/' . $pieces['versionDescriptor'];
+      }
+      else {
+        return $result;
+      }
+    }
+    if ($pieces['path']) {
+      $result .= '/' . $pieces['path'];
+    }
+    else {
+      return $result;
+    }
+    if ($pieces['fragment']) {
+      $result .= '/#' . $pieces['fragment'];
+    }
+    return $result;
+  }
+
+  /**
+   * @param string $identifier
+   *   examples: "user/en/master", "user/en", "user", ""
+   *
+   * @return array
+   */
+  public function getObjectsByIdentifier($identifier) {
+    $parts = self::parseIdentifier($identifier);
+    $book = $this->getBookBySlug($parts['bookSlug']);
+    $language = $book->getLanguageByCode($parts['languageCode']);
+    $version = $language->getVersionByDescriptor($parts['versionDescriptor']);
+    return [
+      'book' => $book,
+      'language' => $language,
+      'version' => $version,
+    ];
   }
 
 }

@@ -98,6 +98,9 @@ class Version {
     // Add alias for $branch (e.g. so urls with "master" will work correctly)
     $redirects[] = $this->branch;
 
+    // Add alias for $slug (e.g. so urls with "4.7" will work correctly)
+    $redirects[] = $this->slug;
+
     // Make sure each alias is URL-safe
     foreach ($redirects as &$redirect) {
       $redirect = StringTools::urlSafe($redirect);

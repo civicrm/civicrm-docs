@@ -48,7 +48,7 @@ class Publisher {
   private $publishingMessages = [];
 
   /**
-   * @param LoggerInterface $logger
+   * @param Logger $logger
    * @param Filesystem $fs
    * @param Library $library
    * @param MkDocs $mkDocs
@@ -181,6 +181,8 @@ class Publisher {
    * @param string $versionDescriptor
    *   Can be the name of the version, the name of the git branch, or a name
    *   of a redirect defined for the version
+   *
+   * @throws \Exception
    */
   private function publishVersion($book, $language, $versionDescriptor) {
     $version = $this->getVersion($book, $language, $versionDescriptor);
@@ -229,6 +231,8 @@ class Publisher {
    * @param string $bookSlug
    *
    * @return Book
+   *
+   * @throws \Exception
    */
   private function getBook($bookSlug) {
     $book = $this->library->getBookBySlug($bookSlug);
@@ -248,6 +252,8 @@ class Publisher {
    * @param string $languageCode
    *
    * @return Language
+   *
+   * @throws \Exception
    */
   private function getLanguage($book, $languageCode) {
     $language = $book->getLanguageByCode($languageCode);
@@ -272,6 +278,7 @@ class Publisher {
    *
    * @return Version
    *
+   * @throws \Exception
    */
   private function getVersion($book, $language, $versionDescriptor) {
     $version = $language->getVersionByDescriptor($versionDescriptor);
@@ -298,6 +305,8 @@ class Publisher {
    * @param Version $version
    * @param string $repoPath
    * @param string $publishPath
+   *
+   * @throws \Exception
    */
   private function build(
     Book $book,
