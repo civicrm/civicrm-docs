@@ -7,12 +7,14 @@ use AppBundle\Utils\LocaleTools;
 class Language {
 
   /**
-   * @var string The URL to the git repository for this language
+   * @var string
+   *   The URL to the git repository for this language
    */
   public $repo;
 
   /**
-   * @var array An array (without keys) of Version objects
+   * @var Version[]
+   *   An array (without keys) of Version objects
    */
   public $versions;
 
@@ -25,7 +27,7 @@ class Language {
 
   /**
    *
-   * @var array
+   * @var string[]
    *   Email addresses for people who would like to receive a notification any
    *   time a version within this language is published
    */

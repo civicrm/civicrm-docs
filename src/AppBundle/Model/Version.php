@@ -41,7 +41,7 @@ class Version {
   public $branch;
 
   /**
-   * @var array
+   * @var string[]
    *   An array (without keys) of strings which represent redirects to this
    *   version of the book.
    *   (e.g. ["latest", "current"])
@@ -64,15 +64,15 @@ class Version {
    * automatically add an alias for $name.
    *
    * @param string $slug
-   *   See Version::slug
+   *   @see Version::slug
    * @param string $name
-   *   See Version::name
+   *   @see Version::name
    * @param null $path
-   *   See Version::path
+   *   @see Version::path
    * @param string $branch
-   *   See Version::branch
+   *   @see Version::branch
    * @param array $redirects
-   *   See Version::redirects
+   *   @see Version::redirects
    */
   public function __construct($slug = 'latest', $name = 'Latest', $path = NULL, $branch = 'master', $redirects = []) {
     $this->slug = $slug;

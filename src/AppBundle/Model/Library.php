@@ -7,7 +7,7 @@ use Symfony\Component\Finder\Finder;
 class Library {
 
   /**
-   * @var array
+   * @var Book[]
    *   An array (without keys) of Book objects to represent all the books in
    *   the system.
    */
@@ -68,9 +68,7 @@ class Library {
     $rows = array();
     foreach ($this->books as $book) {
       foreach ($book->languages as $language) {
-        /* @var \AppBundle\Model\Language $language */
         foreach ($language->versions as $version) {
-          /* @var \AppBundle\Model\Version $version */
           $key = "$book->slug/$language->code/$version->branch";
           $row = array(
             'book' => $book->name,
