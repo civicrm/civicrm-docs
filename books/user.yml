@@ -5,7 +5,6 @@ category: Core
 langs:
   en:
     repo: 'https://github.com/civicrm/civicrm-user-guide'
-    default_version: 4.7
     versions:
       4.7:                    # This is stored as $slug
         name: 4.7 / Latest    # If omitted, use $slug
