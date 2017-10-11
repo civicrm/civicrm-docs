@@ -15,27 +15,32 @@ class Book {
   public $slug;
 
   /**
-   * @var string The title of the book, taken from the "name"
+   * @var string
+   *   The title of the book, taken from the "name"
    */
   public $name;
 
   /**
-   * @var string Short phrase describing the book, taken from the
+   * @var string
+   *   Short phrase describing the book, taken from the
    */
   public $description;
 
   /**
-   * @var array An array (without keys of Language objects to
+   * @var Language[]
+   *   An array (without keys of Language objects to
    */
   public $languages;
 
   /**
-   * @var int Used to sort books
+   * @var int
+   *   Used to sort books
    */
   public $weight;
 
   /**
-   * @var string (e.g. "Core", "Extensions") Should be in sentence case
+   * @var string
+   *   (e.g. "Core", "Extensions") Should be in sentence case
    */
   public $category;
 

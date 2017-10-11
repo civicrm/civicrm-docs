@@ -8,7 +8,24 @@ class Version {
 
   /**
    * @var string
-   *   Version name (e.g. "4.6" or "latest"). This is what readers see.
+   *   The machine readable name of this version. For example, in a book with
+   *   multiple versions, the slug should be defined to correspond to the
+   *   version numbers of the product (i.e. "4.7", or "4.6"). The slug can be
+   *   "master" if a book is only using one version.
+   */
+  public $slug;
+
+  /**
+   * @var string
+   *   This is the URL component for the published book. If it's not defined
+   *   in the book's yaml file, then we use $slug as the path component.
+   */
+  public $path;
+
+  /**
+   * @var string
+   *   A human-readable name of this version (e.g. "4.7 / Current" or "latest").
+   *   This is what readers see.
    *   Sometimes it's the same as name of the branch, but not always. It can
    *   contain pretty much whatever characters you want.
    */
@@ -24,17 +41,17 @@ class Version {
   public $branch;
 
   /**
-   * @var array
-   *   An array (without keys) of strings which represent aliases to this
-   *   version of the book. For each alias, we will create symbolic links so
-   *   that a reader can also access this version of the book at a URL with that
-   *   alias.
+   * @var string[]
+   *   An array (without keys) of strings which represent redirects to this
+   *   version of the book.
+   *   (e.g. ["latest", "current"])
+   *   If a reader requests a page with one of these redirects in place of the
+   *   $path, then the app will redirect them to the proper page.
    */
-  public $aliases;
+  public $redirects;
 
   /**
    * Defines a new "version" of a book, with aliases.
-   *
    * A version has one and only
    * one "branch", meaning the git branch used for the version. A version also
    * can have many "aliases", which are other descriptors like "stable" that we
@@ -43,63 +60,66 @@ class Version {
    * links to this directory for each of the aliases. So if the branch is
    * "master" and we have an alias called "stable", then the book will be
    * accessible at "master" via the directory and at "stable" via the symlink.
-   *
    * If the constructor receives different $name and $branch values, it will
    * automatically add an alias for $name.
    *
+   * @param string $slug
+   *   @see Version::slug
    * @param string $name
-   *   e.g. "latest", "master", "4.7"
-   *
+   *   @see Version::name
+   * @param null $path
+   *   @see Version::path
    * @param string $branch
-   *   e.g "master", "4.7"
-   *
-   * @param array $aliases
-   *   Array of strings containing names which can also be used to reference
-   *   this version.
+   *   @see Version::branch
+   * @param array $redirects
+   *   @see Version::redirects
    */
-  public function __construct($name, $branch = NULL, $aliases = array()) {
+  public function __construct($slug = 'latest', $name = 'Latest', $path = NULL, $branch = 'master', $redirects = []) {
+    $this->slug = $slug;
     $this->name = $name;
-    $this->branch = $branch ?: $name;
-    $this->setupAliases($aliases);
+    $this->path = $path ?? $slug;
+    $this->branch = $branch;
+    $this->setupRedirects($redirects);
   }
 
   /**
-   * @param $aliases array|string
+   * @param $redirects array|string
    *   e.g. "latest"
    */
-  private function setupAliases($aliases) {
+  private function setupRedirects($redirects) {
     // wrap $aliases in array, if necessary
-    if (!is_array($aliases)) {
-      $aliases = array($aliases);
+    if (!is_array($redirects)) {
+      $redirects = array($redirects);
     }
 
-    // Add an alias for $name if necessary
-    if ($this->name != $this->branch && !isset($aliases[$this->name])) {
-      $aliases[] = $this->name;
-    }
+    // Remove alias for $path if it exists
+    unset($redirects[$this->path]);
 
-    // Remove alias for $branch if it exists
-    unset($aliases[$this->branch]);
+    // Add alias for $branch (e.g. so urls with "master" will work correctly)
+    $redirects[] = $this->branch;
+
+    // Add alias for $slug (e.g. so urls with "4.7" will work correctly)
+    $redirects[] = $this->slug;
 
     // Make sure each alias is URL-safe
-    foreach ($aliases as &$alias) {
-      $alias = StringTools::urlSafe($alias);
+    foreach ($redirects as &$redirect) {
+      $redirect = StringTools::urlSafe($redirect);
     }
 
-    $this->aliases = array_unique($aliases);
+    // Make sure we don't have any duplicate branches
+    $this->redirects = array_unique($redirects);
   }
 
   /**
    * Gives an array of all unique strings that can be used to describe this
-   * version, including branch, name, and any aliases.
+   * version, including the path plus any aliases.
    *
    * @return array
    *   Array of strings (without keys)
    */
   public function allDescriptors() {
-    $result = $this->aliases;
-    $result[] = $this->name;
-    $result[] = $this->branch;
+    $result = $this->redirects;
+    $result[] = $this->path;
     return array_unique($result);
   }
 
@@ -114,7 +134,7 @@ class Version {
    */
   public function validate() {
     if (preg_match("#/#", $this->branch)) {
-      throw new Exception("Branch name can not contain a forward slash.");
+      throw new \Exception("Branch name can not contain a forward slash.");
     }
   }
 

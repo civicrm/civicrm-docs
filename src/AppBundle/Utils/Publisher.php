@@ -48,7 +48,7 @@ class Publisher {
   private $publishingMessages = [];
 
   /**
-   * @param LoggerInterface $logger
+   * @param Logger $logger
    * @param Filesystem $fs
    * @param Library $library
    * @param MkDocs $mkDocs
@@ -168,7 +168,7 @@ class Publisher {
     $language = $this->getLanguage($book, $languageCode);
     if ($language) {
       foreach ($language->versions as $version) {
-        $this->publishVersion($book, $language, $version->branch);
+        $this->publishVersion($book, $language, $version->slug);
       }
     }
   }
@@ -180,7 +180,9 @@ class Publisher {
    * @param Language $language
    * @param string $versionDescriptor
    *   Can be the name of the version, the name of the git branch, or a name
-   *   of an alias defined for the version
+   *   of a redirect defined for the version
+   *
+   * @throws \Exception
    */
   private function publishVersion($book, $language, $versionDescriptor) {
     $version = $this->getVersion($book, $language, $versionDescriptor);
@@ -192,7 +194,7 @@ class Publisher {
     $tmpPublishDir = $this->makeTmpDir('publish_' . $tmpPrefix);
     $repoRoot = $this->paths->getRepoPathRoot();
     $masterRepoDir = sprintf('%s/%s/%s', $repoRoot, $slug, $langCode);
-    $webPath = sprintf('%s/%s/%s', $slug, $langCode, $branch);
+    $webPath = sprintf('%s/%s/%s', $slug, $langCode, $version->path);
     $webRoot = $this->paths->getPublishPathRoot() . "/" . $webPath;
 
     try {
@@ -210,7 +212,6 @@ class Publisher {
       // remove existing and copy new
       $this->fs->removeDir($webRoot);
       $this->fs->copyDir($tmpPublishDir, $webRoot);
-      $this->setupSymlinks($book, $language, $version, $webRoot);
       $this->setupRedirects($tmpRepoDir, $webRoot);
 
       $msg = sprintf("<a href='/%s'>Book published!</a>.", $webPath);
@@ -230,6 +231,8 @@ class Publisher {
    * @param string $bookSlug
    *
    * @return Book
+   *
+   * @throws \Exception
    */
   private function getBook($bookSlug) {
     $book = $this->library->getBookBySlug($bookSlug);
@@ -249,6 +252,8 @@ class Publisher {
    * @param string $languageCode
    *
    * @return Language
+   *
+   * @throws \Exception
    */
   private function getLanguage($book, $languageCode) {
     $language = $book->getLanguageByCode($languageCode);
@@ -272,6 +277,8 @@ class Publisher {
    * @param string $versionDescriptor
    *
    * @return Version
+   *
+   * @throws \Exception
    */
   private function getVersion($book, $language, $versionDescriptor) {
     $version = $language->getVersionByDescriptor($versionDescriptor);
@@ -298,6 +305,8 @@ class Publisher {
    * @param Version $version
    * @param string $repoPath
    * @param string $publishPath
+   *
+   * @throws \Exception
    */
   private function build(
     Book $book,
@@ -316,37 +325,6 @@ class Publisher {
         $e->getMessage()
       );
       throw new \Exception($msg);
-    }
-  }
-
-  /**
-   * Check and update symlinks so that latest and stable point to the right
-   * places
-   *
-   * @param Book $book
-   * @param Language $language
-   * @param Version $version
-   * @param string $publishPath
-   */
-  private function setupSymlinks(
-    Book $book,
-    Language $language,
-    Version $version,
-    string $publishPath
-  ) {
-    $publishPathRoot = $this->paths->getPublishPathRoot();
-    $path = sprintf('%s/%s/%s', $publishPathRoot, $book->slug, $language->code);
-
-    // Remove any existing symlinks to the branch
-    $cmd = "rm $(find -L '$path' -xtype l -samefile '$publishPath')";
-    $purgeExisting = new Process($cmd);
-    $purgeExisting->run();
-
-    // Add new symlinks
-    foreach ($version->aliases as $alias) {
-      $this->fs->symlink($publishPath, "$path/$alias");
-      $msg = sprintf("Adding alias '%s' for %s.", $alias, $version->name);
-      $this->addMessage('INFO', $msg);
     }
   }
 
@@ -378,8 +356,8 @@ class Publisher {
     $this->addMessage('INFO', "Using book: " . $book->name);
 
     $aliasText = "";
-    if ($version->aliases) {
-      $aliasList = implode('", "', $version->aliases);
+    if ($version->redirects) {
+      $aliasList = implode('", "', $version->redirects);
       $aliasText = sprintf("with aliases: %s", $aliasList);
     }
 

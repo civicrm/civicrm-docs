@@ -3,20 +3,24 @@ weight: -100
 description: For staff members who use CiviCRM's web-based interface as part of their job at an organization
 category: Core
 langs:
-    en:
-        repo: 'https://github.com/civicrm/civicrm-user-guide'
-        latest: master
-        stable: master
-        history:
-            - 4.6
-    ca:
-        repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
-        latest: master
-    fr:
-        repo: 'https://github.com/civicrm-french/civicrm-user-guide'
-        latest: master
-        stable: master
-    es:
-        repo: 'https://github.com/ixiam/civicrm-user-guide-spanish'
-        latest: master
-        stable: master
+  en:
+    repo: 'https://github.com/civicrm/civicrm-user-guide'
+    versions:
+      4.7:                    # This is stored as $slug
+        name: 4.7 / Latest    # If omitted, use $slug
+        path: latest          # If omitted, use a URL-safe version of $slug
+        branch: master        # If omitted, use $slug
+        redirects:            # These are not displayed anywhere
+          - current
+          - stable
+      4.6:
+        branch: 4.6
+        name: 4.6 / Long Term Support
+        redirects:
+          - lts
+  ca:
+    repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
+  fr:
+    repo: 'https://github.com/civicrm-french/civicrm-user-guide'
+  es:
+    repo: 'https://github.com/ixiam/civicrm-user-guide-spanish'

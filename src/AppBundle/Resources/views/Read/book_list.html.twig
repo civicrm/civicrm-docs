@@ -5,13 +5,13 @@
     <div>
       {% set language = book.getDefaultLanguage %}
       {% set version = language.getDefaultVersion %}
-      {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.name %}
+      {% set url = "/" ~ book.slug ~ "/" ~ language.code ~ "/" ~ version.path %}
       <a href="{{ url }}">
         <span class="name">
           {{ book.name }}
         </span>
         <span class="edition">
-          ({{ language.nativeName() }} / {{ version.name }})
+          ({{ language.nativeName() }} &ndash; {{ version.name }})
         </span>
       </a>
       {% set countOtherEditions = book.countEditions - 1 %}

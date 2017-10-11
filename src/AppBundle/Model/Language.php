@@ -7,12 +7,14 @@ use AppBundle\Utils\LocaleTools;
 class Language {
 
   /**
-   * @var string The URL to the git repository for this language
+   * @var string
+   *   The URL to the git repository for this language
    */
   public $repo;
 
   /**
-   * @var array An array (without keys) of Version objects
+   * @var Version[]
+   *   An array (without keys) of Version objects
    */
   public $versions;
 
@@ -25,7 +27,7 @@ class Language {
 
   /**
    *
-   * @var array
+   * @var string[]
    *   Email addresses for people who would like to receive a notification any
    *   time a version within this language is published
    */
@@ -58,30 +60,19 @@ class Language {
    *   Data passed into the language constructor.
    */
   private function setupVersions($yaml) {
-    $latestBranch = isset($yaml['latest']) ? $yaml['latest'] : NULL;
-    $stableBranch = isset($yaml['stable']) ? $yaml['stable'] : NULL;
-    $history = isset($yaml['history']) ? $yaml['history'] : array();
-    if ($latestBranch && $stableBranch) {
-      if ($latestBranch == $stableBranch) {
-        $this->addVersion('latest', $latestBranch,
-            array('stable'));
-      }
-      else {
-        $this->addVersion('latest', $latestBranch);
-        $this->addVersion('stable', $stableBranch);
-      }
+    // Add versions defined in yaml
+    $versions = $yaml['versions'] ?? [];
+    foreach ($versions as $slug => $version) {
+      $name = $version['name'] ?? 'Latest';
+      $path = $version['path'] ?? $slug;
+      $branch = $version['branch'] ?? 'master';
+      $redirects = $version['redirects'] ?? [];
+      $this->versions[] = new Version($slug, $name, $path, $branch, $redirects);
     }
-    elseif ($latestBranch) {
-      $this->addVersion('latest', $latestBranch);
-    }
-    elseif ($stableBranch) {
-      $this->addVersion('stable', $latestBranch);
-    }
-    foreach ($history as $item) {
-      $this->addVersion($item);
-    }
+
+    // If no versions were defined, then add one version (with default values)
     if (count($this->versions) == 0) {
-      $this->addVersion('latest', 'master');
+      $this->versions[] = new Version();
     }
   }
 
@@ -111,21 +102,6 @@ class Language {
       throw new \Exception("Language code '{$this->code}' is not a valid "
       . "ISO 639-1 code.");
     }
-  }
-
-  /**
-   * Adds a new version to this branch
-   *
-   * @param string $name
-   *   (e.g. "latest", "master", "4.7", etc.)
-   * @param string $branch
-   *   (e.g "master", "4.7", etc)
-   * @param array $aliases
-   *   Array of strings containing names which can also be used to reference
-   *   the version.
-   */
-  public function addVersion($name, $branch = NULL, $aliases = array()) {
-    $this->versions[] = new Version($name, $branch, $aliases);
   }
 
   /**
