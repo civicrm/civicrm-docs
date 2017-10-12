@@ -26,10 +26,30 @@ class ReadController extends Controller {
    * Displays a page for one book which shows the various languages and
    * versions available for the book
    *
-   * @route("/{slug}/", requirements={"slug": "(?!_)(?!admin/)[^/]+"},
-   * name="book_home")
+   * @route("/{slug}/", name="book", requirements={"slug": "(?!_)(?!admin/)[^/]+"})
    */
   public function BookAction($slug) {
+    /** @var \AppBundle\Model\Library */
+    $library = $this->get('library');
+    /** @var \AppBundle\Model\Book */
+    $book = $library->getBookBySlug($slug);
+    if (!$book) {
+      throw $this->createNotFoundException(
+          "We can't find a '$slug' book");
+    }
+    $language = $book->getDefaultLanguage();
+    $version = $language->getDefaultVersion();
+    return $this->redirect("/{$slug}/{$language->code}/{$version->path}");
+  }
+
+  /**
+   * Displays a page for one book which shows the various languages and
+   * versions available for the book
+   *
+   * @route("/{slug}/editions", requirements={"slug": "(?!_)(?!admin/)[^/]+"},
+   * name="book_editions")
+   */
+  public function EditionsAction($slug) {
     /** @var \AppBundle\Model\Library */
     $library = $this->get('library');
     $book = $library->getBookBySlug($slug);
@@ -45,7 +65,11 @@ class ReadController extends Controller {
    * @route("/{slug}/{code}/", requirements={"slug": "(?!_)(?!admin/)[^/]+"})
    */
   public function LanguageAction($slug, $code) {
-    return $this->redirectToRoute('book_home', array('slug' => $slug));
+    /** @var \AppBundle\Model\Library */
+    $path = "{$slug}/{$code}";
+    $library = $this->get('library');
+    $id = $library->getObjectsByIdentifier($path);
+    $version = $id['language']->getDefaultVersion()->path;
+    return $this->redirect("/{$path}/{$version}");
   }
-
 }
