@@ -1,18 +1,40 @@
-<p><strong>Note from
-    <a href="{{ publishURLBase }}">{{ publishURLBase }}</a>:<br />
-    {{ status }}</strong>
+<p>
+  <strong>
+    Note from <a href="{{ publishURLBase }}">{{ publishURLBase }}</a>:
+    <br/>
+    {{ status }}
+  </strong>
 </p>
+
 <p>Please check the publish log for any errors:</p>
+
+<h4>Messages:</h4>
 <ul>
   {% for message in messages %}
     <li><strong>{{ message.label }}:</strong> {{ message.content|raw }}</li>
   {% endfor %}
 </ul>
-<p>You are receiving this message because either (a) you have made commits
-included in the changes currently being published, or (b) your email address
-is set for notification in this book's repository.</p>
 
-<p>If you have questions, please contact the CiviCRM documentation working
-  group here:<br />
+<h4>Commits:</h4>
+<ul>
+  {% for commit in commits %}
+    <li>
+      <strong><a href="{{ commit.url }}">{{ commit.id }}</a></strong> |
+      {{ commit.message }} | {{ commit.author.username }}
+    </li>
+  {% endfor %}
+</ul>
+
+<p>
+  You are receiving this message because either (a) you have made commits
+  included in the changes currently being published, or (b) your email address
+  is set for notification in this book's repository.
+</p>
+
+<p>If you have questions, please contact the CiviCRM documentation working group
+  here:
+  <br/>
   <a href='https://chat.civicrm.org/civicrm/channels/documentation'>
-    https://chat.civicrm.org/civicrm/channels/documentation</a></p>
+    https://chat.civicrm.org/civicrm/channels/documentation
+  </a>
+</p>

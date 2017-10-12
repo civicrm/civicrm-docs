@@ -5,11 +5,6 @@ namespace AppBundle\Utils;
 class GitHubHookProcessor {
 
   /**
-   * @var array of strings for email addresses of people to notify
-   */
-  public $recipients = array();
-
-  /**
    * @var string the URL for the repository
    */
   public $repo;
@@ -20,13 +15,6 @@ class GitHubHookProcessor {
   public $branch;
 
   /**
-   * Constructor
-   */
-  public function __construct() {
-
-  }
-
-  /**
    * Process a GitHub webhook
    *
    * @param string $event
@@ -34,6 +22,8 @@ class GitHubHookProcessor {
    *
    * @param mixed $payload
    *   An object given by json_decode()
+   *
+   * @return array
    *
    * @throws \Exception
    */
@@ -48,7 +38,8 @@ class GitHubHookProcessor {
     if ($event != 'push') {
       throw new \Exception("Webhook event type is not 'push'");
     }
-    $this->getDetailsFromPush($payload);
+
+    return $this->getDetailsFromPush($payload);
   }
 
   /**
@@ -58,9 +49,11 @@ class GitHubHookProcessor {
    * @param mixed $payload
    *   An object given by json_decode()
    *
+   * @return array
+   *
    * @throws \Exception
    */
-  public function getDetailsFromPush($payload) {
+  protected function getDetailsFromPush($payload) {
     $this->branch = preg_replace("#.*/(.*)#", "$1", $payload->ref);
     if (empty($this->branch)) {
       throw new \Exception("Unable to determine branch from payload data");
@@ -69,27 +62,37 @@ class GitHubHookProcessor {
     if (empty($this->repo)) {
       throw new \Exception("Unable to determine repository from payload data");
     }
+
+    $recipients = [];
     foreach ($payload->commits as $commit) {
-      $this->addRecipients($commit->author->email);
-      $this->addRecipients($commit->committer->email);
+      $this->addRecipients($recipients, $commit->author->email);
+      $this->addRecipients($recipients, $commit->committer->email);
     }
+
+    return [
+      'commits' => $payload->commits,
+      'recipients' => $recipients
+    ];
   }
 
   /**
    * Adds one or more email recipients, and makes sure all recipients are
    * kept unique
    *
-   * @param array $recipients
+   * @param array $new
    *   Array of strings for emails of people to notify
+   * @param array $existing
+   *   Existing recipients so far
+   * @return array
+   *   Unique array of recipients
    */
-  public function addRecipients($recipients) {
-    if (!is_array($recipients)) {
-      $recipients = array($recipients);
+  protected function addRecipients($existing, $new) {
+    if (!is_array($new)) {
+      $new = array($new);
     }
     // remove any email addresses begins with "donotreply@" or "noreply"
-    $recipients = preg_grep('/^(donot|no)reply@/', $recipients, PREG_GREP_INVERT);
+    $new = preg_grep('/^(donot|no)reply@/', $new, PREG_GREP_INVERT);
 
-    $this->recipients = array_unique(array_merge($this->recipients, $recipients));
+    return array_unique(array_merge($existing, $new));
   }
-
 }
