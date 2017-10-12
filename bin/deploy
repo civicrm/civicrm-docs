@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -x
-sudo -u docs
-echo 1
 SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 cd $SCRIPTPATH/..
-git pull --ff-only origin master
-./bin/console cache:clear -e prod
+sudo -u docs git pull --ff-only origin master
+sudo -u docs ./bin/console cache:clear -e prod
