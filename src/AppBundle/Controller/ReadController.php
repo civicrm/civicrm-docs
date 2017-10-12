@@ -26,7 +26,7 @@ class ReadController extends Controller {
    * Displays a page for one book which shows the various languages and
    * versions available for the book
    *
-   * @route("/{slug}/", name="book")
+   * @route("/{slug}/", name="book", requirements={"slug": "(?!_)(?!admin/)[^/]+"})
    */
   public function BookAction($slug) {
     /** @var \AppBundle\Model\Library */
