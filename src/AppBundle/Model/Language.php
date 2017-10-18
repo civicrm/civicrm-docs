@@ -72,7 +72,7 @@ class Language {
 
     // If no versions were defined, then add one version (with default values)
     if (count($this->versions) == 0) {
-      $this->versions[] = new Version();
+      $this->versions[] = new Version('latest', 'Latest', 'latest', 'master', ['stable', 'current']);
     }
   }
 
