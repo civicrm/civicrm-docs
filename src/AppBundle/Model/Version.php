@@ -92,9 +92,6 @@ class Version {
       $redirects = array($redirects);
     }
 
-    // Remove alias for $path if it exists
-    unset($redirects[$this->path]);
-
     // Add alias for $branch (e.g. so urls with "master" will work correctly)
     $redirects[] = $this->branch;
 
@@ -106,8 +103,11 @@ class Version {
       $redirect = StringTools::urlSafe($redirect);
     }
 
-    // Make sure we don't have any duplicate branches
+    // Make sure we don't have any duplicate redirects
     $this->redirects = array_unique($redirects);
+
+    // Ensure that $path is not a redirect (to avoid infinite redirect loops)
+    $this->redirects = array_diff($this->redirects, [$this->path]);
   }
 
   /**
