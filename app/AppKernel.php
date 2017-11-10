@@ -24,6 +24,10 @@ class AppKernel extends Kernel {
       $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
     }
 
+    if ('dev' === $this->getEnvironment()) {
+      $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
+    }
+
     return $bundles;
   }
 
