@@ -1,0 +1,5 @@
+name: FlexMailer
+description: Extensible email delivery engine for CiviMail 
+langs:
+  en:
+    repo: 'https://github.com/civicrm/org.civicrm.flexmailer'
