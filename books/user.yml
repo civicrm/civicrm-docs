@@ -20,6 +20,14 @@ langs:
           - lts
   ca:
     repo: 'https://github.com/babu-cat/civicrm-user-guide-ca'
+    versions:
+      4.7:                    # This is stored as $slug
+        name: 4.7 / Latest    # If omitted, use $slug
+        path: latest          # If omitted, use a URL-safe version of $slug
+        branch: master        # If omitted, use $slug
+        redirects:            # These are not displayed anywhere
+          - current
+          - stable
   fr:
     repo: 'https://github.com/civicrm-french/civicrm-user-guide'
   es:
