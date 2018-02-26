@@ -10,7 +10,10 @@ RUN apk update \
     python-dev \
     py-pip
 
-RUN pip install mkdocs mkdocs-material pygments pymdown-extensions
+RUN pip install 'mkdocs==0.16.1'
+RUN pip install 'mkdocs-material==1.4.1'
+RUN pip install 'pygments==2.2.0'
+RUN pip install 'pymdown-extensions==2.0'
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
